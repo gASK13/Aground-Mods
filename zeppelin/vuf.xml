@@ -1,0 +1,248 @@
+<gASK>
+    <!-- THIS VERSION IS FOR ZEPPELIN ONLY!!! USE REGULAR VUF IF YOU WANNA MAKE YOUR OWN VEHICLE MOD! -->
+        
+    <action>
+        function changeVehicleStat(vehicleInfo, field, value) {
+            properField = field == "speed" ? "speedX" : field;
+            currentValue = Reflect.field(vehicleInfo, properField);
+            if (currentValue.get != null) {
+                currentValue.set(currentValue.get() + value);
+            } else {
+                Reflect.setField(vehicleInfo, properField, currentValue + value);
+            }
+        }
+        
+        function changeOnEquip(info, player) {
+            for (statChange in info.xml.elementsNamed("statChange")) {
+                statValue = Std.parseInt(statChange.get("value"));
+                changeVehicleStat(player.vehicle.info, statChange.get("id"), statValue);
+            }
+            
+            if (info.xml.elementsNamed("repairChange").next() != null) {
+                player.vehicle.info.repairItems = [];
+                player.vehicle.info.repairMap = new Xml().attributeMap;
+            
+                for (repChange in info.xml.elementsNamed("repairChange")) {
+                    addRepair(player.vehicle.info, repChange);
+                }
+            }
+            
+            if (info.xml.elementsNamed("fuelChange").next() != null) {
+                player.vehicle.info.fuelItems = [];
+                player.vehicle.info.fuelMap = new Xml().attributeMap;
+            
+                for (fChange in info.xml.elementsNamed("fuelChange")) {
+                    addFuel(player.vehicle.info, fChange);
+                }
+            }
+            
+            if (info.xml.elementsNamed("hideFuel").next() != null) {
+                player.vehicle.info.fuelItems = [];
+                player.vehicle.info.fuelMap = new Xml().attributeMap;
+            }
+            
+            if (info.xml.elementsNamed("electric").next() != null) {
+                setElectric(player.vehicle.info, player.vehicle);
+            }
+        }
+        
+        function changeOnUnequip(info, player) {
+            for (statChange in info.xml.elementsNamed("statChange")) {
+                statValue = Std.parseInt(statChange.get("value"));
+                changeVehicleStat(player.vehicle.info, statChange.get("id"), -statValue);
+            }
+            
+            if (info.xml.elementsNamed("repairChange").next() != null) {
+                player.vehicle.info.repairItems = [];
+                player.vehicle.info.repairMap = new Xml().attributeMap;
+            
+                for (repChange in player.vehicle.info.xml.elementsNamed("repair")) {
+                   addRepair(player.vehicle.info, repChange);
+                }
+            }
+            
+            if (info.xml.elementsNamed("fuelChange").next() != null || info.xml.elementsNamed("electric").next() != null) {
+                loadOriginalFuel(player.vehicle.info, player.vehicle);
+                player.vehicle.info.fuelItems = [];
+                player.vehicle.info.fuelMap = new Xml().attributeMap;
+            
+                for (fChange in player.vehicle.info.xml.elementsNamed("fuel")) {
+                    addFuel(player.vehicle.info, fChange);
+                }
+            }
+            
+            if (player.vehicle.info.xml.elementsNamed("hideFuel").next() != null) {
+                player.vehicle.info.fuelItems = [];
+                player.vehicle.info.fuelMap = new Xml().attributeMap;
+            }
+            
+            if (player.vehicle.info.xml.elementsNamed("electric").next() != null) {
+                setElectric(player.vehicle.info, player.vehicle);
+            }
+        }
+        
+        function addRepair(info, repChange) {
+            repValue = Std.parseInt(repChange.get("value"));
+            repIt = Item.get(repChange.get("id"));
+            if (repIt != null) {
+                repCt = new ItemCt(repIt, repValue);
+                info.repairItems.push(repCt);
+                info.repairMap.set(repIt.id, repValue);
+            } else {
+                trace('ERROR! Item [' + repChange.get("id") + '] not found!');
+            }
+        }
+        
+        function addFuel(info, fChange) {
+            if (fChange.get("id") != null) {
+                fValue = Std.parseInt(fChange.get("fuel"));
+                fItem = Item.get(fChange.get("id"));
+                if (fItem != null) {
+                    fRec = Recipe.createFuel(fItem, fValue);
+                    info.fuelItems.push(fRec);
+                    info.fuelMap.set(fItem.id, fValue);
+                } else {
+                    trace('ERROR! Item [' + fChange.get("id") + '] not found!');
+                }    
+            } else if (fChange.get("type") != null) {
+                rIt = Recipe.getByType(fChange.get("type"));         
+                if (rIt != null) {                                                                    
+                    while (rIt.hasNext()) {
+                        fRec = rIt.next();
+                        info.fuelItems.push(fRec);
+                        info.fuelMap.set(fRec.requires[0].id, fRec.fuel);
+                    }
+                }
+            }
+            
+            if (info.xml.second.elementsNamed('fuel').next() == null) {
+                x = new Xml();
+                x.nodeName = "fuel";
+                info.xml.second.xml.addChild(x);
+            }
+        }   
+        
+        function setElectric(info, vehicle) {
+            vehicle.fuelName = "power";
+            info.fuelItems = null;
+            info.fuelMap = null;
+                    
+            x = new Xml();
+            x.nodeName = "fuelStorage";
+            info.xml.second.xml.addChild(x);
+            for (fXml in info.xml.second.elementsNamed('fuel')) {
+                x.addChild(fXml);
+            }
+        }     
+        
+        function loadOriginalFuel(info, vehicle) {
+            vehicle.fuelName = "fuel";
+            fsXml = info.xml.second.elementsNamed('fuelStorage').next();
+            if (fsXml != null) {
+                for (fXml in fsXml.elementsNamed('fuel')) {
+                    info.xml.second.xml.addChild(fXml);
+                }
+            }
+            info.xml.second.xml.removeChild(fsXml);
+        }
+        
+        function storeFuel(event) {
+            // if any equipment has storeFuel
+            veh = event.target;
+            for(eSlot in veh.equipment.iterator()) {
+                eItem = eSlot.get();
+                if (eItem != null && eItem.info.xml.elementsNamed('storeFuel').next() != null) {
+                    eItem.value = eItem.info.getDurability() - veh.fuel;
+                }
+            }
+        }
+    </action>
+    
+    <!-- Vehicle Upgrade Framework Equipment -->
+    <item id="vufb_z_equip">
+        <onEquip>
+            <action>
+                if (player.vehicle == null) {
+                    trace('WARNING! EQUIPPING VUFB ITEMS ON NON-PLAYER VEHICLES IS NOT SUPPORTED!');
+                    return;
+                }
+                
+                changeOnEquip(this.info, player);
+                
+                if (this.info.xml.elementsNamed("storeFuel").next() != null) {
+                    player.vehicle.fuel = this.info.getDurability() - this.value;
+                }
+
+                if (this.info.xml.elementsNamed("clearFuel").next() != null) {
+                    player.vehicle.fuel = 0;
+                }
+                
+                player.vehicle.gui.init();
+            </action>
+            <closeWindows />
+        </onEquip>
+        
+        <onUnequip>
+    		<action>
+                if (player.vehicle == null) {
+                    trace('WARNING! UNEQUIPPING VUFB ITEMS ON NON-PLAYER VEHICLES IS NOT SUPPORTED!');
+                    return;
+                }
+                
+                changeOnUnequip(this.info, player);
+                
+                if (this.info.xml.elementsNamed("clearFuel").next() != null) {
+                    player.vehicle.fuel = 0;
+                }
+                
+                player.vehicle.gui.init();
+            </action>
+            <closeWindows />
+        </onUnequip>
+    </item>
+    
+    <!-- Vehicle Upgrade Framework Vehicle -->
+    <vehicle id="vufb_z_vehicle">
+        <mount>
+            <action>                     
+                xml = this.info.xml;
+                player.vehicle.info.flight_height = xml.exists("flight_height") ? Std.parseInt(xml.get("flight_height")) : null;
+                player.vehicle.info.speedX = Std.parseFloat(xml.get("speed"));
+                player.vehicle.info.speedY = xml.exists("speedY") ? Std.parseFloat(xml.get("speedY")) : player.vehicle.info.speedX;
+                player.vehicle.info.max_weight.set(xml.exists("max_weight") ? Std.parseInt(xml.get("max_weight")) : 0);
+                player.vehicle.info.fuel = xml.exists("fuel") ? Std.parseInt(xml.get("fuel")) : 0;
+
+                player.vehicle.info.repairItems = [];
+                player.vehicle.info.repairMap = new Xml().attributeMap;
+                for (repChange in xml.elementsNamed("repair")) {
+                    addRepair(player.vehicle.info, repChange);
+                }
+                
+                loadOriginalFuel(player.vehicle.info, player.vehicle);
+                player.vehicle.info.fuelItems = [];
+                player.vehicle.info.fuelMap = new Xml().attributeMap;
+                for (fChange in xml.elementsNamed("fuel")) {
+                    addFuel(player.vehicle.info, fChange);
+                }               
+                
+                if (player.vehicle.info.xml.elementsNamed("hideFuel").next() != null) {
+                    player.vehicle.info.fuelItems = [];        
+                    player.vehicle.info.fuelMap = new Xml().attributeMap;            
+                }
+                
+                if (player.vehicle.info.xml.elementsNamed("electric").next() != null) {
+                    setElectric(player.vehicle.info, player.vehicle);                    
+                }
+                
+                for (slot in player.vehicle.equipment.iterator()) {
+                    if (slot.get() != null) {
+                        changeOnEquip(slot.get().info, player);
+                    }
+                }
+                
+                player.vehicle.removeEventListener("update_fuel", storeFuel);
+                player.vehicle.addEventListener("update_fuel", storeFuel);
+            </action>
+        </mount>
+    </vehicle>
+</gASK>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<lang id="en_US">
+	<section id="item.names">
+		<text id="alloy_envelope">High-Altitude Envelope</text>
+        <text id="steel_envelope">Rigid Envelope</text>
+        <text id="plastic_sheet">Plastic Sheet</text>
+        <text id="nuke_engine">Nuclear Engine</text>
+        <text id="coal_engine">Steam Engine</text>
+        <text id="electric_engine">Electric Engine</text>
+	</section>
+	<section id="vehicle">
+		<text id="zeppelin">Zeppelin</text>
+	</section>
+	<section id="equipment">
+		<text id="envelope">Envelope:</text>
+	</section>
+    <section id="actions">
+        <text id="consume">Consume</text>
+    </section>
+    <section id="item.descriptions">
+        <text id="steel_envelope">Capacity: +1000</text>
+        <text id="alloy_envelope">Capacity: +2000</text>
+        <text id="coal_engine">Capacity: +500\nSpeed: 3\nPowered by coal or wood.</text>
+        <text id="electric_engine">Capacity: -500\nSpeed: 4\nPowered by electricity.</text>
+        <text id="nuke_engine">Capacity: +1000\nSpeed: 5\nVert. Speed: 2\nPowered by uranium.</text>
+    </section>
+    <section id="mechanic">
+      <text id="build_airship1">Hey, what is that bulge in your backpack?</text>
+      <text id="build_airship2">What is this? A [item=helium_sac] from a [color=770000][tile=skyfish] Skyfish[/color] you say? It seems to be lighter then air!</text>
+      <text id="build_airship3">If you bring me some more [item=helium_sac]s, I might be able to create something useful from them. Like an airship!</text>
+      <text id="build_airship4">You got the [item=helium_sac]s? Excellent! We need to go to the factory immidiately!</text>  
+      <text id="build_airship5">There, all done! Why don't you take your new [object=zeppelin] for a test flight?</text>
+      <text id="build_airship6">I already have some ideas how to improve this design, so be sure to check the [color=ff2222]Factory[/color] for some improvements.</text>
+      <text id="build_airship_cave">There, all done! Why don't you take your new [object=zeppelin] for [pause=4]...Oh!</text>
+      <text id="build_airship_cave2">I did not realize an airship in a cave is not very useful. Well, at least it can serve as a nice decoration, eh?</text>
+    </section>
+    <section id="quests">
+        <text id="airship">Build a Zeppelin</text>
+    </section>
+    <section id="quest.description">
+        <text id="airship">wants to build a [object=zeppelin].</text>
+    </section>
+</lang>

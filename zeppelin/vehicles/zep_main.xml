@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<tilesheet id='zeppelin.png' width='74' height='42'>
+	   <image frame='0' x='0' y='0' width='74' height='42' offsetX='0' offsetY='0' />
+    </tilesheet> 
+    
+	<tile id="zeppelin" sheet="zeppelin.png" x="0" y="0" />
+    
+    <object id="zeppelin_fake" tile="zeppelin" />
+        
+	<tilesheet id="zep_rail.png" width="15" height="12" />        
+	<tile id="zep_rail" sheet="zep_rail.png" offsetX="32" offsetY="28" />
+                                                                      
+    <tilesheet id="zeppelin_steel.png" width="72" height="30" />
+    
+    <tilesheet id="zeppelin_alloy.png" width="80" height="35" />
+    
+    <tilesheet id="zeppelin_coal.png" width="32" height="11" />
+    
+    <tilesheet id="zeppelin_ele.png" width="32" height="11" />
+    
+    <tilesheet id="zeppelin_nuke.png" width="27" height="9" />
+    
+    <tile id="steel_envelope" sheet="zeppelin_steel.png" x="0" offsetX='-1' offsetY='-6' />
+    <tile id="alloy_envelope" sheet="zeppelin_alloy.png" x="0" offsetY="-9" />
+    <tile id="coal_engine" sheet="zeppelin_coal.png" x="0" offsetY="15" offsetX="-18" />
+    <tile id="electric_engine" sheet="zeppelin_ele.png" x="0" offsetY="15" offsetX="-18" />
+    <tile id="nuke_engine" sheet="zeppelin_nuke.png" x="0" offsetY="15" offsetX="-18" />
+    
+	<animation id="equipment.steel_envelope.idle" x="0" count="1" />
+    <animation id="equipment.alloy_envelope.idle" x="0" count="1" />
+    
+    <animation id="equipment.coal_engine.idle" x="1" count="5" length="2" />
+    <animation id="equipment.nuke_engine.idle" x="0" count="10" length="1" />
+    <animation id="equipment.electric_engine.idle" x="1" count="6" length="2" />
+    
+	<animation id="zeppelin.empty" x="0" count="1" />
+	<animation id="zeppelin.mount" x="0" count="1" />
+	<animation id="zeppelin.dismount" x="0" count="1" />
+	<animation id="zeppelin.idle" x="0" count="1" />
+	<animation id="zeppelin.fly" x="0" count="1" />
+	<animation id="zeppelin.hover" x="0" count="1" />
+	<animation id="zeppelin.takeoff" x="0" count="1" />
+	<animation id="zeppelin.land" x="0" count="1"/>
+	<vehicle id="zeppelin" tile="zeppelin" health="500" defense="2" speed="1" speedY="1" type="flying" 
+             title="vehicle.zeppelin" fuel="0" underground="false" flight_height="13" stamina="false" max_weight="1000" death_sfx="rock_door"
+             extends="vufb_z_vehicle">
+		<player x="37" y="32" />
+		<repair id="cloth" value="50" />
+		<slot id="envelope" /><slot id="engine" />
+		<tile id="zep_rail" />
+	</vehicle>
+</data>

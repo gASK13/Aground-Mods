@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<tilesheet id="items.png" width="16" height="10" />
+	<tile id="silk_net.ico" sheet="items.png" x="0" />
+    <tile id="stun_trap.ico" sheet="items.png" x="9" />
+    <animation id="stun_trap" x="-8" count="4" />
+    <animation id="stun_trap.capture" x="-8" count="4" />
+   
+    <tile id="stun_rune.ico" sheet="items.png" x="10" />
+    <animation id="stun_rune" x="-5" count="4" />
+    <animation id="stun_rune.capture" x="-5" count="4" />
+    
+    <item id="silk_net" type="object" cost="100" weight="1" icon="silk_net.ico" action="place" object="trap" capture="4" />
+    <item id="stun_trap" type="object" cost="150" weight="2" icon="stun_trap.ico" underwater="true" floating="true" animation="stun_trap" action="place" object="trap" capture="8" />
+    <item id="stun_rune" type="object" cost="0" weight="2" icon="stun_rune.ico" animation="stun_rune" action="place" object="trap" capture="8" />
+    
+    <recipe id="make_silk_net" creates="silk_net">
+        <type id="factory" />
+        <type id="dock" />
+        <item id="net" count="1" />
+		<item id="silk" count="2" />
+	</recipe>
+    
+    <recipe id="make_stun_trap" creates="stun_trap" type="factory">
+        <item id="net" count="1" />
+		<item id="battery" count="1" />
+        <item id="iron" count="1" />
+	</recipe>
+    
+    <recipe id="make_stun_rune" creates="stun_rune" type="enchantments">
+        <item id="net" count="1" />
+		<item id="blood_gem" count="1" />
+        <item id="focus_gem" count="1" />
+	</recipe>
+</data>

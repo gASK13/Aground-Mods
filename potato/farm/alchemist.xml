@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<npcs>
+	<npc id="alchemist" extends="alchemist">
+		<operate>			
+				<section if="getFlag('farmer_seen_potato') && !player.hasQuest('vodka') && player.questComplete('wyrm_hive')">
+					<dialogue section="alchemist" id="potato1" speaker='this' />
+                    <dialogue section="alchemist" id="potato2" speaker='this' />
+                    <dialogue section="alchemist" id="potato3" speaker='this' />
+                    <quest id="vodka" />
+					<dialogue section="alchemist" id="potato4" speaker='this' />
+				</section>
+                <section if="player.hasQuest('vodka') && player.canCompleteQuest('vodka')">
+                    <dialogue section="alchemist" id="potato_f1" speaker='this' />
+                    <dialogue section="alchemist" id="potato_f2" speaker='this' />
+                    <complete quest="vodka" />
+           			<section with="fade">
+			            <dialogue section="alchemist" id="potato_f3" speaker='this' />
+                        <section with="fade">
+			                <dialogue section="alchemist" id="potato_f4" speaker='this' />
+                            <item id="vodka" />
+                            <dialogue section="alchemist" id="potato_f5" speaker='this' />
+                        </section>
+                    </section>
+                </section>
+		</operate>
+	</npc>
+    
+    <npc id="alchemist_magic" extends="alchemist_magic">
+        <operate>			
+				<section if="getFlag('farmer_seen_potato') && !player.hasQuest('vodka') && player.questComplete('wyrm_hive')">
+					<dialogue section="alchemist" id="potato1" speaker='this' />
+                    <dialogue section="alchemist" id="potato2" speaker='this' />
+                    <dialogue section="alchemist" id="potato3" speaker='this' />
+                    <quest id="vodka" />
+					<dialogue section="alchemist" id="potato4" speaker='this' />
+				</section>
+                <section if="player.hasQuest('vodka') && player.canCompleteQuest('vodka')">
+                    <dialogue section="alchemist" id="come_to_lab" speaker='this' />
+                </section>
+		</operate>
+    </npc>
+             
+    <quest id="vodka" giver="alchemist" exp="1000" recipe="vodka">
+    </quest>
+
+</npcs>

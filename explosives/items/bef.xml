@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+    <!-- B.E.F. or BOMB EXLOSION FRAMEWORK -->
+    <action>
+        // Global variables used for BOMBS!
+        bombs = new Array();
+        
+        // This one mines the area and collects items to damage later
+        function explode(x, y, area, player, resultList) {
+            if (!area.isEmptyTile(x, y) && area.getTileString(x,y) != 'blackstone' &&
+                area.getTileString(x,y) != 'bedrock') {
+                ore = area.mine(x, y, area.getBaseTile(x, y));
+                if (ore != null && (Item.get(ore).type.id == 'resource' || Item.get(ore).type.id == 'potion')) { player.addItem(ore); }
+            }
+            
+            iter = area.getObjectsInTile(x,  y);
+            while(iter.hasNext()) {
+                o = iter.next();
+                // Hacky way of doing "set" and having each item just once
+                resultList.remove(o);
+                resultList.push(o);
+            }
+        };
+        
+        // This one damages all stuff found by the partial explosions
+        function damageStuff(resultList, player, area, damage, element) {
+            for(o in resultList) {
+                if (o.info.xml.nodeName() == 'player' || o.info.xml.nodeName() == 'enemy' || o.info.xml.nodeName() == 'vehicle') {                    
+                    dmg = o.loseHealth(damage, 0, player, getElement(element), 0, true);                    
+                    
+                    if (o.info.xml.nodeName() == 'enemy') {
+                        player.experience += (dmg * (o.getDefense() + 1));
+                    }
+                }
+                
+                if (o.info.xml.nodeName() == 'tree' || o.info.xml.nodeName() == 'bush') {
+                    o.loseHealth(damage, 0, player, getElement(element), 0, true);
+                }                    
+                
+                if ((o.info.xml.nodeName() == 'object' && o.info.xml.get("spongable") != "true")
+                    ||  (o.info.xml.nodeName() == 'item'))
+                {
+                    if (o.info.xml.get("bomb") != null) {
+                        bombExplosion(o, Item.get(o.info.xml.get("bomb")), o.tile_x, o.tile_y, player, area);
+                    } else {                
+                        area.removeObject(o);
+                    }
+                }                    
+            }                
+        }                  
+        
+        // This is for round explosions
+        function roundExplosion(player, area, bombX, bombY, radius) {
+            resultList = new Array();
+            
+            for(i in (-radius)...(radius + 1)) {
+                for(j in (-radius)...(radius + 1)) {
+                    if (radius >= Math.round(Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2)))) {
+                        explode(bombX + i, bombY + j, area, player, resultList);
+                    }                            
+                }                
+            }                  
+              
+            return resultList;
+        }
+        
+        // This is for horizontal explosions
+        function sidesExplosion(player, area, bombX, bombY, radius) {
+            resultList = new Array();
+            
+            for(i in (-radius)...(radius + 1)) {
+                explode(bombX + i, bombY, area, player, resultList);
+            }                  
+              
+            return resultList;
+        }
+        
+        // This is for general boom!
+        function bombExplosion(bomb, bombTemplate, bombX, bombY, player, area) {
+            if (area.objects.objectList.indexOf(bomb) > -1) {
+                var resultList = null;
+                area.removeObject(bomb);
+                if (bombTemplate.xml.get('bomb_shape') == 'sides') {
+                    resultList = sidesExplosion(player, area, bombX, bombY, Std.parseInt(bombTemplate.xml.get('bomb_radius')));
+                } else {
+                    resultList = roundExplosion(player, area, bombX, bombY, Std.parseInt(bombTemplate.xml.get('bomb_radius')));
+                }
+                
+                damageStuff(resultList, player, area, bombTemplate.xml.get('bomb_damage'), bombTemplate.xml.get('bomb_element'));
+                
+                var eObject = getObject(bombTemplate.xml.get('bomb_explosion'));
+                if (eObject == null) { trace('ERROR! BOMB EXPLOSION OBJECT NOT DEFINED!'); }
+                var eX = ((bombX * Tile.SIZE) + Tile.SIZE / 2) - (eObject.xml.get("width") / 2);
+                var eY = ((bombY * Tile.SIZE) - Tile.SIZE / 2) + (eObject.xml.get("height") / 2);
+                var newExplo = eObject.create(eX, eY);
+                area.addObject(newExplo);
+            }
+        }
+    </action>
+    
+    <item id="bomb_base" cost="0" weight="0" type="tool" bomb_radius="1" bomb_damage="0">
+        <action id="use" name="light_fuse">
+            <choose>
+                <dialogue if="!player.isUnderwater() && !player.isFlying() && this.xml.get('bomb_ground') == 'false'" section="warning" id="bomb_gr" />
+                <dialogue if="player.isUnderwater() && this.xml.get('bomb_underwater') != 'true'" section="warning" id="bomb_uw" />
+                <dialogue if="player.isFlying() && this.xml.get('bomb_flying') != 'true'" section="warning" id="bomb_fl" />
+                <section>                    
+                    <action>                    
+                        player.addItem(this.id, -1);
+                        var bObject = getObject(this.xml.get('bomb_placement'));
+                        if (bObject == null) { trace('ERROR! BOMB PLACEMENT OBJECT NOT DEFINED!'); }
+                        var newBomb = bObject.create(player.tile_x * Tile.SIZE, player.tile_y * Tile.SIZE);
+                        area.addObject(newBomb);
+                        bombs.push({ bomb: newBomb, bombTemplate: this, x: player.tile_x, y: player.tile_y });                          
+                    </action>
+                    <invokeLater seconds="3.7">
+                        <choose>
+                            <section if="area.objects.objectList.indexOf(bombs[0].bomb) > -1">
+                                <action>   
+                                    // Bomb is still in area, destroy stuff!             
+                                    curBomb = bombs.shift();
+                                    bombExplosion(curBomb.bomb, curBomb.bombTemplate, curBomb.x, curBomb.y, player, area);
+                                </action>              
+                            </section>
+                            <section>
+                                <action>
+                                    // Just shift if the bomb is no longer present
+                                    bombs.shift();
+                                </action>
+                            </section>
+                        </choose>         
+                    </invokeLater>
+                </section>
+            </choose>
+        </action>        
+    </item>
+</data>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<npcs>
+	<npc id="mechanic" extends="mechanic">
+		<operate>			
+				<section if="!getFlag('tater_bater') && (player.hasItem('potato'))">
+					<action>setFlag('tater_bater', true)</action>
+					<dialogue section="mechanic" id="potato1" speaker='this' />
+                    <dialogue section="mechanic" id="potato2" speaker='this' />
+                    <dialogue section="mechanic" id="potato3" speaker='this'/>
+                    <item id="potato" count="-1" />
+                    <dialogue section="mechanic" id="potato4" speaker='this'/>
+                    <item id="potato_battery" count="1" />
+                    <dialogue section="mechanic" id="potato5" speaker='this' />
+                    <dialogue section="mechanic" id="potato6" speaker='this' />
+                    <quest id="spud_cannon" />					
+				</section>
+                <section if="getFlag('tater_bater') && !player.hasQuest('spud_cannon')">
+                    <dialogue section="mechanic" id="potato_a1" speaker='this' />
+                    <quest id="spud_cannon" />					
+                </section>
+                <section if="player.hasQuest('spud_cannon') && player.canCompleteQuest('spud_cannon')">
+                    <dialogue section="mechanic" id="potato_f1" speaker='this' />
+                    <complete quest="spud_cannon" />
+           			<sound id="build" />
+            		<section with="fade">
+                        <section if="area.id == 'science1'">
+            		          <move object="player" x="138" />
+                        </section>
+                        <section if="area.id == 'crashed_ship.cave1'">
+            		          <move object="player" x="51" y="19" />
+                        </section>
+            			<move object="this" to="player" />
+            			<item id="spud_cannon" />
+                        <dialogue section="mechanic" id="potato_f2" speaker='this' />
+            		</section>
+                </section>
+		</operate>
+	</npc>
+             
+    <quest id="spud_cannon" giver="mechanic" exp="1000" recipe="spud_cannon">
+    </quest>
+
+</npcs>

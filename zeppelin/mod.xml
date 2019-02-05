@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Zeppelin</name>
+    <description>Adds a zeppelin with a couple of upgrades.</description>
+    <author>gASK</author>
+    <version>2.2.1</version>
+    <init>
+        <include id="vuf.xml" />
+        <include id="vehicles/zep_main.xml" />
+        <include id="lang/languages.xml" />
+        <include id="items/items.xml" />
+        <include id="quest/quests.xml" />
+    </init>
+</mod>
+
+<!-- TODO:
+- MECHANIC ASKS FOR HELIUM SAC quest (if you do not find it before ship part or something)
+- MAGIC upgrades (envelope / engine), including ALCHEMIST quest
+- ENVELOPE defense / HP (need to figure out how to preserve HP % and how to affect defense)
+- SKY PIRATES !!! Maybe one day? A man can dream...arrrr!
+
+FUTURE VERSION:
+- bob in the air (not possible now unless I ditch the railing / equipment)
+
+-->

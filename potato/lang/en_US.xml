@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<lang id="en_US">
+	<section id="item.names">
+		<text id="potato">Potato</text>
+        <text id="potato_seed">Seed Potato</text>
+        <text id="baked_potato">Baked Potato</text>
+        <text id="bangers_mash">Bangers & Mash</text>
+        <text id="potato_stew">Meat Stew</text>
+        <text id="fries">Fries</text>
+        <text id="poutine">Poutine</text>
+        <text id="combo_meal">Combo Meal</text>
+        <text id="potato_battery">Potato Battery</text>
+        <text id="spud_cannon">Spud Cannon</text>
+        <text id="potato_salad">Potato Salad</text>
+        <text id="rotten_potato">Rotten Potato</text>
+        <text id="vodka">Vodka</text>
+	</section>
+    <section id="item.descriptions">
+        <text id="potato">Spud. Tuber. Tater. Earth apple.</text>
+        <text id="potato_seed">This one is ready to be planted.</text>
+        <text id="rotten_potato">So rotten it is almost liquid. Yuck!</text>
+        <text id="vodka">Allows you to talk to spirits. Also pink elephants.</text>
+    </section>
+    <section id="structure">
+		<text id="potato">Potato Field</text>
+    </section>
+    <section id="actions">
+        <text id="p_seed">Seed Potato</text>
+        <text id="make_tater_bater">Make Battery</text>
+        <text id="drink">Drink</text>
+    </section>
+    <section id="quests">
+        <text id="baked_potato">Bake a Potato</text>
+        <text id="vodka">'Spirit' drink</text>
+        <text id="vodka_h">'Spirit' drink</text>
+        <text id="spud_cannon">Spud Cannon</text>
+    </section>
+    <section id="quest.description">
+        <text id="baked_potato">is craving a [item=baked_potato]. Or two.</text>
+        <text id="vodka">can make a drink that will let me see spirits.</text>
+        <text id="vodka_h">can make a drink that will let me see spirits.</text>
+        <text id="spud_cannon">will build me a powerful [item=spud_cannon]!</text>
+    </section>
+    <section id="mechanic">
+        <text id="potato1">Wow, is that a [item=potato]? Haven't seen one since I was a little kid!</text>
+        <text id="potato2">One of the first experiments I did was making a [item=potato_battery] out of one of those.</text>
+        <text id="potato3">Here, let me show you, I should have some wire right here...</text>
+        <text id="potato4">There you go. It is not very powerful, but it can be made anywhere as long as you have a [item=potato] and some spare [item=iron].</text>
+        <text id="potato5">I also made a big [item=spud_cannon] once.</text>
+        <text id="potato6">What do you think? If you bring me some stuff, we can build one together!</text>
+        <text id="potato_a1">Did you change your mind about that [item=spud_cannon]?</text>
+        <text id="potato_f1">You brought everything? Let's meet at the factory then!</text>
+        <text id="potato_f2">All done. Now you can start a real food fight!</text>
+    </section>
+    <section id="farmer">
+        <text id="potato1">Is that a [item=potato]? Where did you get that, man?</text>
+        <text id="potato2">Let me turn it into a [item=potato_seed] so you can plant it.</text>
+        <text id="potato2b">If you need more of those, just come to me and I can help you.</text>
+        <text id="potato3">Oh! You know what? I haven't got a [item=baked_potato] in ages!</text>
+        <text id="b_potato2">Would you be a good sport and fix me one?</text>
+        <text id="b_potato3">...actually, make that two, please!</text>
+        <text id="b_potato_f1">Mmm, this smells delicious! Now excuse me, this is best eaten still hot...</text>
+        <text id="b_potato_f2">Thank you! That was delicious. I got some more potato recipes, so feel free to try them in the kitchen.</text>
+    </section>
+    <section id="alchemist">
+        <text id="potato1">I heard you found a [item=potato] somewhere? Is that true?</text>
+        <text id="potato2">You know, back when I was young, we used to make a drink from them. It allowed me to see spirits for the first time.</text>
+        <text id="potato3">If you help me gather the needed ingredients, I can show you how it's made!</text>
+        <text id="potato4">Great! Come find me at my lab when you have the needed ingredients!</text>
+        <text id="come_to_lab">You got the ingredients? Great! Meet me at my lab and I will prepare the drink.</text>
+        <text id="potato_f1">Ah, I see you've gathered everything.</text>
+        <text id="potato_f2">This will take a while, it involves a lenghty distillation.</text>
+        <text id="potato_f3">Good, now we need to distill it once more.</text>
+        <text id="potato_f4">Here! All done! The drink that will let you see the spirits - [item=vodka]!</text>
+        <text id="potato_f5">I left the recipe in the lab in case you need to make more.</text>
+    </section>
+    <section id="hunter">
+        <text id="potato1">I heard you found a [item=potato] somewhere? Is that true?</text>
+        <text id="potato2">You know, back when I was young, we used to make a drink from them. Some say it allowed them to talk to the spirits of nature.</text>
+        <text id="potato3">If you help me gather the needed ingredients, I can show you how it's made!</text>
+        <text id="potato4">Great! Come find me when you have the needed ingredients!</text>
+        <text id="potato_f1">Ah, I see you've gathered everything.</text>
+        <text id="potato_f2">This will take a while - the process involves a lenghty distillation and extraction.</text>
+        <text id="potato_f4">Here! The [item=vodka] is done! Don't be disappointed if the drink does nothing - the talk about spirits was probably just a fairy tale.</text>
+        <text id="potato_f5">If you have access to a lab, you can easily make more there.</text>
+    </section>
+    <section id="object.tooltip">
+		<text id="wild_potato">Dig Wild Potato</text>
+	</section>
+    <section id="achievement.names">
+		<text id="fries_with_that">Extra Fries!</text>
+    </section>
+    <section id="achievement.descriptions">
+		<text id="fries_with_that">Cook the [color=ff2222]Combo Meal[/color].</text>
+    </section>
+    <section id="common">
+        <text id="potatos">Potatos</text>
+        <text id="load_potatos">Load Potatos</text>
+    </section>
+    <section id="warning">
+        <text id="max_potatos">Cannot fit any more potatos in there!</text>
+        <text id="sees_spirits">I do not want to drink any more [item=vodka], I can already see the spirits!</text>
+        <text id="iron_needed">You need some [item=iron] to make a [item=potato_battery]!</text>
+        <text id="not_known_bater">I remember you can make a battery out of a potato, but I do not know how. I should ask somebody more technical...</text>
+    </section>
+</lang>                                              

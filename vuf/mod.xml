@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>VUF</name>
+    <description>Vehicle Upgrade Framework. A basis for future mods.</description>
+    <author>gASK</author>
+    <version>1.1.0</version>
+    <init>
+        <include id="vuf.xml" />
+    </init>
+</mod>

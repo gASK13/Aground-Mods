@@ -1,0 +1,169 @@
+    <?xml version="1.0" encoding="utf-8" ?>
+<data>
+    <!-- Since we do not have Save-persistent maps or arrays, this is my way
+         of saving the cargo - move it into a hidden secret AREA and save the index into the winch name. 
+         
+         Terra, if you're reading this - allow me to use maps and persist custom objects (wheter structs or arrays or maps
+         I don't really care :) -->   
+
+
+    <area id="winch_storage" height = "1" width="255">
+    </area>
+    
+    <action>
+        // Save into our AREA storage
+        function saveVehicleToStorage(player, vehicle) {
+            w_area = player.areas.get("winch_storage");
+            for(i in 1...255) {
+                
+                if (getVehicleFromStorage(player, i) == null) {
+                    // found an empty one!
+                    w_area.addObject(vehicle);
+                    vehicle.setTile(i, 0);
+                    return i;
+                }
+            }
+        }
+        
+        // Gets vehicles from storage at certain index or null
+        function getVehicleFromStorage(player, storIdx) {
+            w_area = player.areas.get("winch_storage");
+            for (o in player.areas.get("winch_storage").objects.objectList) {
+                if (o.tile_x == storIdx) { return o; }
+            }
+            return null;
+        }
+        
+        // Remove vehicle from storage area, including its removal from area
+        function removeVehicleFromStorage(player, vehicle) {               
+            if (vehicle != null) {
+                player.areas.get("winch_storage").removeObject(vehicle);
+            }
+        }
+        
+        // Load Vehicle from AREA into VEHICLE and change icon of WINCH equipment accordingly
+        function loadVehicle(player, area, vehicle, winch) {
+            area.getObjects(vehicle.getBounds(), function(r,o) { checkObject(o, player, area, vehicle, winch); }, null, 0);
+            return winch.name.name != null;          
+        }
+        
+        // Unload vehicle into AREA from VEHICLE and update WINCH icon / name accordingly
+        // Also checks if GROUND / WATER based
+        function unloadVehicle(player, area, vehicle, winch) {
+            o = getVehicleFromStorage(player, getStorageIndexFromName(winch)); 
+            properY = vehicle.tile_y + 1;
+            if (o.info.type == 'com.davidmaletz.mining.world.vehicle.Submarine' || o.info.type == 'com.davidmaletz.mining.world.vehicle.Boat') {
+                //check water
+                properY = findWater(area, vehicle.tile_x, vehicle.tile_y, vehicle.tile_y + 5);
+                if (properY == null) { runProcedure('detach_water'); return false; }
+                if (o.info.type == 'com.davidmaletz.mining.world.vehicle.Submarine') { properY = properY + 1; } // sub belongs underwater
+            } else {
+                //check ground
+                properY = findGround(area, vehicle.tile_x, vehicle.tile_y, vehicle.tile_y + 5);
+                if (properY == null) { runProcedure('detach_ground'); return false; }
+            }
+            
+            removeVehicleFromStorage(player, o);
+            o.setTile(vehicle.tile_x, properY);
+            area.addObject(o);
+            winch.setName(null);
+            return true;
+        }
+        
+        // Find highest ground tile (divide between empty and non-empty tiles)
+        function findGround(area, x, startY, endY) {
+            for(curY in startY...endY) {
+                if (area.isEmptyTile(x, curY) && !area.isEmptyTile(x, curY + 1)) {
+                    return curY;
+                }
+            }
+            return null;
+        }
+        
+        // Find highest open-water tile
+        function findWater(area, x, startY, endY) {
+            for(curY in startY...endY) {
+                if (area.isOpenWater(x, curY + 1)) {
+                    return curY;
+                }
+            }
+            return null;
+        }
+        
+        function getStorageIndexFromName(winch) {
+            if(winch.name.name != null) {
+                return Std.parseInt(winch.name.name.split(",")[0]);
+            } 
+            return null;
+        }            
+        
+        // Checks object - if it is a loadable vehicle, it loads it into VEHICLE and changes WINCH icon and name
+        function checkObject(o, player, area, vehicle, winch) {
+            if (o.info != null && o != vehicle && o.info.xml != null && o.info.xml.nodeName() == 'vehicle'
+                && o.info.xml.get("loadable") != "false") {
+                area.removeObject(o);
+                saveIdx = saveVehicleToStorage(player, o);
+                tile = getTile(o.info.getDisplayTile());
+                if (tile == null) { tile = getTile(winch.info.getDisplayTile()); }
+                name = getText(o.info.getDisplayId()); 
+                if (name == null) { name = getText("common.vehicle"); }                    
+                winch.setName(saveIdx + ',t' + tile.id + ",pwinch&" + name.get());
+                return true;
+            }
+            return false;
+        }
+
+        function dismantleVehicleCarryall(player, vehicle, winch) {
+            veh = getVehicleFromStorage(player, getStorageIndexFromName(winch));
+            itemIter = veh.inventory.items.keys();                 
+            recIter = Recipe.getAll();
+            found = false;
+            while(recIter.hasNext()) {
+              rec = recIter.next();
+              if (rec.object != null && rec.object.id == veh.info.id) {
+                  for(req in rec.requires) {
+                      vehicle.inventory.addItems(Item.get(req.id), Math.ceil(req.count/2), 0, null);
+                      found = true;                          
+                  }
+                  break;
+              }
+            }
+            
+            trace(found);
+            
+            if (!found) { 
+                runProcedure("spanner.no_recipe");
+                return false; 
+            }
+                      
+            while(itemIter.hasNext()) {
+                key = itemIter.next();
+                vehicle.inventory.addItems(Item.get(key), veh.inventory.items.get(key).count, 0, null);
+            }
+            
+            for(slot in veh.equipment.slots) {
+                if (slot.get() != null && slot.get().info.xml.get("unequip") != "false") {
+                    vehicle.inventory.addItems(Item.get(slot.get().info.id), 1, 0, null);
+                }
+            }                                
+                                   
+            removeVehicleFromStorage(player, veh);
+            winch.setName(null);
+            
+            return true;                
+        }
+    </action>
+    
+    <procedure id="spanner.no_recipe">
+        <dialogue section="warning" id="no_recipe" />
+    </procedure>
+    
+    <procedure id="detach_ground">
+        <dialogue section="warning" id="detach_ground" />
+    </procedure>
+    
+    <procedure id="detach_water">
+        <dialogue section="warning" id="detach_water" />
+    </procedure>
+</data>
+

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<tilesheet id="items.png" width="16" height="10" />
+	<tile id="alloy_envelope.ico" sheet="items.png" x="0" />
+    <tile id="steel_envelope.ico" sheet="items.png" x="2" />
+    <tile id="steel_envelope_a.ico" sheet="items.png" x="2" />
+    <tile id="plastic_sheet.ico" sheet="items.png" x="3" />
+    <tile id="nuke_engine.ico" sheet="items.png" x="4" />
+    <tile id="coal_engine.ico" sheet="items.png" x="5" />
+	<tile id="zeppelin.ico" sheet="items.png" x="1" />	
+    <tile id="coal_engine_a.ico" sheet="items.png" x="5" />
+	<tile id="zeppelin_a.ico" sheet="items.png" x="1" />
+    <tile id="electric_engine.ico" sheet="items.png" x="6" />
+    <animation id="electric_engine" count="4" length="2" />		
+
+    <item id="nuke_engine" type="equipment" slot="engine" equipOn="zeppelin" cost="3000" weight="100" efficiency="0.5" icon="nuke_engine.ico" group="revolver"
+    extends="vufb_z_equip" durability="10000" durabilityName="common.fuel" breakable="false">
+        <statChange id="max_weight" value="1000" />
+        <statChange id="fuel" value="10000" />
+        <statChange id="speed" value="4" />
+        <statChange id="speedY" value="1" />
+        <fuelChange id="uranium" fuel="2500" />
+        <storeFuel />        
+    </item>	
+    
+    <item id="coal_engine" type="equipment" slot="engine" equipOn="zeppelin" cost="800" weight="50" icon="coal_engine.ico" efficiency="0.1" group="revolver"
+    extends="vufb_z_equip" durability="500" durabilityName="common.fuel" breakable="false">
+        <statChange id="max_weight" value="500" />
+        <statChange id="fuel" value="500" />
+        <statChange id="speed" value="2" />
+        <fuelChange type="fuel" />     
+        <storeFuel />   
+    </item>	
+    
+    <item id="electric_engine" type="equipment" slot="engine" equipOn="zeppelin" cost="1000" weight="40" icon="electric_engine.ico" animation="electric_engine" efficiency="1" group="revolver"
+    extends="vufb_z_equip" durability="5000" storage="power">
+        <statChange id="max_weight" value="-500" />
+        <statChange id="fuel" value="5000" />
+        <statChange id="speed" value="3" />
+        <electric />
+        <storeFuel />   
+    </item>	
+    
+	<item id="alloy_envelope" type="equipment" slot="envelope" equipOn="zeppelin" cost="1500" weight="20" icon="alloy_envelope.ico" group="revolver" flight_height="39" extends="vufb_z_equip">
+        <statChange id="max_weight" value="2000" />
+        <repairChange id="plastic_sheet" value="100" />        
+    </item>
+    
+    <item id="plastic_sheet" type="resource" cost="200" weight="5" icon="plastic_sheet.ico" />
+    <item id="steel_envelope" type="equipment" slot="envelope" equipOn="zeppelin" cost="1000" weight="40" icon="steel_envelope.ico" group="revolver" flight_height="26" extends="vufb_z_equip">
+        <statChange id="max_weight" value="1000" />
+        <repairChange id="silk" value="50" />
+    </item>
+	
+    <recipe id="plastic_sheet" creates="plastic_sheet" type="factory">        
+		<item id="silicon" count="1" />
+        <item id="oil" count="1" />
+	</recipe>
+    <recipe id="alloy_envelope" creates="alloy_envelope">
+        <type id="car_factory" available="player.questComplete('airship')" />
+        <type id="airport" available="player.questComplete('airship')" />        
+		<item id="ship_parts" count="1" />
+        <item id="titanium" count="4" />
+        <item id="plastic_sheet" count="12" />
+        <item id="helium_sac" count="4" />
+	</recipe>
+    <recipe id="steel_envelope" creates="steel_envelope">
+        <type id="factory" available="player.questComplete('airship')" />
+        <type id="airport" available="player.questComplete('airship')" />
+		<item id="steel_bar" count="9" />
+        <item id="silk" count="9" />
+        <item id="helium_sac" count="3" />
+	</recipe>
+    <recipe id="nuke_engine" creates="nuke_engine" value="0">
+        <type id="car_factory" available="player.questComplete('airship')" />
+        <type id="airport" available="player.questComplete('airship')" />        
+		<item id="ship_parts" count="1" />
+        <item id="titanium" count="8" />
+        <item id="uranium" count="2" />
+        <item id="battery" count="4" />
+	</recipe>
+    <recipe id="coal_engine" creates="coal_engine" value="0">
+        <type id="factory" available="player.questComplete('airship')" />
+        <type id="airport" available="player.questComplete('airship')" />
+		<item id="steel_bar" count="8" />
+        <item id="sulfur" count="2" />
+	</recipe>
+    <recipe id="electric_engine" creates="electric_engine" value="0">
+        <type id="factory" available="player.questComplete('airship')" />
+        <type id="airport" available="player.questComplete('airship')" />
+		<item id="steel_bar" count="8" />
+        <item id="battery" count="10" />
+	</recipe>
+	<recipe id="zeppelin" object="zeppelin">
+        <type id="factory" available="player.questComplete('airship')" />
+        <type id="airport" available="player.questComplete('airship')" />
+		<item id="helium_sac" count="5" />
+		<item id="cloth" count="9" />
+		<item id="net" count="9" />
+		<item id="wood" count="9" />
+	</recipe>
+
+</data>

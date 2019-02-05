@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Ore Scanner</name>
+    <description>Allows you to scan the current area for all ores!</description>
+    <author>gASK</author>
+    <version>1.1.0</version>
+    <init>
+        <action>
+            function getOres(area, minePower) {
+                sm = new StringMap();
+                
+                for(x in area.getStartX()...area.getEndX() + 1) {
+                    height = Area.getXML(area.id).get("height");
+                    if (height == null) { height = 100; }
+                    for (y in -80...height + 1) {
+                        mCost = Area.getMineCost(area.getTile(x,y));
+                        oTile = area.getTile(x,y,ORE_LAYER);
+                        if (oTile != null && minePower > mCost) {
+                            sm.set(oTile.getId(), (sm.exists(oTile.getId()) ? sm.get(oTile.getId()) : 0) + 1);
+                        }
+                    }
+                }
+                
+                return sm;
+            }
+        </action>
+        <tilesheet id="scanner.png" width="16" height="10" />
+        <tile id="scanner.ico" sheet="scanner.png" x="0" />
+        <animation id="scanner" tile="scanner.ico" count="13" length="1" />
+        <item id="ore_scanner" animation="scanner" durability="10" durabilityName="common.quartz_crystal" breakable="false" icon="scanner.ico" weight="5" cost="525" type="tool">
+            <action id="use" name="scan_ores">
+                <choose>
+                    <dialogue if="durability <= 0" section="warnings" id="broken_quartz" />
+                    <section>
+                        <action>
+                            setDurability(durability - 1);
+
+                            sm = getOres(area, 9999);
+        
+                            // parse and output
+                            first = true;                    
+                            resultMsg = getText("messages.scan_result_basic").get();
+                            for (result in sm.keys()) {
+                                item = Item.get(result);
+                                if (item == null || item.type.id == 'object') { continue; } 
+                                resultMsg += (first ? "" : ", ") + sm.get(result) + "x[item=" + result + "] "; first = false; 
+                            }
+                            if (first) { resultMsg = getText("messages.no_ore").get(); } // no result
+                            getText("messages.scan_result").set(resultMsg);
+                        </action>
+                        <dialogue section="messages" id="scan_result" />
+                    </section>
+                </choose>
+            </action>
+            <action id="use" name="scan_mineable_ores">
+                <choose>
+                    <dialogue if="durability <= 0" section="warnings" id="broken_quartz" />
+                    <section>
+                        <action>
+                            setDurability(durability - 1);
+
+                            sm = getOres(area, player.getMine());
+                            
+        
+                            // parse and output
+                            first = true;                    
+                            resultMsg = getText("messages.scan_result_basic").get();
+                            for (result in sm.keys()) {
+                                item = Item.get(result);
+                                if (item == null || item.type.id == 'object') { continue; } 
+                                resultMsg += (first ? "" : ", ") + sm.get(result) + "x[item=" + result + "] "; first = false; 
+                            }
+                            if (first) { resultMsg = getText("messages.no_ore").get(); } // no result
+                            getText("messages.scan_result").set(resultMsg);
+                        </action>
+                        <dialogue section="messages" id="scan_result" />
+                    </section>
+                </choose>
+            </action>
+            <action id="use" name="replace_crystal">
+                <choose>
+                    <dialogue if="durability >= 10" section="warnings" id="quartz_full" />
+                    <dialogue if="!player.hasItem('quartz')" section="warnings" id="no_quartz" />
+                    <section>
+                        <item id="quartz" count="-1" />
+                        <action>
+                            setDurability(this.xml.get("durability"));
+                        </action>
+                    </section>
+                </choose>
+            </action>
+        </item>  
+        
+        <recipe id="scanner" creates="ore_scanner" type="factory">
+            <item id="uranium" count="1" />
+            <item id="steel_bar" count="1" />
+            <item id="quartz" count="1" />
+            <item id="silicon" count="2" />
+        </recipe>
+        
+        <lang id="en_US">
+            <section id="item.names">
+                <text id="ore_scanner">Ore Scanner</text>
+            </section>
+            <section id="actions">
+                <text id="scan_ores">Scan Ores</text>
+                <text id="scan_mineable_ores">Scan Mineable Ores</text>
+                <text id="replace_crystal">Replace Crystal</text>
+            </section>
+            <section id="warnings">
+                <text id="no_quartz">You do not have any [item=quartz] crystals!</text>
+                <text id="quartz_full">The [item=quartz] crystal in the [item=ore_scanner] is still completely intact!</text>
+                <text id="broken_quartz">The scan process requires an intact [item=quartz] crystal! The current one is already broken...</text>
+            </section>
+            <section id="messages">
+                <text id="scan_result"></text>                
+                <text id="scan_result_basic">Scan results:</text>
+                <text id="no_ore">There are no ores in the immediate area!</text>
+            </section>
+
+            <section id="item.descriptions">
+                <text id="ore_scanner">Using a [item=quartz] crystal as a resonator, allows you to scan ores in the surrounding area.</text>
+            </section>
+            <section id="common">
+                <text id="quartz_crystal">Quartz Crystal Integrity</text>
+            </section>
+        </lang>
+    </init>
+</mod>
+

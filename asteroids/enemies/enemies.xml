@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+    <!-- DRONES -->
+    <!-- Space Drone Enemy -->
+    <tilesheet id="space_drone_enemy.png" width="40" height="32"/>
+    <tile id="asteroid_miner_drone" sheet="space_drone_enemy.png" offsetY="-6"/>
+    <animation id="asteroid_miner_drone.fire" x="0" count="4"/>
+    <animation id="asteroid_miner_drone.idle" x="4" count="4"/>
+    <animation id="asteroid_miner_drone.walk" x="4" count="4"/>
+    <animation id="asteroid_miner_drone.mine" x="8" count="4"/>
+
+    <enemy id="asteroid_miner_drone" tile="asteroid_miner_drone" health="100" defense="10" type="surface" passEnemies="true" range="40" speed="3" vertical="true" flying="true" death_sfx="explosion">
+      <loot id="titanium" p="2" /><loot id="drone_core" p="1" />
+      <attack type="projectile" animation="fire" damage="15" range="15" cost="0" cooldown="5">
+        <projectile tile="spirit_bolt" animation="spirit_bolt" speed="4" offsetY="4" fire_sfx="laser" color="ff3d00" colorScale="2">
+          <light tile="light.small" color="ff3d00" />
+        </projectile>
+      </attack>
+    </enemy>
+
+    <!-- Plant Drone Enemy -->
+    <tilesheet id="plant_drone_enemy.png" width="40" height="32"/>
+    <tile id="asteroid_plant_drone" sheet="plant_drone_enemy.png"/>
+    <animation id="asteroid_plant_drone.fire" x="0" count="4"/>
+    <animation id="asteroid_plant_drone.idle" x="4" count="4"/>
+    <animation id="asteroid_plant_drone.walk" x="4" count="4"/>
+    <animation id="asteroid_plant_drone.mine" x="8" count="4"/>
+    <enemy id="asteroid_plant_drone" tile="asteroid_plant_drone" health="100" defense="5" type="surface" passEnemies="true" range="40" speed="4" vertical="true" flying="true" death_sfx="explosion">
+        <loot id="plant_eye" p="2" /><loot id="drone_core" p="1" />
+        <attack type="projectile" animation="fire" damage="10" hpSteal="10" range="15" cost="0" cooldown="5">
+          <projectile tile="spirit_bolt" animation="spirit_bolt" speed="4" offsetY="10" fire_sfx="laser" color="25d700" colorScale="2">
+            <light tile="light.small" color="25d700" />
+          </projectile>
+        </attack>
+    </enemy>
+
+    <!-- Time drone enemy -->
+    <tilesheet id="time_drone_enemy.png" width="32" height="32"/>
+    <tile id="time_drone_enemy" sheet="time_drone_enemy.png" x="0"/>
+
+    <animation id="time_drone_enemy.fire" x="5" count="5" length=".3"/>
+    <animation id="time_drone_enemy.idle" x="0" count="5"/>
+    <animation id="time_drone_enemy.walk" x="0" count="5"/>
+    <enemy id="time_drone_enemy" tile="time_drone_enemy" health="100" defense="5" type="surface" passEnemies="true" range="50" speed="12" vertical="true" flying="true" death_sfx="explosion">
+        <loot id="exotic_matter" p="1" /><loot id="drone_core" p="4" />
+        <attack type="projectile" animation="fire" damage="9" range="20" cost="0" >
+          <projectile tile="spirit_bolt" animation="spirit_bolt" speed="4" offsetY="-3" fire_sfx="laser" color="ffcf00" colorScale="2">
+            <light tile="light.small" color="ffcf00" />
+          </projectile>
+        </attack>
+    </enemy>
+
+    <!-- Dragon drone enemy -->
+    <tilesheet id="dragon_drone_enemy.png" width="42" height="32"/>
+    <tile id="dragon_drone_enemy" sheet="dragon_drone_enemy.png" x="0"/>
+
+    <animation id="dragon_drone_enemy.fire" x="0" count="4"/>
+    <animation id="dragon_drone_enemy.idle" x="0" count="4"/>
+    <animation id="dragon_drone_enemy.walk" x="0" count="4"/>
+    <enemy id="dragon_drone_enemy" tile="dragon_drone_enemy" health="200" defense="10" type="surface" passEnemies="true" range="50" speed="4" vertical="true" flying="true" death_sfx="explosion">
+        <loot id="exotic_matter" p="1" /><loot id="drone_core" p="4" />
+        <attack type="projectile" animation="fire" damage="20" range="20" cost="0" cooldown="5">
+          <projectile tile="spirit_bolt" animation="spirit_bolt" speed="4" offsetY="-1" fire_sfx="laser" color="b500ff" colorScale="2">
+            <light tile="light.small" color="b500ff" />
+          </projectile>
+        </attack>
+    </enemy>
+
+    <!-- Space Pirate Ship -->
+    <animation id="enemy.utility_ship.fire" x="0" count="1">
+      <append tile="utility_ship_laser" animation="equipment.utility_ship_laser"/>
+    </animation>
+    <animation id="enemy.utility_ship.idle" x="0" count="1"/>
+    <animation id="enemy.utility_ship.walk" x="0" count="1">
+        <append tile="utility_ship" animation="utility_ship.antigrav" />
+        <append tile="utility_ship" animation="utility_ship.impulse" />
+    </animation>
+
+    <enemy id="enemy.utility_ship" tile="utility_ship" health="150" defense="8" color="B55218" colorScale="1.6" type="surface" range="32" speed="5" vertical="true" flying="true" passEnemies="true" death_sfx="explosion">
+        <loot id="titanium" p="3" /><loot id="exotic_matter" p="1" /><loot id="advanced_tech" p="1" />
+        <attack type="projectile" animation="fire" damage="20" range="15" cost="0" cooldown="25">
+          <projectile tile="utility_laser_bolt" animation="utility_laser_bolt" speed="5" offsetY="4">
+            <hitEffect tile="laser_bolt" animation="laser_bolt.impact" color="ff9999" />
+          </projectile>
+        </attack>
+    </enemy>
+</data>

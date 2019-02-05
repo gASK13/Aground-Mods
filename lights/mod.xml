@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Lights</name>
+    <description>Let there be light!</description>
+    <author>gASK</author>
+    <version>1.1.1</version>
+    <init>
+
+        <!-- TODO:
+                -magic lamp!
+                -turn lights on/off?
+                -fix coal light so it starts instantly on refuel
+                -add other underground lights (coal / torch / magic / battery )
+                -candles, candlesticks and more
+                -nuclear powered lights? IS THIS SAFE??? 
+                - GEOTHERMAL POWERPLANT???
+        -->                    
+        
+        <tile id="cable_v"><tile sheet="tiles.png" x="0" offsetY="3" /></tile>
+        <tilesheet id="items.png" width="16" height="10" />
+	    <tile id="cable_v.ico" sheet="items.png" x="0"/>
+	    <item id="cable_v" type="object" cost="10" weight="1" icon="cable_v.ico" action="place_rail" actionName="place" rail="cable_v" powered="true"
+        vertical="true" />                                                    
+    
+        <action>        
+            areasWithHandlers = [];
+            
+            function handleUpdate(area) {
+                for(ob in area.objects.objects.iterator()) {
+                    if(ob.powerHandler != null) {
+                        updateVerticalCables(area, ob.powerHandler);
+                    }
+                }
+                
+                for(st in area.getStructures()) {
+                    if(st.powerHandler != null) {
+                        updateVerticalCables(area, st.powerHandler);
+                    }
+                }
+            }
+            
+            function updateVerticalCables(area, ph) {            
+                visited = [];
+                area.structures.getObjects(ph.rect, ph.addStructure, function(x,y) { return followVerticalCables(area, ph, x, y, visited); }, 0);               
+            }
+            
+            function followVerticalCables(area, ph, x, y, visited) {
+                toVisit = [{x: x, y: y, vOnly: false}];
+                while (toVisit.length > 0) {
+                    nextVisit = toVisit.pop();
+                    if (visited.indexOf(Utils.getIdx(nextVisit.x, nextVisit.y)) == -1) {
+                        visited.push(Utils.getIdx(nextVisit.x, nextVisit.y));
+                        
+                        p = isPowered(area, nextVisit.x, nextVisit.y);
+                        v = isVerticalCable(area, nextVisit.x, nextVisit.y);
+                        
+                        if (nextVisit.vOnly && !v) { continue; } //skip horizontal cables below us
+                        
+                        if (p) {
+                            // always check sides + down
+                            toVisit.push({x: nextVisit.x + 1, y: nextVisit.y, vOnly: false});
+                            toVisit.push({x: nextVisit.x - 1, y: nextVisit.y, vOnly: false});
+                            toVisit.push({x: nextVisit.x, y: nextVisit.y + 1, vOnly: true});
+                        }
+                        
+                        if (v) {                        
+                            // check up only for VERTICAL cables    
+                            toVisit.push({x: nextVisit.x, y: nextVisit.y - 1, vOnly: false});
+                        }
+                        
+                        if (p || v) {
+                            area.structures.getObjects(makeRect(nextVisit.x * Tile.SIZE, nextVisit.y * Tile.SIZE, Tile.SIZE, Tile.SIZE), ph.addStructure, null, 0);
+                        }
+                    }
+                }
+                
+                return false;
+            }
+            
+            function isPowered(area, x, y) {
+                t = area.getTile(x, y, 1);
+                if (t == null) { return false; }
+                i = Item.get(t.id);
+                return i != null && i.xml.get("powered") == "true";
+            }
+            
+            function isVerticalCable(area, x, y) {
+                t = area.getTile(x, y, 1);
+                if (t == null) { return false; }
+                i = Item.get(t.id);
+                return i != null && i.xml.get("powered") == "true" && i.xml.get("vertical") == "true";
+            }
+        </action>
+        
+        <tilesheet id="light.png" width="16" height="32" />
+        <tile id="light" sheet="light.png" x="0" />      
+        <animation id="light.off.idle" x="0" count="1" />      
+        <animation id="light.off.on" x="0" count="1" />
+        <animation id="light.on.idle" x="0" count="1" />
+        <animation id="light.on.on" x="1" count="1" />
+        
+        <tilesheet id="coal_light.png" width="16" height="32" />
+        <tile id="coal_light" sheet="coal_light.png" x="0" />
+        <animation id="coal_light.off.idle" x="0" count="1" />
+        <animation id="coal_light.off.off" x="0" count="1" />
+        <animation id="coal_light.on" x="1" count="4" />
+        <animation id="coal_light.on.idle" x="1" count="4" />
+        <animation id="coal_light.on.off" x="1" count="4" />
+        
+        <tilesheet id="mine_light.png" width="16" height="16" />
+        <tile id="mine_light" sheet="mine_light.png" x="0" />      
+        <animation id="mine_light.idle" x="0" count="1" />
+        <animation id="mine_light.on" x="1" count="1" />        
+
+        <tilesheet id="light16.png" width="16" height="16" />
+        <tile id="light.tiny" sheet="light16.png" />
+
+        <structure id="light" tile="light" animation="light.off" powered="true" nightAnimation="light.on">            
+            <light tile="light.large" color="fdffad" offsetX="8" offsetY="4" ifAnim="light.on.on" flicker="false" />
+        </structure>
+        
+        <structure id="mine_light" tile="mine_light" animation="mine_light" powered="true">            
+            <light tile="light.large" color="fdffad" offsetX="8" offsetY="4" ifAnim="mine_light.on" flicker="false" />
+            <light tile="light.tiny" color="00ff00" offsetX="1" offsetY="11" ifAnim="mine_light.on" flicker="false" />
+            <light tile="light.tiny" color="ff0000" offsetX="4" offsetY="11" ifAnim="mine_light.idle" flicker="false" />
+        </structure>
+        
+        <structure id="coal_light" tile="coal_light" animation="coal_light.off" type="smelter" openable="true" max_fuel="120"
+            light="true" night_light="coal_light.on">
+            <recipe id="fuel_coal" />            
+            <light tile="light.large" color="ef9411" offsetX="8" offsetY="4" ifAnim="coal_light.on" flicker="true" />            
+        </structure>
+        
+        <!-- On start, start this infinite loop to change light status for non-electric autolights -->
+        <onLoad>
+            <invokeLater seconds="0.1">
+                <action>
+                    //start mineItems checker loop
+                    runProcedure("check_lights");
+                    runProcedure("check_fuel");                        
+                </action>
+            </invokeLater>
+        </onLoad>
+
+        <procedure id="check_lights">
+            <action>
+                if (areasWithHandlers.indexOf(area) == -1) {
+                    area.addEventListener("add_structure", function(e) { handleUpdate(area); }, null, -50);
+                    area.addEventListener("update_cables", function(e) { handleUpdate(area); }, null, -50);
+                    handleUpdate(area);
+                    areasWithHandlers.push(area);
+                }
+                
+                for(sItem in area.getStructures()) {
+                    if(sItem.info.xml.get("light") == "true") {
+                        // is it night?
+                        sItem.updateAnim();
+                        if (sItem.info.xml.get("night_light") != null && isNight() && sItem.fuel > 0) {
+                            sItem.loopAnimation(sItem.info.xml.get("night_light"));
+                        }                        
+                    }
+                }
+            </action>
+            <invokeLater seconds="0.1">
+                <action>runProcedure("check_lights");</action>
+            </invokeLater>
+        </procedure>
+        
+        <procedure id="check_fuel">
+            <action>
+                for(sItem in area.getStructures()) {
+                    if(sItem.info.xml.get("light") == "true") {
+                        sItem.updateAnim();
+                        if (sItem.info.xml.get("night_light") != null && isNight() && sItem.fuel > 0) {
+                            sItem.addFuel(-1);
+                            sItem.loopAnimation(sItem.info.xml.get("night_light"));
+                        }                        
+                    }
+                }
+            </action>
+            <invokeLater seconds="5">
+                <action>runProcedure("check_fuel");</action>
+            </invokeLater>
+        </procedure>
+        
+        <recipe id="craft_cable_v" creates="cable_v" count="6" type="factory">
+            <item id="silicon" count="1" />
+            <item id="iron" count="1" />
+    	</recipe>
+
+        
+        <item id="light_blueprint" type="blueprint" cost="1000" weight="0" icon="blueprint.ico">
+            <action id="build" structure="light">
+                <item id="steel_bar" count="2" />
+                <item id="silicon" count="1" />
+            </action>
+        </item>
+        
+        <item id="mine_light_blueprint" type="blueprint" cost="1000" weight="0" icon="blueprint.ico">
+            <action id="build" structure="mine_light" underground="true">
+                <item id="iron" count="1" />
+                <item id="silicon" count="1" />
+                <item id="battery" count="1" />
+            </action>
+        </item>
+        
+        <item id="coal_light_blueprint" type="blueprint" cost="1000" weight="0" icon="blueprint.ico">
+            <action id="build" structure="coal_light">
+                <item id="iron_bar" count="2" />
+            </action>
+        </item>
+        
+        <npc id="mechanic" extends="mechanic">
+            <operate>
+                <section if="!player.hasItemStorehouse('light_blueprint') && player.questComplete('factory')">
+                    <quest />
+                    <dialogue section="mechanic" id="lights1" speaker="this" />
+					<item id="light_blueprint" />
+                </section>
+            </operate>
+        </npc>
+        
+        <npc id="miner" extends="miner">
+            <operate>
+                <section if="!player.hasItemStorehouse('mine_light_blueprint') && player.questComplete('factory')">
+                    <quest />
+                    <dialogue section="miner" id="lights1" speaker="this" />
+					<item id="mine_light_blueprint" />
+                </section>
+            </operate>
+        </npc>
+        
+        <npc id="builder" extends="builder">
+            <operate>
+                <section if="!player.hasItemStorehouse('coal_light_blueprint') && player.questComplete('smelter')">
+                    <quest />
+                    <dialogue section="builder" id="lights1" speaker="this" />
+                    <item id="coal_light_blueprint" />
+                </section>
+            </operate>
+        </npc>
+                
+        <lang id="en_US">
+            <section id="common">
+                <text id="coal_light">Coal Gas Lamp</text>
+                <text id="light">Electric Lamp</text>
+            </section>
+            <section id="item.names">
+                <text id="coal_light_blueprint">Coal Gas Lamp Blueprint</text>
+                <text id="light_blueprint">Electric Lamp Blueprint</text>
+                <text id="cable_v">Cable (Vertical)</text>
+                <text id="mine_light_blueprint">Mine Light Blueprint</text>
+            </section>
+            <section id="structure.tooltip">
+                <text id="coal_light">Fuel Light</text>
+            </section>
+            <section id="builder">
+                <text id="lights1">It gets dark here during nights. Why don't you build some lights around? I got just the thing for you - with these blueprints, you can build a [color=770000]Coal Gas Lamp[/color] anywhere you need!</text>
+            </section>
+            <section id="mechanic">
+                <text id="lights1">Now that we have power back and everything is in order, you can also build some [color=770000]Electric Lamp[/color]s around town to keep in nicely lit.</text>
+            </section>
+            <section id="miner">
+                <text id="lights1">It can get dark in the mines. Why don't you build some lights? I can show you how to build a [color=770000]Mine Light[/color] while digging!</text>
+            </section>
+        </lang>
+        
+	</init>
+</mod>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Spanner</name>
+    <description>This mod allow you to disassemble any vehicle you can assemble!</description>
+    <author>gASK</author>
+    <version>1.1.2</version>
+    <init>
+    
+        <tilesheet id="items.png" width="16" height="10" />
+        
+        <tile id="spanner.ico" sheet="items.png" x="0" />
+        
+        <action>
+            function dismantleVehicle(veh, player, area) {                 
+                if (veh.info.id == 'fly_adult_dragon') {
+                    runProcedure('spanner.dragon');
+                    return false;    
+                }
+                
+                itemIter = veh.inventory.items.keys();
+                 
+                recIter = Recipe.getAll();
+                found = false;
+                while(recIter.hasNext()) {
+                  rec = recIter.next();
+                  if (rec.object != null && rec.object.id == veh.info.id) {
+                      for(req in rec.requires) {
+                          player.addItem(req.id, Math.ceil(req.count/2));
+                          found = true;                          
+                      }
+                      break;
+                  }
+                }
+                
+                /** This should (ideally) produce a dialogue warning! **/
+                if (!found) { 
+                    runProcedure('spanner.no_recipe');
+                    return false; 
+                }
+                          
+                while(itemIter.hasNext()) {
+                    key = itemIter.next();
+                    player.addItem(key, veh.inventory.items.get(key).count);
+                }
+                
+                for(slot in veh.equipment.slots) {
+                    if (slot.get() != null && slot.get().info.xml.get("unequip") != "false") {
+                        player.addItem(slot.get().info.id, 1);
+                    }
+                }                                
+                                       
+                if (player.vehicle == veh) {
+                    veh.dismount();
+                }   
+                                                                    
+                area.removeObject(veh);                
+            }
+        </action>
+        
+        <procedure id="spanner.no_recipe">
+            <dialogue section="warning" id="no_recipe" />
+        </procedure>
+        
+         <procedure id="spanner.dragon">
+            <dialogue section="warning" id="not_dragon" />
+        </procedure>
+        
+        <item id="spanner"icon="spanner.ico" type="tool" weight="1" cost="0">
+            <action id="use" name="dismantle">
+                <choose>                    
+                    <section if="player.vehicle == null">
+                        <action>
+                            iter = area.getObjectsInTile(player.tile_x, player.tile_y);
+                            while(iter.hasNext()) {
+                                o = iter.next();
+                                if (o.info != null && o.info.xml != null && o.info.xml.nodeName() == 'vehicle') {
+                                    dismantleVehicle(o, player, area);
+                                    break;
+                                }                                
+                            }                            
+                        </action>
+                    </section>                                        
+                    <section>
+                      <closeWindows />
+                      <action>
+                          dismantleVehicle(player.vehicle, player, area);                                                  
+                      </action>
+                    </section>
+                </choose>
+            </action>
+        </item>     
+    
+        <lang id="en_US">
+            <section id="item.names">
+                <text id="spanner">Spanner</text>             
+            </section>
+            <section id="item.descriptions">
+                <text id="spanner">Use this to disassemble any vehicle you can construct. You need to be inside the vehicle, then use this item.</text>            
+            </section>
+            <section id="actions">
+                <text id="dismantle">Dismantle</text>
+            </section>
+            <section id="warning">
+                <text id="not_in_vehicle">You need to use [item=spanner] in vehicle you want to dismantle!</text>
+                <text id="no_recipe">You do not know how to assemble this vehicle so you cannot take it apart!</text>
+                <text id="not_dragon">H-how? How do you propose to do that? To take apart an [item=adult_dragon] with a [item=spanner]?</text>
+            </section>
+        </lang>     
+        
+        <recipe id="spanner" creates="spanner" type="workshop">
+            <item id="steel_bar" count="1" />
+        </recipe>
+   
+	</init>
+</mod>

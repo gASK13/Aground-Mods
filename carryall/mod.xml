@@ -1,0 +1,19 @@
+    <?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Caryall</name>
+    <description>Can we lift it? Yes we can!</description>
+    <author>gASK</author>
+    <version>1.0.3</version>
+    <!--<requires>Full Version</requires>-->
+    <init>
+        <include id="data/haxe.xml" />
+        <include id="data/carryall.xml" />
+        <include id="data/lang.xml" />
+        <!--
+            Nice to have:
+                ~NOTIFICATION ON LOAD / UNLOAD
+                ~ALTERNATIVE VERSION (NO SHIP PARTS)            
+        -->        
+    </init>
+</mod>
+

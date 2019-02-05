@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Bombs!!!</name>
+    <description>Adds a couple of new, explosive items. Dig that pesky rock, blast those pesky enemies!</description>
+    <author>gASK</author>
+    <version>1.1.2</version>
+    <init>
+        <include id="items/bef.xml" />
+        <include id="items/items.xml" />
+        <include id="lang/languages.xml" />
+        <include id="quest/miner.xml" />
+	</init>
+    
+    <!--
+    TODO:
+        - proper mining power on bombs
+        - xp for mining 
+        - saltpeter source (capture fire boar?)             
+    -->
+
+</mod>

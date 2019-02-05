@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<lang id="en_US">
+	<section id="item.names">
+		<text id="bomb_s">Small Bomb</text>
+        <text id="dynamite">Dynamite Stick</text>
+        <text id="shaped_charge">Shaped Charge</text>
+        <text id="water_bomb">Water Mine</text>
+        <text id="helium_bomb">Helium Bomb</text>
+        <text id="saltpetre">Saltpetre</text>
+        <text id="ch_book">Chemistry Textbook</text>
+	</section>
+    <section id="actions">
+        <text id="read">Read</text>
+        <text id="light_fuse">Light Fuse</text>
+    </section>
+    <section id="item.descriptions">
+        <text id="bomb_s">Small explosive device. 
+Destroys tiles and enemies in a one tile radius.</text>
+        <text id="shaped_charge">A shaped charge. 
+Destroys tiles and enemies three tiles away, but just horizontally.</text>
+        <text id="water_bomb">A watertight explosive device. 
+Destroys tiles and enemies in a two tile radius. 
+Works only underwater</text>
+        <text id="helium_bomb">A floating explosive device. 
+Destroys tiles and enemies in a two tile radius.
+Can only be placed into air while flying.</text>
+        <text id="saltpetre">Potassium Nitrate. 
+Glad I did not have to dig through bat guano to get it!</text>
+        <text id="ch_book">A heavy tome listing a lot of useful recipes!</text>
+        <text id="dynamite">Medium explosive device. Destroys tiles and enemies in a two tile radius.</text>
+    </section>
+    <section id="warning">
+        <text id="bomb_uw">This bomb is sadly not waterproof!</text>
+        <text id="bomb_fl">This bomb cannot be placed into thin air!</text>
+        <text id="bomb_gr">This bomb cannot be placed on the ground!</text>
+        <text id="ch_book_read">Orthorhombic crystal structure? Hygroscopic solution? Double displacement reaction? I can't understand a word in this [item=ch_book]!</text>
+    </section>
+    <section id="miner">
+        <text id="ch_get_1">I heard you managed to sail to Sunset Haven. Is it true they have electricity there?</text>
+        <text id="ch_get_2">If we had some explosives, then mining would go much faster.</text>
+        <text id="ch_get_3">I wanted to make some, but my chemistry knowledge is limited. Perhaps someone on Sunset Haven would know more.</text>
+        <text id="ch_get_4">Would you be so kind and ask around for me?</text>
+        <text id="ch_reget_1">Did you change your mind? Will you ask about chemistry on Sunset Haven?</text>
+        <text id="ch_advice_1">Did you have some time to ask around on Sunset Haven if anyone knows some chemistry?</text>
+        <text id="ch_got_1">A [item=ch_book]? That is awesome! Let's take a look...</text>
+        <text id="ch_got_2">It's all in here! The formulas, ratios, everything!</text>
+        <text id="ch_got_3">Now I just need a source of [tile=saltpetre.ico] [color=770000]Potassium Nitrate[/color] and we're all set!</text>
+        <text id="ch_got_4">Oh, sorry, you can just call it [item=saltpetre]. Could you try to find some and bring it to me?</text>
+        <text id="ch_regot_1">Hey, if you're not busy, maybe you could look for some [item=saltpetre] for me now?</text>
+        <text id="ch_s_advice_1">Any luck getting that [item=saltpetre]? I got everything else ready.</text>
+        <text id="ch_final_1">Great! You found it. Here, let me take that and get started.</text>
+        <text id="ch_final_2">Worked like a charm. I was able to turn that [item=saltpetre] into [item=bomb_s]s!</text>
+        <text id="ch_final_3">But be warned - explosives don't discriminate. They will hurt you, enemies, damage vehicles, chop down trees and even break any [item=rail]s, [item=fence]s or [item=cable]s you set up!</text>
+        <text id="ch_final_4">If you need any more explosives made, just come to me and I will make them for you.</text>
+        FOUND SP
+    </section>
+    <section id="mechanic">
+        <text id="give_book_1">You are looking for some chemistry knowledge? I might have just the thing. Wait here please!</text>
+        <text id="give_book_2">Here - we saved a whole box of [item=ch_book]s from the ship! Those should help your friend in his experiemnts!</text>
+        <text id="regive_book_1">You lost the [item=ch_book]? No worries, we have a whole box of them. Just wait here and I'll bring you one more.</text>
+        <text id="regive_book_2">Here you go. Try to not lose this one!</text>
+    </section>
+    <section id="quests">
+        <text id="ch_book_get">Chemistry</text>
+        <text id="saltpetre_get">Making bombs</text>
+    </section>
+    <section id="quest.description">
+        <text id="ch_book_get">wants to learn some advanced chemistry.</text>
+        <text id="saltpetre_get">needs some [item=saltpetre] to start making explosives!</text>
+    </section>
+</lang>

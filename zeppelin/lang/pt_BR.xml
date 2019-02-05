@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<lang id="pt_BR">
+	<section id="item.names">
+		<text id="alloy_envelope">Envelope de voo alto</text>
+        <text id="steel_envelope">Envelope Rigido</text>
+        <text id="plastic_sheet">Placa de plastico</text>
+        <text id="nuke_engine">Engrenagem nuclear</text>
+        <text id="coal_engine">Engrenagem a vapor</text>
+	</section>
+	<section id="vehicle">
+		<text id="zeppelin">Zeppelin</text>
+	</section>
+	<section id="equipment">
+		<text id="envelope">Envelope:</text>
+	</section>
+    <section id="actions">
+        <text id="consume">Consumir</text>
+    </section>
+    <section id="item.descriptions">
+        <text id="steel_envelope">Capacidade: +1000</text>
+        <text id="alloy_envelope">Capacidade: +2000</text>
+        <text id="coal_engine">Capacidade: +500
+Velocidade: 3
+Alimentada por carvão ou madeira.</text>
+        <text id="nuke_engine">Capacidade: +1000
+Velocidade: 4
+Utiliza Uranium.</text>
+    </section>
+    <section id="mechanic">
+      <text id="build_airship1">Ei, oque é isso na sua mochila?</text>
+      <text id="build_airship2">O que é isso? Um [item=helium_sac] de um [color=770000][tile=skyfish] Peixe voador[/color]? Parece ser mais leve do que o ar!</text>
+      <text id="build_airship3">Se você me trouxer mais [item=helium_sac]s, eu talvez consiga fazer algo util deles. Como um [object=zeppelin]!</text>
+      <text id="build_airship4">Você adiquiriu os [item=helium_sac]s? Otimo! Precisamos ir a [color=ff2222]Fabrica[/color] imediatamente!</text>  
+      <text id="build_airship5">Pronto! Por que não testar o seu novo [object=zeppelin]?</text>
+      <text id="build_airship6">Eu ja tenho algumas ideias dee como melhorar esse design, então não se esqueça de de ver a [color=ff2222]Fabrica[/color] para adiquirir melhorias.</text>
+    </section>
+    <section id="quests">
+        <text id="airship">Construir um Zeppelin</text>
+    </section>
+    <section id="quest.description">
+        <text id="airship">Quer construir um [object=zeppelin].</text>
+    </section>
+</lang>

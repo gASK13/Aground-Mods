@@ -1,0 +1,42 @@
+    <?xml version="1.0" encoding="utf-8" ?>
+<data>
+    <lang id="en_US">
+        <section id="item.names"> 
+            <text id="winch">Load Vehicle</text>
+            <text id="workshop">Craft / Repair</text>
+            <text id="living">Cook / Sleep</text>
+        </section>
+        <section id="item.descriptions">
+            <text id="winch">Load a vehicle into storage and then drop it off anywhere else.</text>
+            <text id="workshop">Craft or repair your stuff on the go!</text>
+            <text id="living">Cook some meals or sleep on the road.</text>
+        </section>                
+        <section id="warning">
+            <text id="detach_ground">This vehicle can only be dropped on flat ground!</text>
+            <text id="detach_water">This vehicle can only be dropped into open water!</text>
+            <text id="not_in_air">You cannot do this while in the air!</text>
+            <text id="low_fuel">You do not have enough fuel to last through the night!</text>
+            <text id="no_recipe">You do not know how to assemble this vehicle so you cannot take it apart!</text>
+        </section>
+        <section id="actions">
+            <text id="attach">Load Vehicle</text>
+            <text id="detach">Unload Vehicle</text>
+            <text id="winch_inv">Access Inventory</text>
+            <text id="cook">Cook</text>
+            <text id="sleep">Sleep</text>
+            <text id="dismantle_confirm">Do you really want to dismantle the carried vehicle?</text>
+        </section>
+        <section id="equipment">
+      <text id="winch">Cargo:</text>
+          <text id="workshop">Synthetizer:</text>
+          <text id="living">Living Quarters:</text>
+        </section>
+        <section id="common">
+            <text id="vehicle">Vehicle</text>
+        </section>
+        <section id="vehicle">
+            <text id="carryall">Carryall</text>
+        </section>
+    </lang>
+</data>
+

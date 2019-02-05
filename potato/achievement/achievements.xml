@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<tilesheet id="achievements.png" width="32" height="32" />
+	<achievement id="fries_with_that" sheet="achievements.png" locked="0" unlocked="+1" />
+</data>

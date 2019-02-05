@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+    <!-- SUBVERSION 3.5.0 -->
+    <asteroid_field id="asteroids">
+      <biome id="combo" p="3" />
+      <biome id="exotic" p="2" />
+      <biome id="science" p="4" />
+      <biome id="sparse_science" p="3" />
+      <biome id="magic" p="4" />
+      <biome id="sparse_magic" p="3" />
+      <biome id="debris_field" p="1" />
+      <biome id="crash_site" p="1" force="gh.getFlag('asteroids_found') && !gh.player.hasQuest('find_smastirini')"/>
+      <biome id="pirate_base" p="1" force="gh.player.hasQuest('find_space_pirates') && !gh.player.questComplete('find_space_pirates')"/>
+      <biome id="destroyed_pirate_base" p="1" />
+      <biome id="miner_base" p="1" available="gh.player.questComplete('find_space_pirates')" force="gh.getFlag('visit_miners')"/>
+      <biome id="destroyed_miner_base" p="1"/>
+      <biome id="warped" p="1" />
+      <biome id="enemy_cluster" p="1" />
+      <biome id="empty_space" p="1" />
+    </asteroid_field>
+
+    <asteroid_field id="uamt_asteroids">
+      <biome id="combo" p="1" />
+      <biome id="sparse_science" p="2" />
+      <biome id="sparse_magic" p="2" />
+      <biome id="exotic" p="2" />
+      <biome id="debris_field" p="1" />
+      <biome id="crash_site" p="1" />
+      <biome id="pirate_base" p="1" />
+      <biome id="miner_base" p="1" />
+    </asteroid_field>
+
+    <biome id="standard">
+      <asteroid id="huge" p="1" />
+      <asteroid id="big" p="2" />
+      <asteroid id="medium" p="3" />
+      <asteroid id="small" p="1" />
+    </biome>
+
+    <biome id="combo" spacing="1.5" extends="standard">
+      <ore id="coal" percent="0.03" />
+      <ore id="focus_gem" percent="0.03" />
+      <ore id="gold" percent="0.03" />
+      <ore id="titanium" percent="0.02" />
+      <ore id="uranium" percent="0.02" />
+      <ore id="spirit_gem" percent="0.02" />
+      <ore id="exotic_matter" percent="0.004" />
+      <asteroid id="tiny_ice" p="1" />
+      <asteroid id="tiny_s" p="1" />
+      <exotic type="magic" max="1" percent="0.3" />
+      <exotic type="science" max="1" percent="0.3" />
+      <onLoad>
+        <enemy id="asteroid_miner_drone" count="5" random="2" />
+        <enemy id="asteroid_plant_drone" count="5" random="2" />
+      </onLoad>
+    </biome>
+
+    <biome id="science" spacing="1.7" extends="standard">
+      <ore id="coal" percent="0.035" />
+      <ore id="gold" percent="0.035" />
+      <ore id="titanium" percent="0.03" />
+      <ore id="uranium" percent="0.03" />
+      <asteroid id="small_u" p="1" />
+      <exotic type="science" max="1" percent="0.3" />
+      <onLoad>
+        <enemy id="asteroid_miner_drone" count="8" random="2" />
+      </onLoad>
+    </biome>
+
+    <biome id="magic" spacing="1.7" extends="standard">
+      <ore id="coal" percent="0.035" />
+      <ore id="focus_gem" percent="0.035" />
+      <ore id="spirit_gem" percent="0.03" />
+      <asteroid id="tiny_ice" p="1" />
+      <asteroid id="tiny_magic" p="1" />
+      <exotic type="magic" max="1" percent="0.3" />
+      <onLoad>
+        <enemy id="asteroid_plant_drone" count="4" random="1" />
+        <enemy id="dragon_drone_enemy" count="4" random="1" />
+      </onLoad>
+    </biome>
+
+    <biome id="exotic" spacing="1.2">
+      <ore id="titanium" percent="0.03" />
+      <ore id="uranium" percent="0.03" />
+      <ore id="spirit_gem" percent="0.03" />
+      <ore id="magnegem" percent="0.03" />
+      <ore id="exotic_matter" percent="0.008" />
+      <asteroid id="huge" p="2" />
+      <asteroid id="big" p="2" />
+      <asteroid id="medium" p="2" />
+      <asteroid id="small" p="2" />
+      <exotic type="magic" min="1" max="2" percent="0.3" />
+      <exotic type="science" min="1" max="2" percent="0.3" />
+      <onLoad>
+        <enemy id="dragon_drone_enemy" count="5" random="4" />
+        <enemy id="asteroid_miner_drone" count="5" random="4" />
+        <enemy id="asteroid_plant_drone" count="5" random="4" />
+      </onLoad>
+    </biome>
+
+    <biome id="debris_field">
+      <exotic type="debris" min="2" max="5" percent="0.1" />
+      <onLoad>
+        <enemy id="asteroid_miner_drone" count="8" random="2" />
+      </onLoad>
+    </biome>
+
+    <biome id="crash_site">
+      <exotic type="debris" min="1" max="3" percent="0.1" />
+      <onLoad>
+          <function id="fighter_crash" />
+          <enemy id="asteroid_miner_drone" count="5" random="2" />
+      </onLoad>
+      <onLeave>
+        <action>gh.player.areas.remove('destroyed_fighter.interior')</action>
+      </onLeave>
+    </biome>
+
+    <biome id="empty_space" spacing="5">
+      <onLoad>
+          <section if="gh.getFlag('empty_visit')">
+              <procedure id="empty_visit_next" />
+          </section>
+          <section if="!gh.getFlag('empty_visit')">
+              <procedure id="empty_visit_one" />
+              <setFlag id="empty_visit" value="true" />
+          </section>
+      </onLoad>
+    </biome>
+
+    <procedure id="empty_visit_one">
+        <dialogue section="empty_space" id="first_visit" />
+        <dialogue section="empty_space" id="first_visit2" />
+    </procedure>
+
+    <procedure id="empty_visit_next">
+        <dialogue section="empty_space" id="next_visit" />
+    </procedure>
+
+    <biome id="enemy_cluster" spacing="5">
+      <exotic type="aliens" min="1" max="3" percent="0.4" />
+      <onLoad>
+        <spawner radius="15" step="5" percent="0.25">
+          <enemy id="asteroid_miner_drone" />
+        </spawner>
+        <spawner radius="15" step="5" percent="0.25">
+          <enemy id="asteroid_plant_drone" />
+        </spawner>
+        <spawner radius="15" step="5" percent="0.25">
+          <enemy id="dragon_drone_enemy" />
+        </spawner>
+        <spawner radius="15" step="5" percent="0.25">
+          <enemy id="time_drone_enemy" />
+        </spawner>
+      </onLoad>
+    </biome>
+
+    <biome id="sparse_science" spacing="10">
+        <ore id="coal" percent="0.035" />
+        <ore id="gold" percent="0.035" />
+        <ore id="titanium" percent="0.03" />
+        <ore id="uranium" percent="0.03" />
+        <asteroid id="medium" p="1" />
+        <asteroid id="small" p="2" />
+        <asteroid id="tiny" p="3" />
+        <asteroid id="tiny_ice" p="3" />
+        <onLoad>
+          <enemy id="asteroid_miner_drone" count="4" random="2" />
+        </onLoad>
+    </biome>
+
+    <biome id="sparse_magic" spacing="10">
+        <ore id="coal" percent="0.035" />
+        <ore id="focus_gem" percent="0.035" />
+        <ore id="spirit_gem" percent="0.03" />
+        <asteroid id="medium" p="1" />
+        <asteroid id="small" p="2" />
+        <asteroid id="tiny" p="3" />
+        <asteroid id="tiny_ice" p="3" />
+        <onLoad>
+          <enemy id="asteroid_plant_drone" count="2" random="1" />
+          <enemy id="dragon_drone_enemy" count="2" random="1" />
+        </onLoad>
+    </biome>
+
+    <biome id="pirate_base" spacing="3" extends="standard">
+      <ore id="coal" percent="0.035" />
+      <ore id="gold" percent="0.035" />
+      <ore id="titanium" percent="0.03" />
+      <ore id="uranium" percent="0.03" />
+      <ore id="exotic_matter" percent="0.004" />
+      <onLoad>
+          <function id="pirate_base" />
+          <enemy id="enemy.utility_ship" count="20" random="5" />
+      </onLoad>
+    </biome>
+
+    <biome id="destroyed_pirate_base" spacing="2.5" extends="standard">
+      <ore id="coal" percent="0.035" />
+      <ore id="gold" percent="0.035" />
+      <ore id="titanium" percent="0.03" />
+      <ore id="uranium" percent="0.03" />
+      <ore id="exotic_matter" percent="0.005" />
+      <onLoad>
+          <function id="destroyed_pirate_base" />
+          <enemy id="asteroid_miner_drone" count="10" random="3" />
+      </onLoad>
+    </biome>
+
+    <biome id="miner_base" spacing="2.5" extends="standard">
+      <ore id="coal" percent="0.025" />
+      <ore id="gold" percent="0.025" />
+      <ore id="titanium" percent="0.02" />
+      <ore id="uranium" percent="0.02" />
+      <ore id="magnegem" percent="0.02" />
+      <ore id="exotic_matter" percent="0.001" />
+      <onLoad>
+        <function id="mine_base" />
+        <action>
+          gh.setFlag('visit_miners', false);
+          gh.area.getStructureById('mine_silo').inventory.copyFrom(gh.player.areas.get('mine_silo_sync').getStructureById('storehouse').inventory);
+        </action>
+      </onLoad>
+      <onLeave>
+        <action>gh.player.areas.get('mine_silo_sync').getStructureById('storehouse').inventory.copyFrom(gh.area.getStructureById('mine_silo').inventory);</action>
+      </onLeave>
+    </biome>
+
+    <biome id="destroyed_miner_base" spacing="2" extends="standard">
+      <ore id="coal" percent="0.03" />
+      <ore id="gold" percent="0.03" />
+      <ore id="titanium" percent="0.025" />
+      <ore id="magnegem" percent="0.025" />
+      <ore id="exotic_matter" percent="0.004" />
+      <onLoad>
+          <function id="destroyed_mine_base" />
+          <enemy id="enemy.utility_ship" count="8" random="2" />
+      </onLoad>
+    </biome>
+
+    <biome id="warped" spacing="1.5" >
+      <ore id="exotic_matter" percent="0.0075" />
+      <asteroid id="b_strange" p="1" />
+      <asteroid id="m_strange" p="2" />
+      <asteroid id="s_strange" p="2" />
+      <asteroid id="tiny_ice" p="2" />
+      <onLoad>
+        <enemy id="time_drone_enemy" count="15" random="5" />
+      </onLoad>
+    </biome>
+
+    <asteroid id="huge" size="23" size_var="3" tile="asteroid"/>
+    <asteroid id="big" size="17" size_var="2" tile="asteroid"/>
+    <asteroid id="medium" size="12" extends="big" />
+    <asteroid id="small" size="8" size_var="1" tile="asteroid"/>
+    <asteroid id="tiny" size="4" extends="small" />
+    <asteroid id="tiny_ice" size="4" size_var="1" tile="ice" shape="jagged">
+        <ore id="quartz" percen="0.2" />
+        <ore id="diamond" percent="0.03" />
+    </asteroid>
+    <asteroid id="tiny_magic" size="4" size_var="2" tile="magic1.stone" shape="strange">
+        <ore id="spirit_gem" percen="0.08" />
+        <ore id="blood_gem" percent="0.08" />
+        <ore id="focus_gem" percent="0.16" />
+    </asteroid>
+    <asteroid id="small_u" size="6" size_var="2" tile="asteroid" shape="perfect">
+        <ore id="uranium" percent="0.05" />
+    </asteroid>
+    <asteroid id="tiny_s" size="4" size_var="1" tile="stone" shape="perfect" />
+    <asteroid id="b_strange" shape="strange" extends="big"/>
+    <asteroid id="m_strange" shape="strange" extends="medium"/>
+    <asteroid id="s_strange" shape="strange" extends="small"/>
+
+    <exotic id="titanium_asteroid" type="science" p="20">
+        <asteroid id="e_titanium" />
+    </exotic>
+
+    <exotic id="enemy_fighter" p="5">
+        <type id="science" />
+        <type id="magic" />
+        <type id="aliens" />
+        <enemy id="alien.fighter" />
+    </exotic>
+
+    <exotic id="enemy_scout_squadron" p="5">
+        <type id="science" />
+        <type id="magic" />
+        <type id="aliens" />
+        <enemy id="dragon_drone_enemy" count="4" />
+    </exotic>
+
+    <exotic id="enemy_fighter_squadron" p="5">
+        <type id="science" />
+        <type id="magic" />
+        <type id="aliens" />
+        <spawner radius="15" step="5" percent="0.2">
+          <enemy id="alien.fighter" />
+        </spawner>
+        <enemy id="dragon_drone_enemy" count="2" />
+    </exotic>
+
+    <exotic id="debris_field" p="10">
+        <type id="science" />
+        <type id="debris" />
+        <spawner radius="15" step="3" percent="0.6">
+            <object id="ass_debris1" p="1" />
+            <object id="ass_debris2" p="1" />
+            <object id="ass_debris3" p="1" />
+            <object id="ass_debris4" p="1" />
+            <object id="ass_debris5" p="1" />
+            <object id="ass_debris6" p="1" />
+            <object id="ass_debris7" p="1" />
+        </spawner>
+        <enemy id="asteroid_miner_drone" count="1"/>
+    </exotic>
+
+    <exotic id="wreck" p="5">
+        <type id="science" />
+        <type id="magic" />
+        <type id="debris" />
+        <function id="wreck" />
+    </exotic>
+
+    <exotic id="spirit_gem_asteroid" type="magic" p="10">
+        <asteroid id="e_spirit" />
+    </exotic>
+
+    <exotic id="uranium_asteroid" type="science" p="1">
+        <asteroid id="e_uranium" count="5" />
+    </exotic>
+
+    <action>
+      function replaceStructure(cStructure, nStructure,area){
+        var eStructure = getStructure(nStructure);
+        var wx = cStructure.tile_x;
+        var wy = cStructure.tile_y;
+        area.addStructure(eStructure.create((wx) * Tile.SIZE, (wy) * Tile.SIZE));
+        area.removeStructure(cStructure);
+        trace('looted '+cStructure.info.id);
+      }
+        function wreck(area) {
+            var rad = 8;
+            var wx = Std.random(area.getEndX());
+            var wy = Std.random(getAreaXML(area.id).get('height') - 10) + 10; // avoid setting it too high so the debris will be at edge
+            clearArea(area, wx-(rad*2), wy-3, wx+(rad*2)+1, wy+3);
+            buildFromSeed(area, wx, wy, rad, 'asteroid', [], 'crescent');
+            // place wreck
+            for (num in -1...2) {
+                if (Std.random(2) > 0) { continue; }
+                var eObject = getObject('ship_debris' + (Std.random(4) + 9));
+                area.addObject(eObject.create((wx + num * 5) * Tile.SIZE, (wy-1) * Tile.SIZE));
+            }
+        };
+
+        function fighter_crash(area) {
+            var wx = Std.random(area.getEndX());
+            var wy = Std.random(getAreaXML(area.id).get('height') - 30) + 20;
+            // Clear everything around it and spawn a small debris field
+            clearArea(area, wx - 35, wy - 15, wx + 35, wy + 15);
+            spawnPatternObjects(area, [ { object: "ass_debris1", p: 1 }, { object: "ass_debris2", p: 5 }, {object: "ass_debris3", p: 1}, {object: "ass_debris4", p: 1}, {object: "ass_debris5", p: 1}, {object: "ass_debris6", p: 1}, {object: "ass_debris7", p: 1}], 15, 3, 0.5, wx, wy);
+            area.addStructure(getStructure("destroyed_fighter").create(wx * Tile.SIZE,wy * Tile.SIZE));
+            area.addStructure(getFighterDoor(wx,wy));
+        };
+        function pirate_base(area) {
+            var rad = 8;
+            var wx = Std.random(area.getEndX());
+            var wy = Std.random(getAreaXML(area.id).get('height') - 10) + 10;
+            clearArea(area, wx-(rad*2), wy-3, wx+(rad*2)+1, wy+3);
+            buildFromSeed(area, wx, wy, rad, 'asteroid', [], 'crescent');
+            // place base
+            var eStructure = getStructure('loot_pirate_base');
+            area.addStructure(eStructure.create((wx-2) * Tile.SIZE, (wy-1) * Tile.SIZE));
+        };
+        function destroyed_pirate_base(area) {
+            var rad = 8;
+            var wx = Std.random(area.getEndX());
+            var wy = Std.random(getAreaXML(area.id).get('height') - 10) + 10;
+            clearArea(area, wx-(rad*2), wy-3, wx+(rad*2)+1, wy+3);
+            buildFromSeed(area, wx, wy, rad, 'asteroid', [], 'crescent');
+            // place structure
+            var eStructure = getStructure('loot_destroyed_pirate_base');
+            area.addStructure(eStructure.create((wx-2) * Tile.SIZE, (wy-1) * Tile.SIZE));
+            for (num in -1...2) {
+                if (Std.random(2) > 0) { continue; }
+                var eObject = getObject('ship_debris' + (Std.random(4) + 9));
+                area.addObject(eObject.create((wx + num * 5) * Tile.SIZE, (wy-1) * Tile.SIZE));
+            }
+        };
+        function mine_base(area) {
+            var rad = 8;
+            var wx = Std.random(area.getEndX());
+            var wy = Std.random(getAreaXML(area.id).get('height') - 10) + 10;
+            clearArea(area, wx-(rad*2), wy-3, wx+(rad*2)+1, wy+3);
+            buildFromSeed(area, wx, wy, rad, 'asteroid', [], 'crescent');
+            // place each indivivualy because it wont take compounds
+            var eStructure = getStructure('mine_lab');
+            area.addStructure(eStructure.create((wx-5) * Tile.SIZE, (wy-1) * Tile.SIZE));
+            var eStructure = getStructure('mine_bunker');
+            area.addStructure(eStructure.create((wx-4.5) * Tile.SIZE, (wy-1) * Tile.SIZE));
+            var eStructure = getStructure('mine_silo');
+            area.addStructure(eStructure.create((wx+3) * Tile.SIZE, (wy-1) * Tile.SIZE));
+            spawnPatternObjects(area, [{ object: "space_miner", p: 1 }], 10, 2, 0.16, wx, wy);
+        };
+        function destroyed_mine_base(area) {
+            var rad = 8;
+            var wx = Std.random(area.getEndX());
+            var wy = Std.random(getAreaXML(area.id).get('height') - 10) + 10;
+            clearArea(area, wx-(rad*2), wy-3, wx+(rad*2)+1, wy+3);
+            buildFromSeed(area, wx, wy, rad, 'asteroid', [], 'crescent');
+            // place structure
+            var eStructure = getStructure('loot_destroyed_mine_base');
+            area.addStructure(eStructure.create((wx-2) * Tile.SIZE, (wy-1) * Tile.SIZE));
+            for (num in -1...2) {
+                if (Std.random(2) > 0) { continue; }
+                var eObject = getObject('ship_debris' + (Std.random(4) + 9));
+                area.addObject(eObject.create((wx + num * 5) * Tile.SIZE, (wy-1) * Tile.SIZE));
+            }
+        };
+    </action>
+
+    <asteroid id="e_spirit" size="4" size_var="1" tile="magic1.stone2" shape="strange">
+        <ore id="spirit_gem" percent="0.5" />
+    </asteroid>
+
+    <asteroid id="e_uranium" size="2" size_var="1" tile="stone" shape="perfect">
+        <ore id="uranium" percent="0.5" />
+    </asteroid>
+
+    <asteroid id="e_titanium" size="5" size_var="2" tile="basalt" shape="perfect">
+        <ore id="titanium" percent="0.5" />
+    </asteroid>
+
+  <object id="ass_debris1" extends="metal_debris1"/>
+	<object id="ass_debris2" animation="debris3" tile="metal_debris2" fps="2" action="collect" layer="item" type="spaceship">
+		<operate><action>lootDebris(player);</action><remove object="this" /></operate>
+	</object>
+	<object id="ass_debris3" extends="ass_debris2" tile="metal_debris3" />
+	<object id="ass_debris4" extends="ass_debris2" tile="metal_debris4" />
+	<object id="ass_debris5" extends="ass_debris2" tile="metal_debris5" />
+	<object id="ass_debris6" extends="ass_debris2" tile="metal_debris6" />
+	<object id="ass_debris7" extends="ass_debris2" tile="metal_debris7" />
+
+</data>

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Spellcasting [POC]</name>
+    <description>Basic spellcasting proof of concept with some cool spells!</description>
+    <author>gASK</author>
+    <version>0.3.0</version>
+    <!--
+        - CASTABLE SPELLS (Hast toggle on / off, light)
+        - MANA SHIELD THAT IS "ALWAYS ON"
+        - REBALANCE COSTS AND DAMAGES
+        - MOAR SPELLS!!11!!1!11! 
+            - CAPTURE
+            - LIGHT
+            - STRENGTH
+            - FLIGHT
+            - FIREBALL
+            - EARTH SPIKES
+            - ???
+        - QUESTS + NEW NPC?
+    -->
+    <init>
+    
+        <lang id="en_US">
+            <section id="item.names">
+                <text id="mana_crystal">Mana Crystal</text>
+                <text id="firebolt_scroll">Firebolt</text>
+                <text id="icebolt_scroll">Icebolt</text>
+                <text id="manashield_scroll">Mana Shield</text>
+                <text id="haste_scroll">Haste</text>
+            </section>
+            <section id="item.descriptions">
+                <text id="mana_crystal">A mystic crystal holding your mana reserve.</text>
+                <text id="firebolt_scroll">A small fiery projectile.
+Gains 2 attack, 1 range and enhanced burn for each spell power level.</text>
+                <text id="icebolt_scroll">A small ice projectile.
+Gains 3 attack and increased freeze effect for each spell power level.</text>
+                <text id="manashield_scroll">A protective spell that causes attackers to deplete your mana first.
+Not affected by spell power.</text>
+                <text id="haste_scroll">A temporary boost in speed.
+Spell power makes it more potent and also consume more mana.</text>
+            </section>
+            <section id="stats">
+                <text id="mana_capacity">Max Mana</text>
+                <text id="mana_regen">Mana Regen</text>
+                <text id="spell_power">Spell Power</text>
+            </section>
+            <section id="stat.descriptions">
+                <text id="mana_capacity">Affects your maximum mana.</text>
+                <text id="mana_regen">Increases mana regeneration rate.</text>
+                <text id="spell_power">How powerful your spells are.</text>
+            </section>
+            <section id="warning">
+                <text id="mana">Not enough mana!</text>
+            </section>
+            <section id="common">
+                <text id="mana">Mana</text>
+                <text id="mana_per_hit">Mana per Hit:</text>
+            </section>
+            <section id="actions">
+                <text id="cast">Cast</text>
+            </section>
+        </lang>
+                
+        <skill id="mana_capacity" name="stats.mana_capacity" start_cost="8" cost_per_level="2">
+		      <stat id="mana_capacity" value="20" />
+	    </skill>
+        
+        <skill id="mana_regen" name="stats.mana_regen" start_cost="16" cost_per_level="8">
+		      <stat id="mana_regen" value="1" />
+	    </skill>
+        
+        <skill id="spell_power" name="stats.spell_power" start_cost="50" cost_per_level="25">
+		      <stat id="spell_power" value="1" />
+	    </skill>
+        
+        <action>
+            function adjustSpellsAndMana(player, getVar, setVar) {
+                if (player.getItemCount("mana_crystal") != player.stats.get("mana_capacity").get()) {
+                    player.addItem("mana_crystal", player.stats.get("mana_capacity").get() - player.getItemCount("mana_crystal"));
+                }
+                
+                iter = Item.getAll();
+                while(iter.hasNext()) {
+                    item = iter.next();
+                    if (item.xml.get("spell_power_attack") != null) {
+                        item.attack = Std.parseInt(item.xml.get("attack")) + (player.stats.get("spell_power").get() * Std.parseInt(item.xml.get("spell_power_attack"))); 
+                    }
+                    if (item.xml.get("spell_power_range") != null) {
+                        item.range = Std.parseInt(item.xml.get("range")) + (player.stats.get("spell_power").get() * Std.parseInt(item.xml.get("spell_power_range"))); 
+                    }
+                    if (item.xml.get("spell_power_hit_effect_" + player.stats.get("spell_power").get()) != null) {
+                        item.xml.elementsNamed("projectile").next().set("hitEffect", item.xml.get("spell_power_hit_effect_" + player.stats.get("spell_power").get())); 
+                    } else {
+                        if (item.xml.elementsNamed("projectile") != null && item.xml.elementsNamed("projectile").next() != null) {
+                            item.xml.elementsNamed("projectile").next().set("hitEffect", null);
+                        }
+                    }
+                    
+                    if (item.xml.get("spell_power_drain") != null) {
+                        item.equipCost.storageCost = Std.parseInt(item.xml.elementsNamed("equipCost").next().get("cost")) + player.stats.get("spell_power").get() * Std.parseInt(item.xml.get("spell_power_drain"));
+                    } 
+                    
+                    if (item.xml.get("spell_power_boost") != null) {
+                        adjustStatsBoost(player, item, getVar, setVar);
+                    }
+                }
+            }
+            
+            function adjustStatsBoost(player, info, getVar, setVar) {
+                if (getVar(info.id) != null) {
+                    removeStatsBoost(player, info, getVar, setVar);
+                }
+                setVar(info.id, Std.parseInt(info.xml.get("spell_boost")) + player.stats.get("spell_power").get() * Std.parseInt(info.xml.get("spell_power_boost")));
+                player.stats.get(info.xml.get("spell_stat")).permaBuff(getVar(info.id));
+            }
+            
+            function removeStatsBoost(player, info, getVar, setVar) {
+                player.stats.get(info.xml.get("spell_stat")).permaBuff(-getVar(info.id));
+                setVar(info.id, null);
+            }
+        </action>
+        
+        <onLoad>
+            <invokeLater seconds="0.1">
+                <section if="!getFlag('mana_load')">
+                    <action>
+                        setFlag('mana_load', true);
+                        player.stats.get("mana_capacity").permaBuff(100);
+                        player.stats.get("mana_regen").permaBuff(3);
+                    </action>
+                </section>
+                <action>
+                    adjustSpellsAndMana(player, getVar, setVar);
+                    
+                    runProcedure("recharge_mana");
+                </action>
+            </invokeLater>            
+        </onLoad>
+        
+        <procedure id="recharge_mana">
+            <invokeLater seconds="1">
+                <action>
+                    player.storage.get("mana").addValue(player.stats.get("mana_regen").get());
+                    runProcedure("recharge_mana");
+                </action>
+            </invokeLater>
+        </procedure>
+        
+        <player id="player.ancient" extends="player.ancient" mana="100">        	
+            <stat id="mana_capacity" value="100" />
+            <stat id="mana_regen" />
+            <stat id="spell_power" />
+            <skill id="mana_capacity" maxLevel="10" />
+            <skill id="mana_regen" maxLevel="3" />
+            <skill id="spell_power" maxLevel="3" />
+            <adjustSkills>
+                <action>
+                    adjustSpellsAndMana(player, getVar, setVar);
+                </action>
+            </adjustSkills>
+        </player>
+
+        <tilesheet id="mana_icons.png" widht="16" height="10" />        
+        <tilesheet id="mana_stat.png" width="8" height="8" />
+        <tile id="mana" sheet="mana_stat.png" x="0" />
+        <tile id="stat.mana_capacity" sheet="mana_icons.png" x="0" />
+        <tile id="stat.mana_regen" sheet="mana_icons.png" x="1" />
+        <tile id="stat.spell_power" sheet="mana_icons.png" x="2" />
+        <bar id="mana" tile="mana" color="000077" />
+        
+        <tilesheet id="manashield.png" width="20" height="16" />
+        <tile id="manashield_scroll" sheet="manashield.png" x="0" />
+        <animation id="equipment.manashield_scroll.idle" count="4" />
+        
+        <tile id="haste_scroll" x="0" />
+        <animation id="equipment.haste_scroll.idle" count="1" />
+        
+        <tile id="firebolt_scroll" x="0" />
+        <animation id="equipment.firebolt_scroll" count="4" />
+        <tile id="icebolt_scroll" x="0" />
+        <animation id="equipment.icebolt_scroll" count="4" />
+                
+        <tilesheet id="items.png" width="16" height="10" />
+        <tile id="mana_crystal.ico" sheet="items.png" x="0" />
+        <animation id="mana_crystal" x="0" count="4" />
+        
+        <tile id="firebolt_scroll.ico" sheet="items.png" x="4" />
+        <tile id="manashield_scroll.ico" sheet="items.png" x="5" />
+        <tile id="icebolt_scroll.ico" sheet="items.png" x="6" />
+        <tile id="haste_scroll.ico" sheet="items.png" x="7" />             
+        
+        <item id="mana_crystal" canStore="false" animation="mana_crystal" icon="mana_crystal.ico" type="equipment" cost="0" weight="0" storage="mana" durability="1" />
+        
+        <item id="firebolt_scroll" icon="firebolt_scroll.ico" 
+        type="equipment" slot="weapon" storage="mana" storageCost="15" cost="0" weight="1" attack="3" range="5" element="fire" action="equip"
+        spell_power_attack="2" spell_power_range="1"
+        spell_power_hit_effect_1="fire_sm_dot" spell_power_hit_effect_2="fire_med_dot" spell_power_hit_effect_3="fire_lg_dot">                
+            <projectile tile="fireball_small" animation="fireball_small" speed="3" offsetY="5" fire_sfx="fireball">
+                <light tile="light.small" color="cc5500" />
+            </projectile>            
+        </item>    
+        
+        <hitEffect id="freeze_s" extends="freeze" fps="30" freeze="1" />            
+        <hitEffect id="freeze_m" extends="freeze" fps="30" freeze="2" />
+        <hitEffect id="freeze_l" extends="freeze" fps="30" freeze="4" />
+        <hitEffect id="freeze_xl" extends="freeze" fps="30" freeze="8" />
+        
+        <item id="icebolt_scroll" icon="icebolt_scroll.ico" 
+        type="equipment" slot="weapon" storage="mana" storageCost="15" cost="0" weight="1" attack="2" range="7" element="ice" action="equip"
+        spell_power_attack="3" spell_power_hit_effect_0="freeze_s"
+        spell_power_hit_effect_1="freeze_m" spell_power_hit_effect_2="freeze_l" spell_power_hit_effect_3="freeze_xl">                
+            <projectile tile="fireball_small" animation="fireball_small" color="1199ff" colorScale="2" speed="2" offsetY="5" fire_sfx="fireball">
+                <light tile="light.small" color="0EEDF4" />                           
+            </projectile>            
+        </item>
+                       
+        <item id="manashield_scroll" animation="manashield_scroll" type="equipment" slot="shield" use="block" block="mana" cost="0" weight="1" icon="manashield_scroll.ico" action="equip" movement_walk="walk_lswing">
+        </item>
+        
+        <item id="haste_scroll" type="equipment" slot="shield" cost="0" weight="1" icon="haste_scroll.ico" action="equip"
+            spell_stat="speed" spell_boost="1" spell_power_boost="1" spell_power_drain="2">
+            <equipCost storage="mana" cost="4" />
+            <onEquip>
+                <action>
+                    adjustStatsBoost(player, this.info, getVar, setVar);    
+                </action>
+            </onEquip>
+            <onUnequip>
+                <action>
+                    removeStatsBoost(player, this.info, getVar, setVar);
+                </action>
+            </onUnequip>
+        </item>
+        
+        <recipe id="firebolt_scroll" creates="firebolt_scroll" type="magic_forge">
+            <item id="fire_gem" count="1" />
+        </recipe>
+                                              -
+        <recipe id="icebolt_scroll" creates="icebolt_scroll" type="magic_forge">
+            <item id="ice_gem" count="1" />
+        </recipe>
+        
+        <recipe id="manashield_scroll" creates="manashield_scroll" type="magic_forge">
+            <item id="earth_gem" count="1" />
+            <item id="ice_gem" count="1" />
+        </recipe>
+        
+        <recipe id="haste_scroll" creates="haste_scroll" type="magic_forge">
+            <item id="plant_gem" count="1" />
+            <item id="fire_gem" count="1" />
+        </recipe>
+        
+	</init>
+</mod>

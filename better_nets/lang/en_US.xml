@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<lang id="en_US">
+	<section id="item.names">
+		<text id="silk_net">Silk Net</text>
+        <text id="stun_trap">Electric Net</text>
+        <text id="stun_rune">Sleep Net</text>
+	</section>
+</lang>

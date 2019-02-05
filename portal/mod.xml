@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Storehouse Portal</name>
+    <description>Portable storehouse - store or retrieve items from anywhere!</description>
+    <author>gASK</author>
+    <version>1.0.0</version>
+    <init>
+        <tilesheet id="portal.png" width="16" height="10" />
+        <tile id="portal.ico" sheet="portal.png" x="0" />
+        <animation id="portal_ripple" tile="portal.ico" count="4" length="2" />
+        <item id="portal" animation="portal_ripple" icon="portal.ico" weight="20" cost="0" type="tool">
+          <action id="use" name="open_portal">
+            <choose>
+                <!-- WARN IF NO STORE -->
+                <dialogue if="area.getStructureById('storehouse') == null && area.getStructureById('warehouse') == null" section="warnings" id="no_storage" />
+                <section if="area.getStructureById('storehouse') != null">
+                    <window type="storehouse" inventory="area.getStructureById('storehouse').inventory" title="common.storehouse" />
+                </section>
+                <section if="area.getStructureById('warehouse') != null">
+                    <window type="storehouse" inventory="area.getStructureById('warehouse').inventory" title="common.warehouse" />
+                </section>
+            </choose>
+          </action>
+        </item>  
+        
+        <recipe id="portal" creates="portal" type="factory">
+            <item id="ship_parts" count="1" />
+            <item id="uranium" count="3" />
+            <item id="titanium" count="8" />
+        </recipe>
+        
+        <lang id="en_US">
+            <section id="item.names">
+                <text id="portal">Storehouse Portal</text>
+            </section>
+            <section id="actions">
+                <text id="open_portal">Open Portal</text>
+            </section>
+            <section id="warnings">
+                <text id="no_storage">There is no storage on this island!</text>
+            </section>
+            <section id="item.descriptions">
+                <text id="portal">Allows you to remotely access the current island's storage!</text>
+            </section>
+        </lang>
+    </init>
+</mod>
+

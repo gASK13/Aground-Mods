@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+    <tilesheet id="items.png" width="16" height="10" />
+	<tile id="potato.ico" sheet="items.png" x="0" />
+    <tile id="potato_seed.ico" sheet="items.png" x="1" />
+    <tile id="baked_potato.ico" sheet="items.png" x="2" />
+    <tile id="bangers_mash.ico" sheet="items.png" x="3" />
+    <tile id="potato_stew.ico" sheet="items.png" x="4" />
+    <tile id="fries.ico" sheet="items.png" x="5" />
+    <tile id="poutine.ico" sheet="items.png" x="6" />
+    <tile id="combo_meal.ico" sheet="items.png" x="7" />
+    <tile id="spud_cannon.ico" sheet="items.png" x="8" />
+    <tile id="potato_battery.ico" sheet="items.png" x="9" />
+    <animation id="potato_battery" x="0" count="3" speed="2" />
+    <tile id="potato_salad.ico" sheet="items.png" x="12" />
+    <tile id="rotten_potato.ico" sheet="items.png" x="15" />
+    <tile id="vodka.ico" sheet="items.png" x="13" />
+        
+    <item id="vodka" type="potion" icon="vodka.ico" weight="2" cost="200">
+        <action id="use" name="drink">
+            <choose>
+                <dialogue section="warning" if="player.viewHidden.get()" id="sees_spirits" />
+                <section>
+                    <item id="vodka" count="-1" />
+                    <weather type="fog" alpha="0.25" color="00ff00" dx="0.5" dy="-0.5" id="vodka_g" />
+        			<weather type="fog" alpha="0.25" color="0000ff" dx="-0.5" dy="-0.5" id="vodka_b" />
+        			<weather type="fog" alpha="0.3" color="ff0000" dx="0.5" dy="0.5" id="vodka_r" />
+                    <action>player.viewHidden.set(true); player.overlapChanged();</action>
+                    <invokeLater seconds="30">
+                        <weather clear="vodka_g" />
+                        <weather clear="vodka_b" />
+        			    <weather clear="vodka_r" />
+                        <action>
+                            if(player.equipment.get("head").get() == null 
+                                || player.equipment.get("head").get().info == null
+                                || player.equipment.get("head").get().info.id != 'goggles') {
+                                player.viewHidden.set(false); player.overlapChanged();
+                            }
+                        </action>    
+                    </invokeLater>
+                </section>
+            </choose>
+        </action>        
+    </item>
+        
+    <item id="rotten_potato" type="food" icon="rotten_potato.ico" weight="1" cost="0" health="-25"/>
+    
+    <!-- THE BROKEN / BREAKABLE ATTRIBUTES DO NOTHING NOW, MAYBE LATER? -->
+    <item id="potato_battery" animation="potato_battery" icon="potato_battery.ico" 
+    cost="10" weight="2" durability="50" storage="power" breakable="true" type="tool" 
+    broken="rotten_potato" />
+    
+    <tilesheet id="spud.png" width="22" height="11" />      
+    <tile id="spud_cannon" sheet="spud.png" x="0" offsetX="-6" offsetY="4"/>
+    <animation id="equipment.spud_cannon.idle" x="0" count="1" />
+	<animation id="equipment.spud_cannon" x="1" count="9" />     
+    
+    <tilesheet id="potato.png" width="3" height="3" />
+    <tile id="potato_projectile" sheet="potato.png" x="0" />
+    <animation id="potato_projectile.idle" sheet="potato.png" x="0" count="4" />   
+    
+    <item id="spud_cannon" delay="3" type="equipment" slot="weapon" cost="200" weight="5" stamina="10" range="5" icon="spud_cannon.ico"
+     projectile="potato" movement_walk="walk_rswing">
+        <action id="equip" />
+        <use slot="shield" />        
+    </item>
+    
+    <item id="revolver" type="equipment" slot="weapon" cost="170" weight="4" stamina="1" range="10" icon="revolver.ico" projectile="bullet" sfx="revolver" movement_walk="walk_rswing" arms="revolver.arms">
+		<action id="equip" /><action id="setProjectile" />
+	</item>
+
+    <!-- CHANGE THIS TO FOOD ONCE TERRA FIXES THE CHECK BUG -->
+    <!-- ALSO ONCE ACTIONS ARE CONDITIONALLY HIDABLE, HIDE THE BATTERY MAKING -->
+	<item id="potato" type="equipment" cost="5" weight="1" health="5" icon="potato.ico" group="food" attack="3">
+        <action id="eat" />
+        <action id="use" name="make_tater_bater" if="getFlat('tater_bater')" available="getFlat('tater_bater')">
+            <choose>
+                <dialogue section="warning" if="!getFlag('tater_bater')" id="not_known_bater" />
+				<dialogue section="warning" id="iron_needed" if="!player.hasItem('iron')" />
+				<section>
+                    <item id="potato" count="-1" />
+                    <item id="iron" count="-1" />
+                    <item id="potato_battery" count="1" />            
+                </section>
+			</choose>
+        </action>
+        <projectile tile="potato_projectile" speed="2" knockback="20" animation="potato_projectile.idle" offsetY="3" offsetX="-3" />
+    </item>            	 
+    
+    <item id="baked_potato" type="food" cost="40" weight="1" health="40" icon="baked_potato.ico">
+        <stat id="weight" value="50" time="60" />                  
+    </item>
+                   
+    <item id="bangers_mash" type="food" cost="60" weight="1" health="120" icon="bangers_mash.ico">
+        <stat id="critical" value="3" time="30" />                          
+    </item>
+    
+    <item id="potato_stew" type="food" cost="40" weight="1" stamina="200" icon="potato_stew.ico">
+        <stat id="mine_speed" value="1" time="30" />                  
+    </item>
+    
+    <item id="fries" type="food" cost="110" weight="1" health="50%" icon="fries.ico">
+        <stat id="weight" value="100" time="60" />                  
+    </item>
+    
+    <item id="poutine" type="food" cost="40" weight="1" stamina="100%" icon="poutine.ico">
+        <stat id="mine_speed" value="3" time="30" />                  
+    </item>
+    
+    <item id="combo_meal" type="food" cost="40" weight="1" stamina="100%" health="100%" icon="combo_meal.ico" />
+    
+    <item id="potato_salad" type="food" cost="70" weight="1" stamina="200" icon="potato_salad.ico">
+        <stat id="cut" value="1" time="30" />                  
+    </item>
+    
+    <recipe id="potato_salad" creates="potato_salad" available="player.questComplete('baked_potato')" type="kitchen2">
+        <item id="potato" count="2" />
+        <item id="cheese" count="1" />
+        <item id="egg" count="1" />
+        <item id="milk" count="1" /> 
+    </recipe>
+    
+    <recipe id="bake_a_potato" creates="baked_potato" available="getFlag('farmer_seen_potato')" type="kitchen">
+        <item id="potato" count="1" />
+        <item id="cheese" count="1" />
+    </recipe>
+    
+    <recipe id="mash_potatoes" creates="bangers_mash" available="player.questComplete('baked_potato')" type="kitchen2">
+        <item id="potato" count="2" />
+        <item id="milk" count="1" />
+        <item id="meat" count="1" />
+    </recipe>
+    
+    <recipe id="potato_stew" creates="potato_stew" available="player.questComplete('baked_potato')" type="kitchen2">
+        <item id="potato" count="2" />
+        <item id="meat" count="2" />
+    </recipe>
+    
+    <recipe id="fries" creates="fries" available="player.questComplete('baked_potato')" type="kitchen3">
+        <item id="potato" count="2" />
+        <item id="cooking_oil" count="1" />
+    </recipe>
+    
+    <recipe id="poutine" creates="poutine" available="player.questComplete('baked_potato')" type="kitchen3">
+        <item id="fries" count="1" />
+        <item id="cheese" count="1" />
+        <item id="meat" count="1" />
+    </recipe>
+    
+    <recipe id="combo_meal" creates="combo_meal" available="player.questComplete('baked_potato')" type="kitchen3" achievement="fries_with_that">
+        <item id="fries" count="1" />
+        <item id="cheeseburger" count="1" />
+    </recipe>
+    
+    <recipe id="combo_meal_ch" creates="combo_meal" available="player.questComplete('baked_potato')" type="kitchen3" achievement="fries_with_that">
+        <item id="fries" count="1" />
+        <item id="hamburger" count="1" />
+        <item id="cheese" count="1" />
+    </recipe>
+    
+    <recipe id="tater_bater_recipe" creates="potato_battery" available="getFlag('tater_bater')" type="workshop">
+        <item id="potato" count="1" />
+        <item id="iron" count="1" />
+    </recipe>
+
+    <recipe id="spud_cannon" creates="spud_cannon" type="factory" available="player.questComplete('spud_cannon')">
+        <item id="iron_bar" count="1" />
+        <item id="silicon" count="3" />
+    </recipe>                    
+    
+    <recipe id="vodka" creates="vodka" type="lab" available="player.questComplete('vodka') || player.questComplete('vodka_h')">
+        <item id="potato" count="8" />
+        <item id="wheat" count="8" />
+    </recipe>
+   
+    <!-- DOES NOT WORK ATM -->
+    <item id="campfire" extends="campfire">
+		<recipe id="bake_a_potato" />
+	</item>
+</data>

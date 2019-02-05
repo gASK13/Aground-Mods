@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<npcs>
+	<npc id="hunter" extends="hunter">
+		<operate>			
+				<section if="area.getNPC('alchemist') == null && getFlag('farmer_seen_potato') && !player.hasQuest('vodka_h') && player.questComplete('wyrm_hive')">
+					<dialogue section="hunter" id="potato1" speaker='this' />
+                    <dialogue section="hunter" id="potato2" speaker='this' />
+                    <dialogue section="hunter" id="potato3" speaker='this' />
+                    <quest id="vodka_h" />
+					<dialogue section="hunter" id="potato4" speaker='this' />
+				</section>
+                <section if="player.hasQuest('vodka_h') && player.canCompleteQuest('vodka_h')">
+                    <dialogue section="hunter" id="potato_f1" speaker='this' />
+                    <dialogue section="hunter" id="potato_f2" speaker='this' />
+                    <complete quest="vodka_h" />
+           			<section with="fade">
+			                <dialogue section="hunter" id="potato_f4" speaker='this' />
+                            <item id="vodka" />
+                            <dialogue section="hunter" id="potato_f5" speaker='this' />
+                    </section>
+                </section>
+		</operate>
+	</npc>
+    
+             
+    <quest id="vodka_h" giver="hunter" exp="1000" recipe="vodka">
+    </quest>
+
+</npcs>

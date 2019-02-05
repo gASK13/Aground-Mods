@@ -1,0 +1,107 @@
+{
+    "date_added": 1540240386,
+    "date_live": 1540240386,
+    "date_updated": 1540378214,
+    "description": "<h2>Happy birthday, Aground!</h2>\n<p>A year ago, this awesome game was born out of <a href=\"https://mod.io/members/david-maletz\">david_maletz</a>'s imagination.</p>\n<p>A group of modders got together and put a bunch of celebratory items into gift boxes, gave them to NPCs and enemies to give them to you, the player!</p>\n<h3>What to expect:</h3>\n<ul>\n<li><strong>Gift boxes -</strong> All the core game NPCs give you one gift each (except for Innkeeper, cause it would cost him money, you know?). Enemies also might drop gifts <strong>(limited time only!)</strong>.</li>\n<li><strong>Gifts!</strong> - a selection of ten celebratory items you might find in the gifts. Some of them are useful, some of them are useless, some of them are even a bit OP, but all of them are <strong>fun to use!</strong></li>\n<li><strong>Hidden items</strong> - once you get all ten items, the fun does not stop - there is one more item you can craft, one little snack to pick up and two items that you need to drink your way to.</li>\n</ul>\n<p>Also don't forget to check <a href=\"https://aground.mod.io/deathbourne\">Deathbourne</a> mod - <a href=\"https://mod.io/members/jgrable634\">jgrable634</a> has also added a small anniversary surprise from Deathbourne itself!</p>\n<h3>Contributors:</h3>\n<p>Thanks to all the UAMT modders for support and ideas, it has been fun making this! Special thanks to:</p>\n<ul>\n<li><a href=\"https://mod.io/members/techtornado\">TechTornado</a> for his awesome <strong>Cake Gun</strong></li>\n<li><a href=\"https://mod.io/members/airom\">Airom</a> for the suprisingly fun <strong>Party Horn</strong></li>\n<li><a href=\"https://mod.io/members/chesirex42\">ChesireX42</a> for the breathtaking <strong>Fireworks</strong> sprites</li>\n<li><a href=\"https://mod.io/members/etrotta\">etrotta, </a><a href=\"https://mod.io/members/geronimo216\">Geronimo216</a> and <a href=\"https://mod.io/members/jgrable634\">jgrable634</a> for their ideas and support</li>\n</ul>\n<p>Have fun and we wish Aground many more happy years around!</p>",
+    "description_plaintext": "HAPPY BIRTHDAY, AGROUND!\n\nA year ago, this awesome game was born out of david_maletz\n[https://mod.io/members/david-maletz]'s imagination.\n\nA group of modders got together and put a bunch of celebratory items\ninto gift boxes, gave them to NPCs and enemies to give them to you,\nthe player!\n\nWHAT TO EXPECT:\n\n \t* GIFT BOXES - All the core game NPCs give you one gift each (except\nfor Innkeeper, cause it would cost him money, you know?). Enemies also\nmight drop gifts (LIMITED TIME ONLY!).\n \t* GIFTS! - a selection of ten celebratory items you might find in\nthe gifts. Some of them are useful, some of them are useless, some of\nthem are even a bit OP, but all of them are FUN TO USE!\n \t* HIDDEN ITEMS - once you get all ten items, the fun does not stop -\nthere is one more item you can craft, one little snack to pick up and\ntwo items that you need to drink your way to.\n\nAlso don't forget to check Deathbourne\n[https://aground.mod.io/deathbourne] mod - jgrable634\n[https://mod.io/members/jgrable634] has also added a small anniversary\nsurprise from Deathbourne itself!\n\nCONTRIBUTORS:\n\nThanks to all the UAMT modders for support and ideas, it has been fun\nmaking this! Special thanks to:\n\n \t* TechTornado [https://mod.io/members/techtornado] for his awesome\nCAKE GUN\n \t* Airom [https://mod.io/members/airom] for the suprisingly fun PARTY\nHORN\n \t* ChesireX42 [https://mod.io/members/chesirex42] for the\nbreathtaking FIREWORKS sprites\n \t* etrotta, [https://mod.io/members/etrotta]Geronimo216\n[https://mod.io/members/geronimo216] and jgrable634\n[https://mod.io/members/jgrable634] for their ideas and support\n\nHave fun and we wish Aground many more happy years around!\n",
+    "game_id": 34,
+    "homepage_url": "",
+    "id": 251,
+    "logo": {
+        "filename": "title_full.jpg",
+        "original": "https://image.mod.io/mods/19f3/251/title_full.jpg",
+        "thumb_1280x720": "https://thumb.mod.io/mods/19f3/251/crop_1280x720/title_full.jpg",
+        "thumb_320x180": "https://thumb.mod.io/mods/19f3/251/crop_320x180/title_full.jpg",
+        "thumb_640x360": "https://thumb.mod.io/mods/19f3/251/crop_640x360/title_full.jpg"
+    },
+    "maturity_option": 0,
+    "media": {
+        "images": [
+            {
+                "filename": "xversary.gif",
+                "original": "https://image.mod.io/mods/19f3/251/xversary.gif",
+                "thumb_320x180": "https://thumb.mod.io/mods/19f3/251/crop_320x180/xversary.gif"
+            },
+            {
+                "filename": "xv2.png",
+                "original": "https://image.mod.io/mods/19f3/251/xv2.png",
+                "thumb_320x180": "https://thumb.mod.io/mods/19f3/251/crop_320x180/xv2.png"
+            },
+            {
+                "filename": "xv1.png",
+                "original": "https://image.mod.io/mods/19f3/251/xv1.png",
+                "thumb_320x180": "https://thumb.mod.io/mods/19f3/251/crop_320x180/xv1.png"
+            }
+        ],
+        "sketchfab": null,
+        "youtube": null
+    },
+    "metadata_blob": "",
+    "metadata_kvp": null,
+    "modfile": {
+        "changelog": "PARTY TIME!!!",
+        "date_added": 1540244084,
+        "date_scanned": 1540245001,
+        "download": {
+            "binary_url": "https://mod.io/mods/file/604",
+            "date_expires": 1603591839
+        },
+        "filehash": {
+            "md5": "a643afcfb767bdceb94a18f604b5cfdc"
+        },
+        "filename": "xversary_1_0_0.zip",
+        "filesize": 87222,
+        "id": 604,
+        "metadata_blob": "",
+        "mod_id": 251,
+        "version": "1.0.0",
+        "virus_positive": 0,
+        "virus_status": 1,
+        "virustotal_hash": "6b3729c4462cf0d83823ab03fbe1ccc3428e1d1aa4c6779627ba24820e6bbcd3-1540244403"
+    },
+    "name": "Anniversary Mod",
+    "name_id": "anniversary-mod",
+    "profile_url": "https://aground.mod.io/anniversary-mod",
+    "stats": {
+        "date_expires": 1540518902,
+        "downloads_total": 8,
+        "mod_id": 251,
+        "popularity_rank_position": 1,
+        "popularity_rank_total_mods": 60,
+        "ratings_display_text": "Positive",
+        "ratings_negative": 0,
+        "ratings_percentage_positive": 100,
+        "ratings_positive": 1,
+        "ratings_total": 1,
+        "ratings_weighted_aggregate": 0.21,
+        "subscribers_total": 4
+    },
+    "status": 1,
+    "submitted_by": {
+        "avatar": {
+            "filename": "e636654923efb6952ce86b6f65a4d252.jpg.png",
+            "original": "https://image.mod.io/members/9d02/32316/e636654923efb6952ce86b6f65a4d252.jpg",
+            "thumb_100x100": "https://thumb.mod.io/members/9d02/32316/crop_100x100/e636654923efb6952ce86b6f65a4d252.jpg",
+            "thumb_50x50": "https://thumb.mod.io/members/9d02/32316/crop_50x50/e636654923efb6952ce86b6f65a4d252.jpg"
+        },
+        "date_online": 1540381133,
+        "id": 32316,
+        "language": "en",
+        "name_id": "gask13",
+        "profile_url": "https://mod.io/members/gask13",
+        "timezone": "Europe/Belgrade",
+        "username": "gASK"
+    },
+    "summary": "Happy birthday, Aground! This mod contains a medley of elements to help you celebrate this occasion!",
+    "tags": [
+        {
+            "date_added": 1540240386,
+            "name": "Complete"
+        },
+        {
+            "date_added": 1540240386,
+            "name": "Items"
+        }
+    ],
+    "visible": 1
+}

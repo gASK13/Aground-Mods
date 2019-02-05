@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+  <name>Asteroids x Uamt System</name>
+  <description>Places an asteroid field in the first UAMT system.</description>
+  <author>Airom</author>
+  <version>1.0.0</version>
+  <init>
+    <planet id="uamt.asteroids" height="80" asteroid_field="uamt_asteroids">
+      <orbit id="uamt.asteroids.orbit" width="320" height="64" background="stars.asteroids.orbit" name="system.planet.asteroids">
+        <init><runAreaLoad /><action>generateAsteroidArea(player.areas.get('uamt.asteroids.orbit'))</action></init>
+        <onLoad><music id="asteroids" seconds="1" /><radar tile="orbit.radar" animation="orbit.radar" padding="2" /></onLoad>
+      </orbit>
+      <onLeave><action>player.areas.remove('uamt.asteroids.orbit')</action></onLeave>
+    </planet>
+
+    <section if="getSystem('UAMT_system1') == null">
+      <system id="UAMT_system1" bgm="voyage" x="85" y="30"/>
+      <lang id="en_US">
+        <section id="system">
+          <text id="UAMT_system1">UAMT System 1</text>
+        </section>
+        <section id="system.desc">
+          <text id="UAMT_system1">Not much is known about this system. Some say it changes over time, others say it's never there.</text>
+        </section>
+      </lang>
+    </section>
+    <system id="UAMT_system1" extends="UAMT_system1">
+      <planet id="uamt.asteroids" tile="asteroids_nav" offsetX="40" name="system.planet.asteroids" />
+    </system>
+  </init>
+</mod>

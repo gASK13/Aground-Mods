@@ -1,0 +1,40 @@
+    <?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>POTATOES!</name>
+    <description>Adds the best crop ever - potato. Also a bunch of recipes and a Spud Cannon!</description>
+    <author>gASK</author>
+    <version>1.1.2</version>
+    <init>
+	   <include id="lang/languages.xml" />
+	   <include id="items/items.xml" />       
+       <include id="farm/farm.xml" />
+       <include id="farm/farmer.xml" />
+       <include id="farm/alchemist.xml" />
+       <include id="farm/mechanic.xml" />
+       <include id="farm/hunter.xml" />
+       <include id="wild_potato/wild_potato.xml" />
+       <include id="wild_potato/area.xml" />
+       <include id="achievement/achievements.xml" />
+    </init>
+</mod>
+
+<!-- 
+TODO:
+- hint from farmer? / mechanic?
+- Mr.Potato? Enchanted potato? Magic potato?
+
+FUTURE:
+- transform potato into something (not working right now - you can't append transform stuff into ALTER GEM, just OVERRIDE it)
+- hide action on potato to make battery
+    ALREADY CODED, BUT DOES NOTHING :(
+- make potato battery degrade into rotten potato
+    ALREADY CODED, BUT DOES NOTHING :(
+- bake potato in campfire (extend does not work)
+    ALREADY CODED, BUT DOES NOTHING :(
+    
+KNOWN BUGS:
+- Potato is under weapons
+- If you equip and unequip goggles while under vodka influence, you can no longer see spirits but you are drunk
+- Wild potatoes over structures / behind fences
+                                   
+-->

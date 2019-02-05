@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<lang id="en_US">
+	<section id="item.names">
+		<text id="o2_tank">Scuba Gear</text>
+        <text id="o2_pot">Oxygen Sack</text>
+        <text id="o2_upgrade_pot">Lung Extension Potion</text>
+	</section>
+    <section id="stats">
+		<text id="oxygen">Oxygen Capacity</text>
+    </section>
+    <section id="actions">
+        <text id="huff">Huff</text>
+    </section>
+    <section id="warning">
+        <text id="huff_out_of_water">It does not make sense to use this out of water!</text>
+    </section>
+</lang>

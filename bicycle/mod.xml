@@ -1,0 +1,247 @@
+    <?xml version="1.0" encoding="utf-8" ?>
+<mod>                              
+    <name>Cycles</name>
+    <description>I want to ride my bicycle, I want to ride my bike!</description>
+    <author>gASK</author>
+    <version>2.1.3</version>
+    <init>
+    
+        <action>
+            function mountBike(bikeName, player, area, setString) {
+                bikeInfo = Item.get(bikeName);
+                bike = player.inventory.getItem(bikeInfo);
+                maxHealth = Std.parseInt(bikeInfo.xml.get('durability'));
+                
+                maxFuelName = null;
+                maxFuel = 0;
+                max = maxHealth;                
+                    
+                iter = bike.getItemValues();
+                while (iter.hasNext()) {
+                    iVal = iter.next();
+                    name = iVal.name;                    
+                    fVal = name == null ? 0 : Std.parseInt(name.substring(0, name.length - 1));
+                    if (fVal > maxFuel) {
+                        maxFuel = fVal;
+                        maxFuelName = name;
+                        max = iVal.value;
+                    } else if (fVal == maxFuel && max > iVal.value) {
+                        max = iVal.value;               
+                    }                                    
+                }
+                
+                player.addItems(bikeInfo, -1, max, maxFuelName);
+                
+                cyc = area.getObject(bikeName);
+                cyc.health = maxHealth - max;
+                cyc.fuel = maxFuel;                                                
+                setString("cycle_id", bikeName);
+                runProcedure("mount_bike");
+            }
+            
+            function dismountBike(bike, bikeName, player, area) {
+                bikeInfo = Item.get(bikeName);
+                maxHealth = Std.parseInt(bikeInfo.xml.get('durability'));
+                
+                itemIter = bike.inventory.items.keys();
+                while(itemIter.hasNext()) {
+                    key = itemIter.next();
+                    player.addItem(key, bike.inventory.items.get(key).count);
+                }
+                if (bike.health > 0) {
+                    player.addItems(bikeInfo, 1, maxHealth - bike.health, bike.fuel == 0 ? null : bike.fuel + '&');
+                    area.removeObject(bike);                                      
+                } else {
+                    player.addItem(bikeInfo.xml.get('broken'));                
+                }
+            }
+        </action>
+        
+        <procedure id="mount_bike">
+            <invokeLater seconds="0">
+                <action>
+                    cyc_id = getString("cycle_id");
+                    area.getObject(cyc_id).mount(player);
+                </action>
+            </invokeLater>
+        </procedure>
+    
+        <tilesheet id="cycle.png" width="16" height="10" />
+        
+        <tile id="cycle.ico" sheet="cycle.png" x="0" />      
+        <tile id="broken_cycle.ico" sheet="cycle.png" x="1" />
+        <tile id="motocycle.ico" sheet="cycle.png" x="2" />
+        <tile id="hovercycle.ico" sheet="cycle.png" x="3" />
+        
+        <item id="broken_cycle" icon="broken_cycle.ico" weight="15" cost="0" type="tool">
+        </item>
+        
+        <item id="cycle" icon="cycle.ico" weight="20" cost="400" durability="50" type="tool" broken="broken_cycle" repair="steel_bar">
+          <action id="use" name="ride">
+            <choose>
+                <dialogue section="warning" id="cycle_in_vehicle" if="player.vehicle != null" />
+                <dialogue section="warning" id="not_underwater" if="player.isUnderwater()" />
+                <dialogue section="warning" id="not_in_air" if="player.isFlying()" />
+                <section>
+                    <object id="cycle" x="player.tile_x" y="player.tile_y" />
+                    <action>
+                        mountBike("cycle", player, area, setString);    
+                    </action>
+                </section>
+            </choose>
+          </action>
+        </item>  
+        
+        <item id="motocycle" icon="motocycle.ico" weight="40" cost="800" durability="100" type="tool" broken="cycle" repair="steel_bar">
+          <action id="use" name="ride">
+            <choose>
+                <dialogue section="warning" id="cycle_in_vehicle" if="player.vehicle != null" />
+                <dialogue section="warning" id="moto_not_underwater" if="player.isUnderwater()" />
+                <dialogue section="warning" id="moto_not_in_air" if="player.isFlying()" />
+                <section>
+                    <object id="motocycle" x="player.tile_x" y="player.tile_y" />
+                    <action>
+                        mountBike("motocycle", player, area, setString);                            
+                    </action>
+                </section>
+            </choose>
+          </action>
+        </item>
+        
+        <item id="hovercycle" icon="hovercycle.ico" weight="30" cost="1600" durability="250" type="tool" broken="motocycle" repair="titanium">
+          <action id="use" name="ride">
+            <choose>
+                <dialogue section="warning" id="cycle_in_vehicle" if="player.vehicle != null" />
+                <dialogue section="warning" id="hover_not_underwater" if="player.isUnderwater()" />
+                <dialogue section="warning" id="hover_not_in_air" if="player.isFlying() && player.tile_y < -3" />
+                <section>
+                    <object id="hovercycle" x="player.tile_x" y="player.tile_y" />
+                    <action>
+                        mountBike("hovercycle", player, area, setString);                            
+                    </action>
+                </section>
+            </choose>
+          </action>
+        </item>
+        
+        <tilesheet id="cycle_headlamp_light.png" width="144" height="106" />
+        <tile id="cycle_light.headlamp" sheet="cycle_headlamp_light.png" />
+        
+        <tilesheet id="bicycle.png" width="16" height="10" />
+        <tile id="cycle" sheet="bicycle.png" x="0" />
+        <animation id="cycle.empty" x="0" count="1"  />
+        <animation id="cycle.idle" equals="cycle.empty" />
+        <animation id="cycle.move" x="1" count="4" length="0.5" reverse="true" />
+        <tile id="bike_handles" sheet="bicycle.png" x="5" offsetX="0" offsetY="0" />
+        
+        <vehicle id="cycle" tile="cycle" health="50" defense="0" speed="4" type="car" 
+             title="item.names.cycle" fuel="0" stamina="true" max_weight="400" death_sfx="rock_door">
+            <repair id="steel_bar" value="50" />
+            <player x="8" y="-3" />
+            <tile id="bike_handles" />
+            <light tile="cycle_light.headlamp" offsetX="-65" offsetY="-3" />
+            <dismount>
+                <section if="this != null">
+                    <action>          
+                        dismountBike(this, "cycle", player, area);
+                    </action>
+                </section>
+            </dismount>        
+        </vehicle>
+        
+        <recipe id="cycle" creates="cycle" type="factory">
+            <item id="steel_bar" count="4" />
+            <item id="silicon" count="2" />
+        </recipe>
+        
+        <tilesheet id="motocycle.png" width="20" height="10" />
+        <tile id="motocycle" sheet="motocycle.png" x="0" />
+        <animation id="motocycle.empty" x="1" count="1" />
+        <animation id="motocycle.idle" x="0" count="2" />
+        <animation id="motocycle.move" x="2" count="4" length="0.5" reverse="true" />
+        <tile id="moto_handles" sheet="motocycle.png" x="6" offsetX="0" offsetY="0" />
+
+        <vehicle id="motocycle" tile="motocycle" health="100" defense="1" speed="6" type="car" 
+             title="item.names.motocycle" fuel="500" stamina="false" max_weight="600" death_sfx="rock_door">
+            <repair id="steel_bar" value="100" />
+            <fuel id="refined_oil" fuel="500" />
+            <player x="8" y="-3" />
+            <tile id="moto_handles" />
+            <light tile="light.headlamp" offsetX="-85" offsetY="-3" />
+            <dismount>
+                <section if="this != null">
+                    <action>          
+                        dismountBike(this, "motocycle", player, area);
+                    </action>
+                </section>
+            </dismount>        
+        </vehicle>
+        
+        <recipe id="motocycle" creates="motocycle" type="car_factory">
+            <type id="factory" available="Item.get('ship_parts') == null" />
+            <item id="cycle" count="1" />
+            <item id="steel_bar" count="2" />
+            <item id="refined_oil" count="1" />
+        </recipe>        
+        
+        <tilesheet id="hovercycle.png" width="20" height="16" />
+        <tile id="hovercycle" sheet="hovercycle.png" x="0" />
+        <animation id="hovercycle.empty" x="0" count="1" />
+        <animation id="hovercycle.idle" x="1" count="6" />
+        <animation id="hovercycle.hover" x="1" count="6" />
+       	<animation id="hovercycle.fly" x="8" count="4" />
+        <animation id="hovercycle.move" x="8" count="4" />
+
+        <tile id="hover_handles" sheet="hovercycle.png" x="7" offsetX="0" offsetY="0" />
+
+        <vehicle id="hovercycle" tile="hovercycle" health="250" defense="2" speed="8" speedY="2" flight_height="2" underground="true" 
+             title="item.names.hovercycle" fuel="1000" efficiency="0.3" stamina="false" max_weight="1200" death_sfx="rock_door">
+            <repair id="titanium" value="250" />
+            <player x="8" y="1" />
+            <tile id="hover_handles" />
+            <light tile="light.headlamp" offsetX="-85" offsetY="-3" />
+            <dismount>
+                <section if="this != null">
+                    <action>          
+                        dismountBike(this, "hovercycle", player, area);
+                    </action>
+                </section>
+            </dismount>        
+        </vehicle>
+        
+        <recipe id="hovercycle" creates="hovercycle" type="advanced_lab">
+            <item id="motocycle" count="1" />
+            <item id="titanium" count="2" />
+            <item id="battery" count="2" />
+        </recipe>    
+        
+        <lang id="en_US">
+            <section id="item.names"> 
+                <text id="cycle">Bicycle</text>
+                <text id="broken_cycle">Broken Bicycle</text>
+                <text id="motocycle">Motorcycle</text>
+                <text id="hovercycle">Hovercycle</text>                       
+            </section>
+            <section id="actions">
+                <text id="ride">Ride</text>
+            </section>
+            <section id="item.descriptions">
+                <text id="cycle">Portable vehicle for faster transport on land.</text>
+                <text id="broken_cycle">Now even more portable, but less useful.</text>
+                <text id="motocycle">A light motocycle for fast transportation over land. Plus you look cool while riding it!</text>
+                <text id="hovercycle">A futuristic flying cycle. Can not fly very high, but is fast as hell and electric powered!</text>
+            </section>                
+            <section id="warning">
+                <text id="not_in_air">A [item=cycle] can only be used when on ground. It's not a flying bike!</text>
+                <text id="not_underwater">I am not taking out my [item=cycle] when in water - it would rust!</text>
+                <text id="cycle_in_vehicle">You cannot ride a bike while riding another vehicle!</text>
+                <text id="moto_not_in_air">A [item=motocycle] can only be used when on ground. It's not a flying bike!</text>
+                <text id="moto_not_underwater">I am not taking out my [item=motocycle] when in water - it would rust!</text>
+                <text id="hover_not_in_air">A [item=hovercycle] can only be used low above the ground!</text>
+                <text id="hover_not_underwater">My [item=hovercycle] won't do me much good underwater!</text>
+                <text id="hover_not_indoors">I don't think it's a good idea to use my [item=hovercycle] indoors!</text>
+            </section>
+        </lang>
+    </init>
+</mod>
+

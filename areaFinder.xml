@@ -1,0 +1,39 @@
+<action>
+    // Finds ALL accessible areas. Skips unconnected ones.
+    function gaskAreaFinder(start, get) { 
+        // Initial arrays for recursive search
+        areas = [start];
+        toProcess = [start];
+        
+        // While we have unvisited areas, visit them
+        while (toProcess.length > 0) {
+            current = toProcess.pop();
+            // First check left / right neighbors
+            if (current.left != null && addAreaIfNotPresent(areas, get(current.left.area))) {
+                toProcess.push(get(current.left.area));                                                                            
+            }
+            if (current.right != null && addAreaIfNotPresent(areas, get(current.right.area))) {
+                toProcess.push(get(current.right.area));                                                                            
+            }
+            // Check structures, find doors and try to visit them
+            for(sItem in current.getStructures()) {
+                if (sItem.area_id != null && addAreaIfNotPresent(areas, get(sItem.area_id))) {
+                    toProcess.push(get(sItem.area_id));                                                                            
+                }
+            }
+        }
+        
+        return areas; 
+    }
+    
+    // Adds area to areas array if not present
+    // Returns true if added, false if already present
+    function addAreaIfNotPresent(areas, newArea) {
+        if (areas.indexOf(newArea) == -1) {
+            areas.push(newArea);
+            return true;
+        }
+        
+        return false;
+    }
+</action>`

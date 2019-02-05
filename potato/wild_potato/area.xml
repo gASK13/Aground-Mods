@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+    <area id="science1" extends="science1">
+        <onLoad>
+    	   <objects id="wild_potato" y="-1" fromX="106" toX="136" percent="0.1" if="area.getObject('wild_potato') == null" />        
+        </onLoad>
+    </area>
+    <area id="science2" extends="science2">
+        <onLoad>        
+            <section if="area.getObject('wild_potato') == null">    
+                <objects id="wild_potato" y="-1" fromX="116" toX="123" percent="0.2" />        
+                <objects id="wild_potato" y="-1" fromX="5" toX="12" percent="0.2" />
+            </section>
+        </onLoad>
+    </area>
+    
+    <area id="farming" extends="farming">
+        <onLoad>        
+            <section if="area.getObject('wild_potato') == null">
+    	        <objects id="wild_potato" y="-1" fromX="4" toX="124" percent="0.05" />        
+           </section>
+        </onLoad>
+    </area>
+</data>

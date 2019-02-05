@@ -1,0 +1,261 @@
+    <?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Magic Brush</name>
+    <description>Adds a magic brush.</description>
+    <author>gASK</author>
+    <version>1.0.1</version>
+    <init>
+        
+        <!-- This code is not as nice as I would have hoped - while it is possible to modify icons + tint of objects at run-time,
+             it seems not to persist without a whole boatload of custom code, so instead I went with the copy & paste approach for each color. 
+             Well, whatever works I guess! -->
+             
+        <!-- basic code -->
+        
+        <tilesheet id="brush.png" width="16" height="10" />        
+        
+        <tile id="brush.ico" sheet="brush.png" x="0" />    
+         
+        <tile id="brush_white.ico" sheet="brush.png" x="6" />
+        <tile id="brush_mark_white_1" sheet="brush.png" x="1" />   
+        <tile id="brush_mark_white_2" sheet="brush.png" x="2" />
+        <tile id="brush_mark_white_3" sheet="brush.png" x="3" />
+        <tile id="brush_mark_white_4" sheet="brush.png" x="4" />
+        <tile id="brush_mark_white_5" sheet="brush.png" x="5" />
+        
+        <object id="brush_mark_white_1" tile="brush_mark_white_1" spongable="true" />
+        <object id="brush_mark_white_2" tile="brush_mark_white_2" spongable="true" />
+        <object id="brush_mark_white_3" tile="brush_mark_white_3" spongable="true" />
+        <object id="brush_mark_white_4" tile="brush_mark_white_4" spongable="true" />
+        <object id="brush_mark_white_5" tile="brush_mark_white_5" spongable="true" />
+        
+        <item id="empty_brush" icon="brush.ico" weight="2" cost="0" type="tool" />
+        
+        <item id="white_brush" icon="brush_white.ico" weight="2" cost="0" durability="20" type="tool" brush_color="white" brush_count="5" breakable="true" broken="empty_brush">
+          <action id="use" name="paint" cost="((player.isUnderwater() || player.isFlying()) && area.isEmptyTile(player.tile_x, player.tile_y)) ? 0 : 1">
+            <choose>
+                <dialogue section="warning" id="brush_not_underwater" if="player.isUnderwater() && area.isEmptyTile(player.tile_x, player.tile_y)" />
+                <dialogue section="warning" id="brush_not_in_air" if="player.isFlying() || area.isEmptyTile(player.tile_x, player.tile_y)" />
+                <section>
+                    <action>
+                         color = this.xml.get("brush_color");
+                         count = this.xml.get("brush_count");
+                         var o = ObjectInfo.make("brush_mark_" + color + "_" + Math.ceil(random()*count), player.xPos, player.yTile); area.addObject(o);
+                    </action>
+                </section>
+            </choose>
+          </action>
+        </item>
+        
+        <!-- repeat stuff for colors since COLOR and COLORSCALE does not work for objects (and even the brushes look better when made manually) -->
+
+        <tile id="brush_red.ico" sheet="brush.png" x="12" /><tile id="brush_mark_red_1" sheet="brush.png" x="7" /><tile id="brush_mark_red_2" sheet="brush.png" x="8" />
+        <tile id="brush_mark_red_3" sheet="brush.png" x="9" /><tile id="brush_mark_red_4" sheet="brush.png" x="10" /><tile id="brush_mark_red_5" sheet="brush.png" x="11" />   
+        <object id="brush_mark_red_1" tile="brush_mark_red_1" spongable="true" /><object id="brush_mark_red_2" tile="brush_mark_red_2" spongable="true"/><object id="brush_mark_red_3" tile="brush_mark_red_3" spongable="true" />
+        <object id="brush_mark_red_4" tile="brush_mark_red_4" spongable="true" /><object id="brush_mark_red_5" tile="brush_mark_red_5" spongable="true" /><item id="red_brush" icon="brush_red.ico" brush_count="5"  brush_color="red" extends="white_brush" />
+        
+        <tile id="brush_blue.ico" sheet="brush.png" x="18" /><tile id="brush_mark_blue_1" sheet="brush.png" x="13" /><tile id="brush_mark_blue_2" sheet="brush.png" x="14" />
+        <tile id="brush_mark_blue_3" sheet="brush.png" x="15" /><tile id="brush_mark_blue_4" sheet="brush.png" x="16" /><tile id="brush_mark_blue_5" sheet="brush.png" x="17" />   
+        <object id="brush_mark_blue_1" tile="brush_mark_blue_1" spongable="true" /><object id="brush_mark_blue_2" tile="brush_mark_blue_2" spongable="true" /><object id="brush_mark_blue_3" tile="brush_mark_blue_3" spongable="true" />
+        <object id="brush_mark_blue_4" tile="brush_mark_blue_4" spongable="true" /><object id="brush_mark_blue_5" tile="brush_mark_blue_5" spongable="true" /><item id="blue_brush" icon="brush_blue.ico" brush_count="5"  brush_color="blue" extends="white_brush" />
+
+        <tile id="brush_green.ico" sheet="brush.png" x="24" /><tile id="brush_mark_green_1" sheet="brush.png" x="19" /><tile id="brush_mark_green_2" sheet="brush.png" x="20" />
+        <tile id="brush_mark_green_3" sheet="brush.png" x="21" /><tile id="brush_mark_green_4" sheet="brush.png" x="22" /><tile id="brush_mark_green_5" sheet="brush.png" x="23" />   
+        <object id="brush_mark_green_1" tile="brush_mark_green_1" spongable="true" /><object id="brush_mark_green_2" tile="brush_mark_green_2" spongable="true" /><object id="brush_mark_green_3" tile="brush_mark_green_3" spongable="true" />
+        <object id="brush_mark_green_4" tile="brush_mark_green_4" spongable="true" /><object id="brush_mark_green_5" tile="brush_mark_green_5" spongable="true" /><item id="green_brush" icon="brush_green.ico" brush_count="5"  brush_color="green" extends="white_brush" />
+        
+        <tile id="brush_yellow.ico" sheet="brush.png" x="30" /><tile id="brush_mark_yellow_1" sheet="brush.png" x="25" /><tile id="brush_mark_yellow_2" sheet="brush.png" x="26" />
+        <tile id="brush_mark_yellow_3" sheet="brush.png" x="27" /><tile id="brush_mark_yellow_4" sheet="brush.png" x="28" /><tile id="brush_mark_yellow_5" sheet="brush.png" x="29" />   
+        <object id="brush_mark_yellow_1" tile="brush_mark_yellow_1" spongable="true" /><object id="brush_mark_yellow_2" tile="brush_mark_yellow_2" spongable="true" /><object id="brush_mark_yellow_3" tile="brush_mark_yellow_3" spongable="true" />
+        <object id="brush_mark_yellow_4" tile="brush_mark_yellow_4" spongable="true" /><object id="brush_mark_yellow_5" tile="brush_mark_yellow_5" spongable="true" /><item id="yellow_brush" icon="brush_yellow.ico" brush_count="5"  brush_color="yellow" extends="white_brush" />
+        
+        <tile id="brush_purple.ico" sheet="brush.png" x="36" /><tile id="brush_mark_purple_1" sheet="brush.png" x="31" /><tile id="brush_mark_purple_2" sheet="brush.png" x="32" />
+        <tile id="brush_mark_purple_3" sheet="brush.png" x="33" /><tile id="brush_mark_purple_4" sheet="brush.png" x="34" /><tile id="brush_mark_purple_5" sheet="brush.png" x="35" />   
+        <object id="brush_mark_purple_1" tile="brush_mark_purple_1" spongable="true" /><object id="brush_mark_purple_2" tile="brush_mark_purple_2" spongable="true" /><object id="brush_mark_purple_3" tile="brush_mark_purple_3" spongable="true" />
+        <object id="brush_mark_purple_4" tile="brush_mark_purple_4" spongable="true" /><object id="brush_mark_purple_5" tile="brush_mark_purple_5" spongable="true" /><item id="purple_brush" icon="brush_purple.ico" brush_count="5"  brush_color="purple" extends="white_brush" />
+        
+        <tile id="brush_orange.ico" sheet="brush.png" x="42" /><tile id="brush_mark_orange_1" sheet="brush.png" x="37" /><tile id="brush_mark_orange_2" sheet="brush.png" x="38" />
+        <tile id="brush_mark_orange_3" sheet="brush.png" x="39" /><tile id="brush_mark_orange_4" sheet="brush.png" x="40" /><tile id="brush_mark_orange_5" sheet="brush.png" x="41" />   
+        <object id="brush_mark_orange_1" tile="brush_mark_orange_1" spongable="true" /><object id="brush_mark_orange_2" tile="brush_mark_orange_2" spongable="true" /><object id="brush_mark_orange_3" tile="brush_mark_orange_3" spongable="true" />
+        <object id="brush_mark_orange_4" tile="brush_mark_orange_4" spongable="true" /><object id="brush_mark_orange_5" tile="brush_mark_orange_5" spongable="true" /><item id="orange_brush" icon="brush_orange.ico" brush_count="5"  brush_color="orange" extends="white_brush" />
+
+        <!-- RECIPES -->
+        
+        <recipe id="white_brush" type="enchantments" creates="white_brush">
+            <item id="wood" count="1" />
+            <item id="focus_gem" count="1" />
+            <item id="dragonblood" count="1" />
+        </recipe>
+        
+        <recipe id="white_brush_e" type="enchantments" creates="white_brush">
+            <item id="empty_brush" count="1" />
+            <item id="dragonblood" count="1" />
+        </recipe>
+        
+        <recipe id="red_brush" type="enchantments" creates="red_brush">
+            <item id="wood" count="1" />
+            <item id="focus_gem" count="1" />
+            <item id="dragonblood" count="1" />
+            <item id="blood_gem" count="1" />
+        </recipe>
+        
+        <recipe id="red_brush_e" type="enchantments" creates="red_brush">
+            <item id="empty_brush" count="1" />
+            <item id="dragonblood" count="1" />
+            <item id="blood_gem" count="1" />
+        </recipe>
+        
+        <recipe id="blue_brush" type="enchantments" creates="blue_brush">
+            <item id="wood" count="1" />
+            <item id="focus_gem" count="1" />
+            <item id="dragonblood" count="1" />
+            <item id="yeti_fur" count="1" />
+        </recipe>
+        
+        <recipe id="blue_brush_e" type="enchantments" creates="blue_brush">
+            <item id="empty_brush" count="1" />
+            <item id="dragonblood" count="1" />
+            <item id="yeti_fur" count="1" />
+        </recipe>
+        
+        <recipe id="blue_brush_2" type="enchantments" creates="blue_brush">
+            <item id="wood" count="1" />
+            <item id="focus_gem" count="1" />
+            <item id="dragonblood" count="1" />
+            <item id="ice_heart" count="1" />
+        </recipe>
+        
+        <recipe id="blue_brush_2_e" type="enchantments" creates="blue_brush">
+            <item id="empty_brush" count="1" />
+            <item id="dragonblood" count="1" />
+            <item id="ice_heart" count="1" />
+        </recipe>
+        
+        <recipe id="green_brush" type="enchantments" creates="green_brush">
+            <item id="wood" count="1" />
+            <item id="focus_gem" count="1" />
+            <item id="dragonblood" count="1" />
+            <item id="plant_eye" count="1" />
+        </recipe>
+        
+        <recipe id="green_brush_e" type="enchantments" creates="green_brush">
+            <item id="empty_brush" count="1" />
+            <item id="dragonblood" count="1" />
+            <item id="plant_eye" count="1" />
+        </recipe>
+        
+        <recipe id="yellow_brush" type="enchantments" creates="yellow_brush">
+            <item id="wood" count="1" />
+            <item id="focus_gem" count="1" />
+            <item id="dragonblood" count="1" />
+            <item id="plant_eye" count="1" />
+            <item id="fire_tusk" count="1" />
+        </recipe>
+        
+        <recipe id="yellow_brush_e" type="enchantments" creates="yellow_brush">
+            <item id="empty_brush" count="1" />
+            <item id="dragonblood" count="1" />
+            <item id="plant_eye" count="1" />
+            <item id="fire_tusk" count="1" />
+        </recipe>
+        
+        <recipe id="purple_brush" type="enchantments" creates="purple_brush">
+            <item id="wood" count="1" />
+            <item id="focus_gem" count="1" />
+            <item id="dragonblood" count="1" />
+            <item id="blood_gem" count="1" />
+            <item id="ice_heart" count="1" />
+        </recipe>
+        
+        <recipe id="purple_brush_e" type="enchantments" creates="purple_brush">
+            <item id="empty_brush" count="1" />
+            <item id="dragonblood" count="1" />
+            <item id="blood_gem" count="1" />
+            <item id="ice_heart" count="1" />
+        </recipe>
+        
+        <recipe id="purple_brush_2" type="enchantments" creates="purple_brush">
+            <item id="wood" count="1" />
+            <item id="focus_gem" count="1" />
+            <item id="dragonblood" count="1" />
+            <item id="blood_gem" count="1" />
+            <item id="yeti_fur" count="1" />
+        </recipe>
+        
+        <recipe id="purple_brush_2_e" type="enchantments" creates="purple_brush">
+            <item id="empty_brush" count="1" />
+            <item id="dragonblood" count="1" />
+            <item id="blood_gem" count="1" />
+            <item id="yeti_fur" count="1" />
+        </recipe>
+        
+        <recipe id="orange_brush" type="enchantments" creates="orange_brush">
+            <item id="wood" count="1" />
+            <item id="focus_gem" count="1" />
+            <item id="dragonblood" count="1" />
+            <item id="fire_tusk" count="1" />
+        </recipe>
+        
+        <recipe id="orange_brush_e" type="enchantments" creates="orange_brush">
+            <item id="empty_brush" count="1" />
+            <item id="dragonblood" count="1" />
+            <item id="fire_tusk" count="1" />
+        </recipe>
+        
+        <!-- SPONGE -->
+        
+        <tile id="sponge.ico" sheet="brush.png" x="43" />
+        <item id="sponge" icon="sponge.ico" type="tool" weight="2" cost="0">
+            <action id="use" name="erase">
+                <action>
+                    iter = area.getObjectsInTile(player.tile_x, player.tile_y);
+                    while(iter.hasNext()) {
+                        o = iter.next();
+                        if (o.info != null && o.info.xml != null && o.info.xml.get("spongable") != null && o.info.xml.get("spongable") == "true") {
+                            area.removeObject(o);
+                        }                                
+                    }  
+                </action>
+            </action>
+        </item>
+        
+        <recipe id="sponge" type="enchantments" creates="sponge">
+            <item id="water_gem" count="1" />
+            <item id="dragonblood" count="1" />
+        </recipe>
+                
+        <lang id="en_US">
+            <section id="item.names"> 
+                <text id="empty_brush">Brush</text>
+                <text id="white_brush">Magic Brush (White)</text>
+                <text id="red_brush">Magic Brush (Red)</text>                      
+                <text id="green_brush">Magic Brush (Green)</text>
+                <text id="blue_brush">Magic Brush (Blue)</text>
+                <text id="yellow_brush">Magic Brush (Yellow)</text>                      
+                <text id="purple_brush">Magic Brush (Purple)</text>
+                <text id="orange_brush">Magic Brush (Orange)</text>
+                <text id="sponge">Magic Sponge</text>
+            </section>
+            <section id="item.descriptions">
+                <text id="empty_brush">Magic brush that ran out of ink.</text>
+                <text id="white_brush">Can mark underground walls to find your way back. This one is [color=ffffff]white[/color]!</text>
+                <text id="red_brush">Can mark underground walls to find your way back. This one is [color=ff0000]red[/color]!</text>
+                <text id="green_brush">Can mark underground walls to find your way back. This one is [color=00ff00]green[/color]!</text>
+                <text id="blue_brush">Can mark underground walls to find your way back. This one is [color=0000ff]blue[/color]!</text>
+                <text id="yellow_brush">Can mark underground walls to find your way back. This one is [color=ffff00]yellow[/color]!</text>
+                <text id="purple_brush">Can mark underground walls to find your way back. This one is [color=B200FF]purple[/color]!</text>
+                <text id="orange_brush">Can mark underground walls to find your way back. This one is [color=FF6A00]orange[/color]!</text>
+                <text id="sponge">Used to remove marking made by [color=770000][tile=brush.ico]Magic Brush[/color].</text>
+            </section>                
+            <section id="warning">
+                <text id="brush_not_in_air">Even though it is a [color=770000][tile=brush.ico]Magic Brush[/color], it can't draw on thin air!</text>
+                <text id="brush_not_underwater">The ink would not stay in one place in water!</text>
+            </section>
+            <section id="actions">
+                <text id="paint">Paint</text>
+                <text id="erase">Erase</text>
+            </section>
+        </lang>
+    </init>
+</mod>
+

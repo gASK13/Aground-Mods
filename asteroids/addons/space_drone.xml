@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+  <name>Asteroids x Space Drone</name>
+  <description>Allows repairs of the drone(s) and a new miniquest</description>
+  <author>Airom</author>
+  <version>1.0.0</version>
+  <requires>Asteroids</requires>
+  <requires>Space Drone</requires>
+  <init>
+    <quest id="kill_asteroid_drones" exp="20">
+      <kill id="asteroid_miner_drone" tile="CH_space_drone.ico" name="item.names.CH_space_drone" count="5" />
+    </quest>
+    <vehicle id="CH_space_drone" extends="CH_space_drone">
+      <repair id="drone_core" value="1000"/>
+    </vehicle>
+
+    <enemy id="asteroid_miner_drone" extends="asteroid_miner_drone" >
+      <onDeath>
+        <section if="!player.hasQuest('kill_asteroid_drones')">
+          <dialogue section="asteroid_drone" id="give_quest" />
+          <quest id="kill_asteroid_drones"/>
+        </section>
+        <section if="player.canCompleteQuest('kill_asteroid_drones')">
+          <dialogue section="asteroid_drone" id="complete_quest" />
+          <complete quest="kill_asteroid_drones"/>
+          <action>player.addItem('drone_core',5)</action>
+        </section>
+      </onDeath>
+    </enemy>
+
+    <lang id="en_US">
+      <section id="asteroid_drone">
+          <text id="give_quest">I wonder if I can extract the cores of these robots... Maybe if I kill a few of them I can extract some!</text>
+          <text id="complete_quest">I figured it out! If I can disable them without blowing them up, I can extract the core!</text>
+      </section>
+      <section id="quests">
+        <text id="kill_asteroid_drones">Kill Drones</text>
+      </section>
+      <section id="quest.description">
+        <text id="kill_asteroid_drones">If I can kill some of these hostile drones, I might be able to extract their power cores!</text>
+      </section>
+    </lang>
+  </init>
+</mod>

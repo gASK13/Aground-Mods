@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Magic Saver</name>
+    <description>Save anywhere.</description>
+    <author>gASK</author>
+    <version>1.0.0</version>
+    <init>
+    
+        <tilesheet id="items.png" width="16" height="10" />
+        <tile id="save.ico" sheet="items.png" x="0" />
+        
+        <item id="save" icon="save.ico" type="tool" cost="0" weight="0">
+            <action id="use" name="save">
+                <save />
+            </action>
+        </item>
+        
+        <lang id="en_US">
+            <section id="item.names">
+                <text id="save">Magic Saver</text>
+            </section>
+            <section id="item.descriptions">
+                <text id="save">Magically saves your game whenever you are. Don't ask me how it works!</text>
+            </section>
+            <section id="actions">
+                <text id="save">Save</text>
+            </section>
+        </lang>
+        
+        <onLoad><invokeLater seconds="0.5" if="!player.hasItem('save')">
+            <item id='save' />
+        </invokeLater></onLoad>
+	</init>
+</mod>

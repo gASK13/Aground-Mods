@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<npcs>
+    <action>
+        function checkMinerOtherOptions(miner, getVar, getFlag, player, area) {
+            // Mine Light
+            if(Item.get("mine_light_blueprint") != null && !player.hasItemStorehouse('mine_light_blueprint')) {
+                return false;
+            }
+            
+            // Secret
+            if(Item.get("gift") != null && canGiveGift(miner, getFlag)) {
+                return false;
+            }
+            
+            return true;
+        }
+    </action>
+	<npc id="miner" extends="miner">
+		<operate>			
+            <section if="player.areas.exists('science1') && !player.hasQuest('ch_book_get') && !getFlag('ch_book_talk')">
+                <dialogue section="miner" id="ch_get_1" speaker='this' />
+                <dialogue section="miner" id="ch_get_2" speaker='this' />
+                <dialogue section="miner" id="ch_get_3" speaker='this' />
+                <dialogue section="miner" id="ch_get_4" speaker='this' />
+                <quest id="ch_book_get" />
+                <action>setFlag('ch_book_talk', true)</action>                
+            </section>
+            <section if="player.areas.exists('science1') && !player.hasQuest('ch_book_get') && getFlag('ch_book_talk')">
+                <dialogue section="miner" id="ch_reget_1" speaker='this' /> 
+                <quest id="ch_book_get" />
+            </section>
+            <section if="player.hasQuest('ch_book_get') && !player.canCompleteQuest('ch_book_get') && !player.questComplete('ch_book_get')">
+                <dialogue section="miner" id="ch_advice_1" speaker='this' />
+            </section>
+            <section if="player.hasQuest('ch_book_get') && player.canCompleteQuest('ch_book_get') && !player.questComplete('ch_book_get')">
+                <complete quest="ch_book_get" />
+                <dialogue section="miner" id="ch_got_1" speaker='this' />
+                <dialogue section="miner" id="ch_got_2" speaker='this' />
+                <dialogue section="miner" id="ch_got_3" speaker='this' />
+                <dialogue section="miner" id="ch_got_4" speaker='this' />
+                <quest id="saltpetre_get" />
+            </section>
+            <section if="!player.hasQuest('saltpetre_get') && player.questComplete('ch_book_get')">
+                <dialogue section="miner" id="ch_regot_1" speaker='this' />
+                <quest id="saltpetre_get" />
+            </section>
+            <section if="player.hasQuest('saltpetre_get') && !player.questComplete('saltpetre_get') && !player.canCompleteQuest('saltpetre_get')">
+                <dialogue section="miner" id="ch_s_advice_1" speaker='this' />
+            </section>
+            <section if="player.hasQuest('saltpetre_get') && !player.questComplete('saltpetre_get') && player.canCompleteQuest('saltpetre_get')">
+                <complete quest="saltpetre_get" />
+                <dialogue section="miner" id="ch_final_1" speaker='this' />                
+                <section with="fade">
+                    <dialogue section="miner" id="ch_final_2" speaker='this' />                    
+                    <item id="bomb_s" count="3" />
+                    <dialogue section="miner" id="ch_final_3" speaker='this' />
+                    <dialogue section="miner" id="ch_final_4" speaker='this' />
+                    <window type="craft" includeStorehouse="true"><recipe type="explosives" /></window>
+                </section>
+            </section>
+            <section if="player.questComplete('saltpetre_get') && checkMinerOtherOptions(this, getVar, getFlag, player, area)">
+                <window type="craft" includeStorehouse="true"><recipe type="explosives" /></window>
+            </section>
+		</operate>
+	</npc>
+    
+    <npc id="mechanic" extends="mechanic">
+        <operate>
+            <section if="player.hasQuest('ch_book_get') && !player.hasItem('ch_book') && !player.questComplete('ch_book_get') && !getFlag('ch_book_given')">
+                <quest />
+                <dialogue section="mechanic" id="give_book_1" speaker='this' />
+                <section with="fade">
+                    <dialogue section="mechanic" id="give_book_2" speaker='this' />
+                    <item id="ch_book" count="1" />
+                    <action>setFlag('ch_book_given', true)</action>
+                </section>                
+            </section>
+            <section if="player.hasQuest('ch_book_get') && !player.hasItem('ch_book') && !player.questComplete('ch_book_get') && getFlag('ch_book_given')">
+                <quest />
+                <dialogue section="mechanic" id="regive_book_1" speaker='this' />
+                <section with="fade">
+                    <dialogue section="mechanic" id="regive_book_2" speaker='this' />
+                    <item id="ch_book" count="1" />
+                </section>
+            </section>
+        </operate>
+    </npc>    
+    
+    <quest id="saltpetre_get" giver="miner" exp="1500">
+        <item id="saltpetre" count="3" />
+    </quest>
+    
+    <quest id="ch_book_get" giver="miner" exp="1500">
+        <item id="ch_book" count="1" hidden="true" />
+    </quest>
+    
+</npcs>

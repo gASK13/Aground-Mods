@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Anniversary Mod</name>
+    <description>It's PARTY time!</description>
+    <author>gASK, VorTechnix, Airom & ChesireX42</author>
+    <version>1 year!</version>
+    <loadAfter>Full Version</loadAfter>
+    <init>
+      
+        <sound id="rocket" />
+        <sound id="crack" />
+        
+        <!-- ALL THE ICONS -->                
+        <tilesheet id="items.png" width="16" height="10" />
+        <tile id="gift.ico" sheet="items.png" x="0" />
+        <tile id="gift_0.ico" sheet="items.png" x="0" />
+        <tile id="gift_1.ico" sheet="items.png" x="1" />
+        <tile id="gift_2.ico" sheet="items.png" x="2" />        
+        <tile id="gift_3.ico" sheet="items.png" x="3" />     
+        <tile id="red_wine.ico" sheet="items.png" x="4" />
+        <tile id="white_wine.ico" sheet="items.png" x="5" />
+        <tile id="empty_bottle.ico" sheet="items.png" x="6" />
+        <tile id="broken_bottle.ico" sheet="items.png" x="7" />
+        <tile id="red_baloon.ico" sheet="items.png" x="8" />
+        <tile id="blue_baloon.ico" sheet="items.png" x="9" />
+        <tile id="green_baloon.ico" sheet="items.png" x="10" />
+        <tile id="baloon_pack.ico" sheet="items.png" x="11" />
+        <tile id="roman_candle.ico" sheet="items.png" x="12" />
+        <tile id="casing.ico" sheet="items.png" x="13" />
+        <tile id="firework.ico" sheet="items.png" x="14" />
+        <tile id="candy.ico" sheet="items.png" x="15" />
+        <tile id="pinata.ico" sheet="items.png" x="16" />
+        
+        <!-- Items -->
+        <item id="red_wine" durability="7" health="100%"  type="potion" cost="0" weight="3" icon="red_wine.ico" broken="empty_bottle">
+            <action id="eat" enabled="false" />
+            <action id="use" name="drink" cost="1">
+                <action>player.restoreHealth();</action>
+            </action>
+        </item>
+        
+        <item id="white_wine" durability="7" stamina="100%" type="potion" cost="0" weight="3" icon="white_wine.ico" broken="empty_bottle">
+            <action id="eat" enabled="false" />
+            <action id="use" name="drink" cost="1">
+                <action>player.restoreStamina();</action>
+            </action>
+        </item>
+        
+        <item id="empty_bottle" type="other" cost="0" weight="1" icon="empty_bottle.ico">
+            <action id="use" name="break">
+                <item id="empty_bottle" count="-1" hidden="true" />
+                <item id="broken_bottle" count="1" />
+            </action>
+        </item>
+        
+        <tilesheet id="bottle.png" width="5" height="5" />
+        <tile id="broken_bottle" sheet="bottle.png" x="0" offsetX="-5" offsetY="4" />
+        <animation id="equipment.broken_bottle.idle" x="0" count="1" />
+        <animation id="equipment.broken_bottle" x="1" count="3" />
+        
+        <tilesheet id="bleed.png" />
+        <tile id="bleed" sheet="bleed.png" x="0" />
+        <animation id="bleed" x="0" count="4" />
+        
+        <hitEffect id="bleed" damageName="common.bleed" tile="bleed" animation="bleed" damage="2" min="2" max="4" />
+        <item id="broken_bottle" movement_walk="walk_rswing" tile="broken_bottle" type="equipment" slot="weapon" cost="0" weight="1" action="equip" icon="broken_bottle.ico" attack="4" critical="true" durability="50">
+            <hitEffect id="bleed" />
+        </item>
+
+        <action>
+            function changeProjectileColor(e) {
+                color = Item.get("roman_candle").xml.elementsNamed("projectile").next().get("color");
+                if (color == "ff0000") { color = "00ff00"; }
+                else if (color == "00ff00") { color = "00aaff"; }
+                else if (color == "00aaff") { color = "ffff00"; } 
+                else if (color == "ffff00") { color = "ff0000"; }
+                
+                rcitem = Item.get("roman_candle").xml.elementsNamed("projectile").next();
+                rcitem.elementsNamed("light").next().set("color", color);
+                rcitem.set("color", color);                                        
+            }
+        </action>
+        
+        <tilesheet id="rcandle.png" width="10" height="5" />
+        <tile id="roman_candle" sheet="rcandle.png" x="0" offsetX="-5" offsetY="4" />
+        <animation id="equipment.roman_candle.idle" x="0" count="1" />
+        <animation id="equipment.roman_candle" x="1" count="5" />
+        
+        <item id="roman_candle" movement_walk="walk_rswing" type="equipment" slot="weapon" range="10" attack="6" cost="0" weight="3" action="equip" icon="roman_candle.ico" durability="24" breakable="false" repair="sulfur" durabilityName="common.shots" durabilityWarning="warning.shots">
+       		<projectile color="00ff00" tile="fireball_small" delay="2" animation="fireball_small" speed="4" offsetY="5" hitEffect="fire_sm_dot" fire_sfx="rocket">
+	   	       	<light tile="light.small" color="00ff00" />
+        	</projectile>            
+            <onEquip>
+                <action>                    
+                    area.removeEventListener("add_projectile", changeProjectileColor);
+                    area.addEventListener("add_projectile", changeProjectileColor);
+                </action>
+            </onEquip>
+        </item>
+        
+        <tilesheet id="baloons.png" width="7" height="16" />
+        <tile id="red_baloon" sheet="baloons.png" x="0" />
+        <animation id="equipment.red_baloon.idle" offsetY="-3" x="0" count="4" length="4" />
+        <tile id="blue_baloon" sheet="baloons.png" x="4" />
+        <animation id="equipment.blue_baloon.idle" offsetY="-3" x="0" count="4" length="4" />
+        <tile id="green_baloon" sheet="baloons.png" x="8" />
+        <animation id="equipment.green_baloon.idle" offsetY="-3" x="0" count="4" length="4" />
+        
+        <tilesheet id="bouquet.png" width="10" height="16" />
+        <tile id="baloon_pack" sheet="bouquet.png" x="0" />
+        <animation id="equipment.baloon_pack.idle" offsetY="-3" x="0" count="4" length="4" />
+        
+        <item id="red_baloon" type="equipment" slot="shield" cost="0" weight="-1" action="equip" icon="red_baloon.ico" capacity="50" />
+        <item id="green_baloon" type="equipment" slot="shield" cost="0" weight="-1" action="equip" icon="green_baloon.ico" capacity="50" />
+        <item id="blue_baloon" type="equipment" slot="shield" cost="0" weight="-1" action="equip" icon="blue_baloon.ico" capacity="50" />
+        <item id="baloon_pack" type="equipment" slot="shield" cost="0" weight="-3" action="equip" icon="baloon_pack.ico" capacity="150">
+            <flight height="3" cost="0" speed="2" maxWeight="600" />
+        </item>
+        
+        <recipe id="baloon_pack" creates="baloon_pack" type="workshop">
+            <item id="red_baloon" count="1" />
+            <item id="blue_baloon" count="1" />
+            <item id="green_baloon" count="1" />
+        </recipe>
+        
+        <action>
+            f_explosions = new Array();
+            c_area = new Array();
+              
+            function moveFireworkUp(e) {
+                if (e.value.xml.get("id") == "firework") {
+                    e.value.dx = 0;
+                    e.value.dy = -1;
+                    c_area.push(e.value.area);
+                }                          
+            }
+            
+            function boom(e) {
+                if (e.value.xml.get("id") == "firework") {
+                    fe = getObject("firework_explosion").create(e.value.xPos, e.value.yPos);                    
+                    c_area.pop().addObject(fe);
+                    f_explosions.push(fe);
+                }
+            }
+        </action>
+        
+        <tilesheet id="fw_rocket.png" width="16" height="16" />
+        <tile id="firework" x="0" sheet="fw_rocket.png" />
+        <animation id="equipment.firework.idle" x="0" count="1" />
+        <animation id="equipment.firework" x="0" count="1" />
+        <tile id="firework_rocket" x="1" sheet="fw_rocket.png" />
+        <animation id="firework_rocket" x="0" count="3" />                
+        <item id="firework" type="equipment" slot="shield" use="attack" movement_walk="walk_lswing" action="equip" weight="3" range="3" attack="0" icon="firework.ico" durability="1" breakable="true">
+            <projectile tile="firework_rocket" id="firework" animation="firework_rocket" speed="1">
+	   	       	<light tile="light.small" color="ffff00" />
+        	</projectile>
+            <onEquip>
+                <action>
+                    area.removeEventListener("add_projectile", moveFireworkUp);
+                    area.addEventListener("add_projectile", moveFireworkUp);
+                    
+                    area.removeEventListener("rem_projectile", boom);
+                    area.addEventListener("rem_projectile", boom);
+                </action>
+            </onEquip>
+        </item>
+        
+        <tilesheet id="fireworks1.png" />
+        <tile id="firework_explosion" x="0" sheet="fireworks1.png" />
+        <animation id="firework_explosion">
+            <frame x="0" length="1" />
+            <frame x="1" length="1" />
+            <frame x="2" length="1" />
+            <frame x="3" length="0.5" /><frame x="4" length="0.5"  /><frame x="3" length="0.5" /><frame x="4" length="0.5"  />
+            <frame x="3" length="0.5" /><frame x="4" length="0.5"  /><frame x="3" length="0.5" /><frame x="4" length="0.5"  />
+            <frame x="3" length="0.5" /><frame x="4" length="0.5"  /><frame x="3" length="0.5" /><frame x="4" length="0.5"  />
+            <frame x="3" length="0.5" /><frame x="4" length="0.5"  /><frame x="3" length="0.5" /><frame x="4" length="0.5"  />
+            <frame x="3" length="0.5" /><frame x="4" length="0.5"  /><frame x="3" length="0.5" /><frame x="4" length="0.5"  />
+            <frame x="3" length="0.5" /><frame x="4" length="0.5"  /><frame x="3" length="0.5" /><frame x="4" length="0.5"  />
+            <frame x="3" length="0.5" /><frame x="4" length="0.5"  /><frame x="3" length="0.5" /><frame x="4" length="0.5"  />            
+        </animation>
+        
+        <object id="firework_explosion" tile="firework_explosion" animation="firework_explosion" layer="top" fps="10" removeOnComplete="true" save="false">
+            <light tile="light.large" color="ffff00" flicker="true" />
+        </object>
+        
+        <item id="candy" type="food" weight="1" cost="100" icon="candy.ico">
+            <stat id="speed" value="4" time="15" />                          
+        </item>
+        
+        <tilesheet id="pinata.png" width="24" height="16" />
+        <tile id="pinata" x="0" sheet="pinata.png" />
+        <animation id="pinata.idle" x="0" count="1" />
+        <animation id="pinata.walk" equals="pinata.idle" />        
+        <animation id="pinata.fly">
+            <frame x="0" offsetX="0" offsetY="0" />
+            <frame x="0" offsetX="0" offsetY="1" />
+            <frame x="0" offsetX="0" offsetY="1" />
+            <frame x="0" offsetX="0" offsetY="0" />
+            <frame x="0" offsetX="0" offsetY="1" />
+        </animation>
+        <animation id="pinata.pop">
+            <frame x="0" /><frame x="1" /><frame x="2" />
+            <frame x="3" /><frame x="4" /><frame x="5" />
+            <frame x="6" /><frame x="7" length="50" /> 
+        </animation>
+        
+        <item id="pinata" type="animal" weight="10" slot="familiar" durability="100" icon="pinata.ico"><!--bugfix here gASK forgot to adda weight param-->
+            <action id="equip" /><action id="feed" alt="feed_all" /><action id="rename" />
+            <familiar id="pinata" tile="pinata" animation="pinata" /> 
+            <food id="sugar" value="10" />
+        </item>
+                        
+       	<familiar id="pinata" type="flying" costPerSecond="0">
+            <spawn item="candy" cooldown="3000" cost="20" animation="pop" />            
+    	</familiar>
+
+        <onLoad>
+            <invokeLater seconds="0.1">
+                <action>
+                    // Only happens a couple of weeks after anniversary
+                    if(isDate(10,30,7)) {
+                        gLoot = getObject("gift_dummy").loot[0];
+                        for(oi in ObjectInfo.info.iterator()) {                        
+                            if (oi.xml != null && oi.xml.nodeName() == 'enemy') {
+                                oi.loot.push(gLoot);
+                            }
+                        }
+                    }
+                </action>
+            </invokeLater>
+        </onLoad>
+                                                 
+        <item id="gift" type="other" cost="0" weight="5" icon="gift.ico">            
+            <action id="use" name="open">
+                <action>
+                    items = [
+                        { id: "red_baloon", count: 1 }, 
+                        { id: "blue_baloon", count: 1 },
+                        { id: "green_baloon", count: 1 },
+                        { id: "white_wine", count: 1 },
+                        { id: "red_wine", count: 1 },
+                        { id: "cake_gun", count: 1 },
+                        { id: "roman_candle", count: 1 },
+                        { id: "pinata", count: 1} ,
+                        { id: "firework", count: 12 },
+                        { id: "party_horn", count: 1 }
+                    ];
+                    
+                    player.addItems(this, -1, durability, name);
+                    
+                    filteredItems = items.filter(function(itm) { return getFlag("gotten." + itm.id) != true; });
+                    trace(filteredItems.length);
+                    
+                    if (filteredItems.length == 0) { filteredItems = items; }
+                    
+                    item = filteredItems[randInt(0,filteredItems.length)];
+                    
+                    player.addItem(item.id, item.count);
+                    
+                    setFlag("gotten." + item.id, true);
+                    
+                    getText("common.open_message").set(replaceGift(getText("common.open_placeholder").get(), item));
+                </action>                
+                <dialogue section="common" id="open_message" />
+            </action>
+        </item>
+
+        <!-- Cause we can't do "name" on loot, I had to make dummy gifts here -->
+        <item id="gift1" extends="gift" icon="gift_1.ico" />
+        <item id="gift2" extends="gift" icon="gift_2.ico" />
+        <item id="gift3" extends="gift" icon="gift_3.ico" />
+        <enemy id="gift_dummy">
+            <lootSet>
+                <loot id="gift" p="5" count="1" />
+                <loot id="gift1" p="2" count="1" />
+                <loot id="gift2" p="2" count="1" />
+                <loot id="gift3" p="2" count="1" />
+                <loot p="92" />
+            </lootSet>
+        </enemy>                                    
+        
+        <action>            
+            function canGiveGift(npc, getFlag) {
+                return getFlag(npc.info.id + ".gift") != true;
+            }
+            
+            function giveGift(npc, player, setFlag, randInt, getText) {
+                tile = "tgift_" + randInt(0,4) + ".ico&";
+                name = tile + replaceGiver(getText("common.gift_placeholder").get(), npc.info.getDisplayName().get()); 
+                player.addItems(Item.get("gift"), 1, 0, name);
+                setFlag(npc.info.id + ".gift", true);
+            }
+            
+            function replaceGiver(str, name) {
+                retString = "";
+                for (sub in str.split("{")) {
+                    for(lit in sub.split("}")) {
+                        if (lit == 'npc') {
+                            retString += name;                            
+                        } else {
+                            retString += lit;
+                        }
+                    }
+                }
+                
+                return retString;
+            }
+            
+            function replaceGift(str, item) {
+                retString = "";
+                for (sub in str.split("{")) {
+                    for(lit in sub.split("}")) {
+                        if (lit == 'item') {
+                            retString += item.id;                            
+                        } else if (lit == 'count') {
+                            retString += item.count;
+                        } else {
+                            retString += lit;
+                        }
+                    }
+                }
+                
+                return retString;
+            }
+        </action>
+                
+        <npc id="mechanic" extends="mechanic">
+            <operate>
+                <section if="canGiveGift(this, getFlag)">
+                    <quest />
+                    <dialogue section="mechanic" id="gift" speaker="this" />
+                    <action>giveGift(this, player, setFlag, randInt, getText)</action>
+                </section>
+            </operate>
+        </npc>
+        
+        <npc id="builder" extends="builder">
+            <operate>
+                <section if="canGiveGift(this, getFlag)">
+                    <quest />
+                    <dialogue section="builder" id="gift" speaker="this" />
+                    <action>giveGift(this, player, setFlag, randInt, getText)</action>
+                </section>
+            </operate>
+        </npc>
+        
+        <npc id="farmer" extends="farmer">
+            <operate>
+                <section if="canGiveGift(this, getFlag)">
+                    <quest />
+                    <dialogue section="farmer" id="gift" speaker="this" />
+                    <action>giveGift(this, player, setFlag, randInt, getText)</action>
+                </section>
+            </operate>
+        </npc>
+        
+        <npc id="miner" extends="miner">
+            <operate>
+                <section if="canGiveGift(this, getFlag)">
+                    <quest />
+                    <dialogue section="miner" id="gift" speaker="this" />
+                    <action>giveGift(this, player, setFlag, randInt, getText)</action>
+                </section>
+            </operate>
+        </npc>
+        
+        <npc id="trader" extends="trader">
+            <operate>
+                <section if="canGiveGift(this, getFlag)">
+                    <quest />
+                    <dialogue section="trader" id="gift" speaker="this" />
+                    <action>giveGift(this, player, setFlag, randInt, getText)</action>
+                </section>
+            </operate>
+        </npc>
+        
+        <npc id="hunter" extends="hunter">
+            <operate>
+                <section if="canGiveGift(this, getFlag)">
+                    <quest />
+                    <dialogue section="hunter" id="gift" speaker="this" />
+                    <action>giveGift(this, player, setFlag, randInt, getText)</action>
+                </section>
+            </operate>
+        </npc>
+        
+        <npc id="alchemist" extends="alchemist">
+            <operate>
+                <section if="canGiveGift(this, getFlag)">
+                    <quest />
+                    <dialogue section="alchemist" id="gift" speaker="this" />
+                    <action>giveGift(this, player, setFlag, randInt, getText)</action>
+                </section>
+            </operate>
+        </npc>
+        
+        <npc id="mirrow_n.npc" extends="mirrow_n.npc">
+            <operate>
+                <section if="canGiveGift(this, getFlag) && player.questComplete('mirrows')">
+                    <quest />
+                    <dialogue section="mirrow_n" id="gift" speaker="this" />
+                    <action>giveGift(this, player, setFlag, randInt, getText)</action>
+                </section>
+            </operate>
+        </npc>
+        
+        <npc id="mirrow_d.npc" extends="mirrow_d.npc">
+            <operate>
+                <section if="canGiveGift(this, getFlag) && player.questComplete('mirrows')">
+                    <quest />
+                    <dialogue section="mirrow_d" id="gift" speaker="this" />
+                    <action>giveGift(this, player, setFlag, randInt, getText)</action>
+                </section>
+            </operate>
+        </npc>
+        
+        <npc id="fisherman" extends="fisherman">
+            <operate>
+                <section if="canGiveGift(this, getFlag)">
+                    <quest />
+                    <dialogue section="fisherman" id="gift" speaker="this" />
+                    <action>giveGift(this, player, setFlag, randInt, getText)</action>
+                </section>
+            </operate>
+        </npc>
+                
+        <lang id="en_US">
+            <section id="common">
+                <text id="gift_placeholder">{npc}'s Gift</text>                           
+                <text id="open_placeholder">Oh, neat! I found {count} [item={item}] inside!</text>
+                <text id="open_message"></text>
+                <text id="shots">Shots</text>
+                <text id="bleed">Bleed</text>
+            </section>
+            <section id="item.names">
+                <text id="gift">Gift</text>
+                <text id="gift1">Gift</text>
+                <text id="gift2">Gift</text>
+                <text id="gift3">Gift</text>
+                <text id="red_wine">Red Wine</text>
+                <text id="white_wine">White Wine</text>
+                <text id="empty_bottle">Empty Bottle</text>
+                <text id="broken_bottle">Broken Bottle</text>
+                <text id="red_baloon">Red Baloon</text>
+                <text id="blue_baloon">Blue Baloon</text>
+                <text id="green_baloon">Green Baloon</text>
+                <text id="baloon_pack">Baloon Bouquet</text>
+                <text id="roman_candle">Roman Candle</text>
+                <text id="firework">Firework</text>
+                <text id="pinata">Pinata</text>
+                <text id="candy">Candy</text>
+            </section>
+            <section id="npc">
+                <text id="mirrow_n.npc">Mirrow</text>
+                <text id="mirrow_d.npc">Mirrow</text>
+            </section>
+            <section id="actions">
+                <text id="open">Open</text>
+                <text id="drink">Cheers!</text>
+                <text id="break">Break</text>
+            </section>
+            <section id="warning">
+                <text id="shots">Out of firework shots!</text>
+            </section>
+            <section id="item.descriptions">
+                <text id="gift">A gift for my birthday!\n I wonder what's inside?</text>
+                <text id="red_wine">Oooh, a bottle of nice Pinot Noir!</text>
+                <text id="white_wine">Hm, a `16 Chateu d'Aground. This will go excellently with steak and red berries!</text>                
+                <text id="broken_bottle">The ultimate improvised weapon.</text>
+                <text id="roman_candle">Fireworks! Yay!</text>
+                <text id="candy">Did anyone say "sugar rush"?</text>
+            </section>
+            <section id="builder">
+                <text id="gift">Hooray! Did you realize we already survived a year on this island? And look at what we built! To celebrate this day, I got you a shiny new gift.</text>
+            </section>
+            <section id="farmer">
+                <text id="gift">Oy, did you know it is already a year since you washed up ashore? Time really flies when you're busy....[pause=4]Anyway, I got you a little something for this occasion!</text>
+            </section>
+            <section id="miner">
+                <text id="gift">Oof, this was a rough year, wasn't it? I hope the next one will be much better! [pause=8] I almost forgot, I found this while mining and thought it would make a nice gift for your anniversary...</text>
+            </section>
+            <section id="trader">
+                <text id="gift">Look at the bustling port we made here. And this took us only a year! Imagine what we could do in another year? Anyway I "found" this little trinket, so here you go - for your anniversary!</text>
+            </section>
+            <section id="hunter">
+                <text id="gift">If I am not mistaken, it should alreay be a year since we crashed in this wilderness. I am not one for big speeches, so I instead hunted a little gift for you.</text>
+            </section>
+            <section id="mechanic">
+                <text id="gift">Hey, I heard it's been a year since you became stranded here. I got you a little something to celebrate your achievements at susnet Haven!</text>
+            </section>            
+            <section id="alchemist">
+                <text id="gift">Nice day, isn't it? [pause=4] I calculated that today is exaclty one year since we crashed here. And still no sight of ... [pauser=4] them. That's a reason to celebrate, isn't it?</text>
+            </section>
+            <section id="fisherman">
+                <text id="gift">Hm, can you feel the see breeze? It brings many memories of the past year. And it also brought you this gift. Nice, eh?</text>
+            </section>
+            <section id="mirrow_n">
+                <text id="gift">Did you know it was year ago that the crash happened? We fabricated you some gifts to celebrate the occasion!</text>
+            </section>
+            <section id="mirrow_d">
+                <text id="gift">Time really flies when you're having fun, doesn't it? And the fun we're having! Anyway, we fabricated you some gifts to celebrate the occasion!</text>
+            </section>
+        </lang>
+        
+        <!-- VOR TECHS PART -->
+        
+        <item id="cake_gun" type="equipment" slot="weapon" cost="170" weight="4" stamina="1" range="10" icon="revolver.ico" projectile="cake_shot" sfx="revolver" movement_walk="walk_rswing" arms="revolver.arms" color="ff4db1">
+    		<action id="equip" /><action id="setProjectile" />
+    	</item>
+
+        <item id="cake_shot" type="equipment" cost="18" weight="0.25" icon="bullet.ico" attack="1" action="fire" with="revolver" color="ff4db1" colorScale="2" >
+            <!-- The cake is a lie -->
+            <projectile tile="bullet" animation="bullet.idle" speed="5" delay="0" offsetY="4" color="ff4db1" colorScale="2" hit_sfx="arrow_hit">
+                <onHit>
+                    <action>
+                      if (object != null && object.info != null && object.info.xml != null && object.info.xml.nodeName() == 'enemy'
+                        && object.info.id != 'mirrow_n' && object.info.id != 'mirrow_d' && object.info.id != 'golemech' && object.info.id != 'alien' ) {
+                          area.removeObject(object);                      
+                          var ck = ObjectInfo.make("cake",object.xPos, object.yTile);
+                          ck.addHealth(1);
+                          area.addObject(ck);                    
+                      }
+                    </action>
+                </onHit>
+            </projectile>
+        </item>
+
+        <item id="casing" type="resource" cost="200" weight="1" icon="casing.ico" color="ffc839"/>
+
+        <!-- Recipes -->
+        <recipe id="cook_cake_shot" creates="cake_shot" count="4" type="kitchen2">
+    		<item id="wheat" count="2" />
+            <item id="milk" count="1" />
+            <item id="eggs" count="1" />
+            <item id="sugar" count="1" />
+    		<item id="casing" count="4" />
+    	</recipe>
+
+        <recipe id="craft_casing" creates="casing" count="4" type="workbench">
+            <item id="iron" count="1" />
+        </recipe>
+
+        <lang id="en_US">
+            <section id="item.names">
+                <text id="cake_gun">Cake Gun</text>
+                <text id="cake_shot">Cake Shot</text>
+                <text id="casing">Casing</text>
+            </section>
+            <section id="item.descriptions">
+                <text id="cake_gun">[font=drachenklaue]Let them eat cake![/font]</text>
+                <text id="cake_shot">Enemy ==> cake. Simple.</text>
+                <text id="casing">The things bullets are mounted in.</text>
+            </section>
+        </lang>
+        
+        <!--Airom's Party Horn-->
+        <sound id="tadah" />
+		<tilesheet id="party_horn.png" width="27" height="4"/>
+		<tile id="party_horn" sheet="party_horn.png" x="0" offsetX="-12" offsetY="3"/>
+		<animation id="equipment.party_horn">
+            <frame x="0" /><frame x="1" /><frame x="2" /><frame x="3" /><frame x="4" /><frame x="5" /><frame x="6" /><frame x="7" />
+            <frame x="6" length="0.5" /><frame x="5" length="0.5" /><frame x="4" length="0.5" />
+            <frame x="3" length="0.5" /><frame x="2" length="0.5" /><frame x="1" length="0.5" />
+        </animation>
+		<item id="party_horn" type="equipment" slot="weapon" cost="20" weight="1" range="5" stamina="1" attack="1" icon="party_horn" action="equip" freeze="1" knockback="20" movement_walk="walk_rswing" arms="equipment.arms" sfx="tadah" />
+		
+		<lang id="en_US">
+			<section id="item.names">
+				<text id="party_horn">Party Horn</text>
+			</section>
+		</lang>        
+	</init>        
+</mod>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Better Nets</name>
+    <description>Adds three new nets to make capturing monsters easier.</description>
+    <author>gASK</author>
+    <version>1.0.0</version>
+    <init>
+	   <include id="lang/languages.xml" />
+	   <include id="items/items.xml" />
+    </init>
+    
+    <!-- TODO:
+            - animate the nets when places (is this even possible?)
+            - more familiars
+            - underwater nets?
+            - bigger nets for Wyrm Queen etc?
+     -->
+</mod>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<farm>
+    <tilesheet id="potato.png" width="115" height="32" />
+	<tile id="potato_field" sheet="potato.png" x="0" y="0" />
+   	<animation id="potato.grow" count="5" x="0" y="0" />
+	<animation id="potato.idle" count="1" x="2" y="1" />
+	<crop id="potato" tile="potato_field" cost="5" icon="potato_seed.ico">
+		<farmable item="potato" min="2" max="8" time="20" />                
+	</crop>	
+</farm>

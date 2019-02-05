@@ -1,0 +1,155 @@
+    <?xml version="1.0" encoding="utf-8" ?>
+<data>        
+    <tilesheet id="icons.png" width="16" height="10" />
+    <tile id="winch.ico" sheet="icons.png" x="0" />
+    <tile id="carryall.ico" sheet="icons.png" x="1" />
+    <tile id="workshop.ico" sheet="icons.png" x="2" />
+    <tile id="living.ico" sheet="icons.png" x="3" />
+    
+    <item id="winch" type="equipment" slot="winch" equipOn="carryall" cost="0" weight="0"  icon="winch.ico" unequip="false">
+  <action id="use" name="attach" enabled="getStorageIndexFromName(player.vehicle.equipment.get('winch').get()) == null">
+        <action>
+            if(loadVehicle(player, area, player.vehicle, player.vehicle.equipment.get("winch").get())) {
+                player.vehicle.info.speedX = 4;
+            }
+        </action>
+      </action>
+      <action id="use" name="detach" enabled="getStorageIndexFromName(player.vehicle.equipment.get('winch').get()) != null">
+        <action>
+            if(unloadVehicle(player, area, player.vehicle, player.vehicle.equipment.get("winch").get())) {
+                player.vehicle.info.speedX = 8;
+            }
+        </action>
+      </action>
+      <action id="use" name="winch_inv" enabled="getStorageIndexFromName(player.vehicle.equipment.get('winch').get()) != null">
+            <window type="storehouse" inventory="getVehicleFromStorage(player, getStorageIndexFromName(player.vehicle.equipment.get('winch').get())).inventory" title="common.vehicle" />
+      </action>
+      <action id="use" name="dismantle" enabled="getStorageIndexFromName(player.vehicle.equipment.get('winch').get()) != null">
+        <window type="prompt" message="actions.dismantle_confirm">
+            <action>
+            if(dismantleVehicleCarryall(player, player.vehicle, player.vehicle.equipment.get("winch").get())) {
+                player.vehicle.info.speedX = 8;
+            }
+            </action>
+        </window>
+      </action>
+  </item>
+    
+    <item id="workshop" type="equipment" slot="workshop" equipOn="carryall" cost="0" weight="0"  icon="workshop.ico" unequip="false">
+        <action id="use" name="craft">
+            <choose>
+                <section if="player.vehicle._isFlying()">
+                    <dialogue section="warning" id="not_in_air" />
+                </section>
+                <section>
+                    <window type="craft">
+                        <recipe type="workshop" />
+                        <recipe type="workbench" />
+                        <recipe type="factory" />
+                        <recipe type="smelter" />                            
+                    </window>
+                </section>
+            </choose> 
+        </action>
+        <action id="use" name="repair">              
+            <window type="repair" />
+        </action>
+    </item>
+    
+    <item id="living" type="equipment" slot="living" equipOn="carryall" cost="0" weight="0"  icon="living.ico" unequip="false">
+        <action id="use" name="cook">
+            <window type="craft" >
+        		<recipe type="kitchen3" />
+        		<recipe type="kitchen2" />
+        		<recipe type="kitchen" />
+            </window>
+        </action>
+        <action id="use" name="sleep">
+            <choose>
+                <section if="player.vehicle._isFlying()">
+                    <dialogue section="warning" id="not_in_air" />
+                </section>
+                <section if="player.vehicle.fuel < 1000">
+                    <dialogue section="warning" id="low_fuel" />
+                </section>
+                <section>
+                    <action>
+                        player.vehicle.fuel -= 1000;
+                        player.restoreStamina();
+                        player.restoreHealth(); 
+                        player.vehicle.gui.init();
+                    </action>
+                    <save sleep="true" />
+                </section>
+            </choose>                
+        </action>
+    </item>
+    
+    <tilesheet id="carryall.png" width="100" height="46" />
+    <tile id="carryall" sheet="carryall.png" x="0" />
+    
+    <animation id="carryall.empty" x="0" count="1" />
+    <animation id="carryall.mount" x="9" count="8" length="2" />
+    <animation id="carryall.dismount" x="9" count="8" length="2" reverse="true" />
+    <animation id="carryall.idle" x="5" count="4" length="2" />
+    <animation id="carryall.hover" x="1" count="4" length="2" />
+    
+    <animation id="carryall.takeoff" x="17" count="4" length="2" />
+    <animation id="carryall.land" x="17" count="4" length="2" reverse="true"/>
+    <animation id="carryall.fly" x="21" count="4" length="2" />
+    
+    <vehicle id="carryall" tile="carryall" health="1000" defense="3" speed="8" speedY="2" type="flying" 
+     title="vehicle.carryall" fuel="10000" efficiency="0.3" underground="false" flight_height="40" stamina="false" max_weight="6000" death_sfx="rock_door" loadable="false">
+        <repair id="titanium" value="250"  />
+        <light tile="light.strong" color="9898ff" flicker="true" offsetX = "-60" offsetY="10" />
+        <fuel id="uranium" fuel="2000" />
+        <slot id="winch" />
+        <slot id="workshop" />
+        <slot id="living" />
+        <mount>
+            <section if="player.vehicle.equipment.get('winch').get() == null">
+                <equip id="winch" to="player.vehicle" fromInventory="false" />
+            </section>
+            <section if="player.vehicle.equipment.get('workshop').get() == null">
+                <equip id="workshop" to="player.vehicle" fromInventory="false" />
+            </section>
+            <section if="player.vehicle.equipment.get('living').get() == null">
+                <equip id="living" to="player.vehicle" fromInventory="false" />
+            </section>
+            <action>
+                if (player.vehicle.equipment.get('winch').get().name.name != null) {
+                    player.vehicle.info.speedX = 4;
+                } else {
+                    player.vehicle.info.speedX = 8;
+                }
+            </action>
+        </mount>
+    </vehicle>        
+    
+    <recipe id="carryall" object="carryall" type="advanced_lab">        
+        <item id="titanium" count="8" />
+        <item id="uranium" count="4" />
+        <item id="jetpack" count="2" />
+    </recipe>
+    
+    <vehicle id="fly_adult_dragon" extends="fly_adult_dragon" loadable="false" />
+    
+    <onLoad>
+        <invokeLater seconds="0.1">
+            <action>
+                if(player.hasItem("living")) {
+                    player.addItem("living", -player.inventory.getItem(Item.get("living")).count);
+                }
+                
+                if(player.hasItem("workshop")) {
+                    player.addItem("workshop", -player.inventory.getItem(Item.get("workshop")).count);
+                }
+                
+                if(player.hasItem("winch")) {
+                    player.addItem("winch", -player.inventory.getItem(Item.get("winch")).count);
+                }
+            </action>
+        </invokeLater>
+    </onLoad>
+   
+</data>

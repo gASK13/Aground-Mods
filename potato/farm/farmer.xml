@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<npcs>
+    <recipe id="make_potato_seed" creates="potato_seed" type="seed" available="getFlag('farmer_seen_potato')">
+		<item id="potato" count="4" />
+	</recipe>
+
+	<npc id="farmer" extends="farmer">
+		<operate>			
+				<section if="!getFlag('farmer_seen_potato') && (player.hasItem('potato'))">
+					<action>setFlag('farmer_seen_potato', true)</action>
+					<dialogue section="farmer" id="potato1" speaker='this' />
+                    <dialogue section="farmer" id="potato2" speaker='this' />
+                    <action>player.addItem('potato', -1);</action>
+                    <item id="potato_seed" />                    
+                    <dialogue section="farmer" id="potato2b" speaker='this' />
+					<dialogue section="farmer" id="potato3" speaker='this' />
+                    <dialogue section="farmer" id="b_potato2" speaker='this' />
+                    <dialogue section="farmer" id="b_potato3" speaker='this' />
+		            <quest id="baked_potato" />
+                </section>
+                <section if="player.hasQuest('baked_potato') && player.canCompleteQuest('baked_potato')">
+                    <dialogue section="farmer" id="b_potato_f1" speaker='this' />
+                    <complete quest="baked_potato" />
+           			<section with="fade">
+			            <dialogue section="farmer" id="b_potato_f2" speaker='this' />
+                    </section>
+                </section>
+		</operate>
+	</npc>
+             
+    <quest id="baked_potato" giver="farmer" exp="1000">
+        <item id="baked_potato" count="2" />
+    </quest>
+
+</npcs>

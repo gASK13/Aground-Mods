@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Robo Pen</name>
+    <description>An auto-collecting cage for all your resource needs!</description>
+    <author>gASK</author>
+    <version>1.1.2</version>
+    <init>
+            
+        <tilesheet id="robocage.png" width="76" height="32" />
+        <tile id="robocage" sheet="robocage.png" />
+        
+        <tilesheet id="robocage_s.png" /><tile id="robocage_s" sheet="robocage_s.png" x="0" />
+        <animation id="robocage.idle" count="1" x="0" />
+
+        <lang id="en_US">
+            <section id="item.names">
+                <text id="robocage_blueprint">Robo Pen Blueprint</text>
+            </section>
+            <section id="structure">
+                <text id="robocage">Robo Pen</text>
+            </section>
+            <section id="structure.tooltip"> 
+                <text id="robocage">Manage Robo Pen</text>
+            </section>
+            <section id="common">
+                <text id="dummy">Dummies</text>
+            </section>
+            <section id="npc">
+                <text id="robocage">Robo Pen</text>
+            </section>
+        </lang>
+        
+        <npc id="robocage" tile="robocage_s" />
+        
+        <area id="robocage_dummy" height="1" width="1">
+            <object id="robocage" x="1" y="1" />
+        </area>
+        
+        <structure id="robocage" width="76" height="32" image="robocage.png" type="pen" animals="3" name="robocage">
+            <sprite>
+                <tile x="1"/>
+                <animal i="0" offsetX="13" offsetY="28" />
+                <animal i="1" offsetX="23" offsetY="28" />
+                <animal i="2" offsetX="33" offsetY="28" />
+                <tile x="0"/>                                
+		    </sprite>
+            <animal id="wyrm" />
+            <animal id="cocoon" />
+            <animal id="dragon" />
+            <animal id="diode_wolf" />
+            <animal id="steel_wyrm" />
+            <animal id="pig" />
+            <animal id="cow" />
+            <animal id="chicken" />
+            <animal id="golem" />            
+         	<animal id="icer" />
+		    <animal id="yeti" />
+            <animal id="crawler" />
+            <animal id="fire_boar" />
+            <animal id="shadow_cat" />
+
+            <!--<animal id="scale_fish" />
+            <animal id="snaptopus" />
+            <animal id="shark" />-->
+	  
+	    </structure>
+        
+        <item id="robocage_blueprint" type="blueprint" cost="5000" weight="0" icon="blueprint.ico">
+            <action id="build" structure="robocage" underground="true">
+                <item id="steel_bar" count="6" />
+                <item id="gold_bar" count="3" />
+                <item id="titanium" count="6" />
+                <item id="uranium" count="3" />
+            </action>
+        </item>
+                
+        <!-- The invokeLater is because "newer" handlers come first and the "original" handler clears inventory. -->
+        <npc id="lurker" extends="lurker">
+            <init><invokeLater seconds="0.1"><action>this.inventory.addItems(getItem("robocage_blueprint"), 1);</action></invokeLater></init>
+            <awaken><invokeLater seconds="0.1"><action>this.inventory.addItems(getItem("robocage_blueprint"), 1);</action></invokeLater></awaken>
+        </npc>
+        
+        <npc id="lurker2" extends="lurker2">
+            <init><invokeLater seconds="0.1"><action>this.inventory.addItems(getItem("robocage_blueprint"), 1);</action></invokeLater></init>
+            <awaken><invokeLater seconds="0.1"><action>this.inventory.addItems(getItem("robocage_blueprint"), 1);</action></invokeLater></awaken>
+        </npc>
+        
+        <!-- start infinite check loop, every 5 seconds (see below). -->
+        <onLoad>
+            <invokeLater seconds="1">
+                <action>runProcedure("check_cages");</action>
+            </invokeLater>
+        </onLoad>
+        
+        <procedure id="check_cages">
+            <action>
+                checkCages(area, player, "robocage", player.areas.get("robocage_dummy").getNPC("robocage"));                
+            </action>
+            <invokeLater seconds="5">
+                <action>runProcedure("check_cages");</action>
+            </invokeLater>
+        </procedure>
+        
+        <action>        
+            offsiteAnimals = [];
+            offsiteCounter = [];
+            
+            // A function to check all cages - iterates over all areas and tries to find a specified cage
+            function checkCages(area, player, cageId, npc) {
+                aIter = player.areas.iterator();
+                while (aIter.hasNext()) {
+                    aItem = aIter.next();
+                    if (aItem.getMainStorehouse() == null) { continue; } //skip if no storehouse
+                    sIter = aItem.getStructures();
+                    while (sIter.hasNext()) {
+                        sItem = sIter.next();
+                        if (sItem.info.id == cageId) {
+                            collectAll(area, aItem, sItem, npc);                            
+                        }
+                    }
+                }
+            }
+            
+            // Collects all stuff from ROBOPEN
+            function collectAll(area, ar, pen, npc) {
+                slotIter = pen.getSlots();
+                while (slotIter.hasNext()) {
+                    slot = slotIter.next();
+                    if (slot.canHarvest()) {
+                        slot.harvest(function(ii, c) { collect(ii, c, ar.getMainStorehouse(), npc); });
+                    } else if (ar != area) {
+                        offsiteCheck(slot, ar, npc);
+                    }
+                }
+            }
+            
+            function offsiteCheck(slot, ar, npc) {
+                if(slot.info == null) { return; }
+                idx = offsiteAnimals.indexOf(slot.info.id);
+                if (0 > idx) {
+                    offsiteAnimals.push(slot.info.id);
+                    offsiteCounter.push(0);
+                    idx = offsiteAnimals.indexOf(slot.info.id);
+                }
+                
+                if (offsiteCounter[idx]++ > getMaxTime(slot.info.farmables)) {
+                    offsiteCounter[idx] -= getMaxTime(slot.info.farmables);
+                    for (info in slot.info.farmables) {
+                        ar.getMainStorehouse().addItem(npc, Item.get(info.item), info.getCount());
+                    } 
+                }
+            }
+            
+            function getMaxTime(farmables) {
+                max = 0;
+                for(info in farmables) {
+                    if (info.time > max) {
+                        max = info.time;
+                    }
+                }
+                return max * 2.5; // Magic constant to make the time the same as in game ticks for farms
+            }
+            
+            // Collect items callback (cause API)
+            function collect(itemInfo, count, storehouse, npc) {
+                storehouse.addItem(npc, itemInfo, count);
+            }
+        </action>        
+	</init>
+</mod>

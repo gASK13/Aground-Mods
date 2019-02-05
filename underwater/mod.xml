@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Underwater Equipment</name>
+    <description>Adds some stuff for more fun diving.</description>
+    <author>gASK</author>
+    <version>1.0.0</version>
+    <init>
+	   <include id="lang/languages.xml" />
+	   <include id="items/items.xml" />
+    </init>
+</mod>
+
+<!-- 
+
+- harpoon? something else?
+
+-->

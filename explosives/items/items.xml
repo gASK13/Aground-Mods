@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+
+    <!-- TILES -->    
+    <tilesheet id="items.png" width="16" height="10" />
+    <tile id="bomb_s.ico" sheet="items.png" x="0" />
+    <tile id="dynamite.ico" sheet="items.png" x="3" />
+    <tile id="shaped_charge.ico" sheet="items.png" x="4" />
+    <tile id="water_bomb.ico" sheet="items.png" x="5" />
+    <tile id="helium_bomb.ico" sheet="items.png" x="6" />
+    <tile id="saltpetre.ico" sheet="items.png" x="1" />                     
+    <tile id="ch_book.ico" sheet="items.png" x="2" />
+    
+    <!-- QUEST ITEMS + RESOURCES -->
+    <item id="saltpetre" icon="saltpetre.ico" type="resource" weight="1" cost="50" />
+    <enemy id="fire_boar" extends="fire_boar"><loot p="2" /><loot id="saltpetre" p="1" /></enemy>
+    <enemy id="fire_bird" extends="fire_bird"><loot p="4" /><loot id="saltpetre" p="1" /></enemy>
+    
+    <item id="ch_book" icon="ch_book.ico" type="tool" weight="5" cost="0">
+        <action id="use" name="read">        
+            <dialogue section="warning" id="ch_book_read" />
+        </action>
+    </item>
+    
+    <!-- SMALL BOMB -->
+    <tilesheet id="bomb_s.png" width="16" height="10" /><tile id="bomb_s" sheet="bomb_s.png" x="0" /><animation id="bomb_s" x="0" count="20" length="2" />          
+    <tilesheet id="boom_s.png" width="48" height="48" /><tile id="bomb_s_explosion" sheet="boom_s.png" x="0" /><animation id="bomb_s_explosion" x="0" count="4" length="2"/>   
+        
+    <object id="bomb_s_explosion" tile="bomb_s_explosion" animation="bomb_s_explosion" width="48" height="48" layer="top" fps="10" removeOnComplete="true" save="false">
+        <light tile="light.medium" color="ffff00" />
+    </object>
+    <object id="bomb_s_fuse" tile="bomb_s" animation="bomb_s" bomb="bomb_s" />
+    <item id="bomb_s" icon="bomb_s.ico" weight="5" cost="130" extends="bomb_base"
+        bomb_placement="bomb_s_fuse" bomb_explosion="bomb_s_explosion" bomb_damage="20" bomb_element="fire" 
+        bomb_underwater="false" bomb_flying="false" bomb_ground="true" />
+    
+    <recipe id="bomb_s" type="explosives" creates="bomb_s">
+        <type id="advanced_lab" />
+        <item id="saltpetre" count="1" />
+        <item id="coal" count="1" />
+        <item id="sulfur" count="1" />
+        <item id="iron" count="1" />
+    </recipe>
+    
+    <!-- DYNAMITE STICK -->
+    <tilesheet id="dynamite.png" width="16" height="10" />
+    <tile id="dynamite" sheet="dynamite.png" x="0" />
+    <animation id="dynamite" x="0" count="20" length="2" />          
+    <tilesheet id="boom_l.png" width="80" height="80" />
+    <tile id="bomb_l_explosion" sheet="boom_l.png" x="0" />
+    <animation id="bomb_l_explosion" x="0" count="4" length="2"/>     
+    <object id="dynamite_fuse" tile="dynamite" animation="dynamite" bomb="dynamite" />
+    <object id="bomb_l_explosion" tile="bomb_l_explosion" animation="bomb_l_explosion" layer="top" fps="10" removeOnComplete="true" save="false" width="80" height="80">
+        <light tile="light.large" color="ffff00" />
+    </object>
+    
+    <item id="dynamite" icon="dynamite.ico" weight="5" cost="220" extends="bomb_base"
+        bomb_placement="dynamite_fuse" bomb_explosion="bomb_l_explosion" 
+        bomb_damage="50" bomb_element="fire" bomb_radius="2" 
+        bomb_underwater="false" bomb_flying="false" bomb_ground="true" />
+    
+    <recipe id="dynamite" type="explosives" creates="dynamite">
+        <type id="advanced_lab" />
+        <item id="saltpetre" count="2" />
+        <item id="coal" count="2" />
+        <item id="sulfur" count="2" />
+    </recipe>
+    
+    <!-- SHAPED CHARGE -->
+    <tilesheet id="shaped.png" width="16" height="10" /><tile id="shaped_charge" sheet="shaped.png" x="0" /><animation id="shaped_charge" x="0" count="20" length="2" />          
+    <tilesheet id="boom_shape.png" width="112" height="16" /><tile id="boom_shape_explosion" sheet="boom_shape.png" x="0" />
+    <animation id="boom_shape_explosion" x="0" count="4" length="2"/>     
+    <object id="boom_shape_explosion" tile="boom_shape_explosion" animation="boom_shape_explosion" layer="top" fps="10" removeOnComplete="true" save="false" width="112" height="16" >
+        <light tile="light.large" color="ffff00" />
+    </object>
+    <object id="shaped_charge_fuse" tile="shaped_charge" animation="shaped_charge" bomb="shaped_charge" />
+    
+    <item id="shaped_charge" icon="shaped_charge.ico" weight="5" cost="500" extends="bomb_base"
+        bomb_placement="shaped_charge_fuse" bomb_explosion="boom_shape_explosion" 
+        bomb_damage="50" bomb_element="fire" bomb_radius="3" bomb_shape="sides" 
+        bomb_underwater="false" bomb_flying="false" bomb_ground="true" />
+    
+    <recipe id="shaped_charge" type="explosives" creates="shaped_charge">
+        <type id="advanced_lab" />
+        <item id="saltpetre" count="3" />
+        <item id="refined_oil" count="1" />
+        <item id="sulfur" count="2" />
+        <item id="silicon" count="1" />
+    </recipe>
+    
+    <!-- WATER BOMB -->
+    <tilesheet id="water.png" width="16" height="11" /><tile id="water_bomb" sheet="water.png" x="0" /><animation id="water_bomb" x="0" count="20" length="2" />          
+    <tilesheet id="boom_l_uw.png" width="80" height="80" /><tile id="bomb_l_uw_explosion" sheet="boom_l_uw.png" x="0" />
+    <animation id="bomb_l_uw_explosion" x="0" count="4" length="2"/>
+    <object id="bomb_l_uw_explosion" tile="bomb_l_uw_explosion" animation="bomb_l_uw_explosion" layer="top" fps="10" removeOnComplete="true" save="false" width="80" height="80" >
+        <light tile="light.large" color="0000ff" />
+    </object>
+    <object id="water_bomb_fuse" tile="water_bomb" animation="water_bomb" bomb="water_bomb" />
+    
+    <item id="water_bomb" icon="water_bomb.ico" weight="5" cost="600" extends="bomb_base"
+        bomb_placement="water_bomb_fuse" bomb_explosion="bomb_l_uw_explosion"
+        bomb_damage="30" bomb_element="fire" bomb_radius="2" 
+        bomb_underwater="true" bomb_flying="false" bomb_ground="false" />
+    
+    <recipe id="water_bomb" type="explosives" creates="water_bomb">
+        <type id="advanced_lab" />
+        <item id="saltpetre" count="3" />                
+        <item id="refined_oil" count="1" />
+        <item id="sulfur" count="2" />
+        <item id="titanium" count="1" />
+    </recipe>
+    
+    <!-- HELIUM BOMB -->
+    <tilesheet id="helium.png" width="16" height="12" /><tile id="helium_bomb" sheet="helium.png" x="0" /><animation id="helium_bomb" x="0" count="20" length="2" />          
+    <object id="helium_bomb_fuse" tile="helium_bomb" animation="helium_bomb" bomb="helium_bomb" />
+    
+    <item id="helium_bomb" icon="helium_bomb.ico" weight="1" cost="450" extends="bomb_base"
+        bomb_placement="helium_bomb_fuse" bomb_explosion="bomb_l_explosion" 
+        bomb_damage="50" bomb_element="fire" bomb_radius="2" 
+        bomb_underwater="false" bomb_flying="true" bomb_ground="false" />
+    
+    <recipe id="helium_bomb" type="explosives" creates="helium_bomb">
+        <type id="advanced_lab" />
+        <item id="saltpetre" count="3" />
+        <item id="refined_oil" count="1" />
+        <item id="sulfur" count="2" />
+        <item id="helium_sac" count="1" />
+    </recipe>
+    
+</data>

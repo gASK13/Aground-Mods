@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Gene Mod</name>
+    <description>Now with 100% more GMO!</description>
+    <author>gASK</author>
+    <version>0.6.9</version>
+    <requires>Full Version</requires>
+    <init>        
+        <!-- LANG -->
+        <lang id="en_US">
+            <section id="actions">
+                <text id="augment">Augment</text>
+                <text id="sequence">Sequence</text>         
+                <text id="erase">Erase</text>
+                <text id="erase_chip">Erase Gene-chip</text>
+                <text id="extract">Extract</text>
+                <text id="extract_genome">Extract Genome</text>
+            </section>
+            <section id="common">
+                <text id="consumes">-- Consumes --</text>
+                <text id="genome">Genome</text>
+            </section>
+            <section id="equipment">
+                <text id="gene">Gene-chip</text>
+            </section>
+            <section id="item.names">
+                <text id="rat_genome">Rat Genome</text>
+                <text id="boar_genome">Boar Genome</text>
+                <text id="pig_genome">Pig Genome</text>
+                <text id="gene_scanner">Gene Extractor</text>
+                <text id="g_small">SM-4LL</text>
+                <text id="g_agile">Agi-L3</text>
+                <text id="g_strong">STR0-NK</text>
+                <text id="g_fat">F4(t)</text>
+                <text id="gene_chip">Blank Gene-Mod</text>
+                <text id="gene_chip_agile">Agile Gene-Mod</text>
+                <text id="gene_chip_strong">Strong Gene-Mod</text>
+            </section>
+            <section id="item.descriptions">
+                <text id="gene_chip">A blank genetic modification chip.</text>
+                <text id="gene_chip_agile">Evasion: +1</text>
+                <text id="gene_chip_strong">Carry: +20</text>
+            </section>
+            <section id="warning">
+                <text id="genome">No genome to sequence!</text>
+            </section>
+            <section id="messages">
+                <text id="seq_result"></text>                
+                <text id="seq_result_basic">Sequencing yielded:</text>
+                <text id="nothing">nothing</text>
+            </section>
+            <section id="npc">
+                <text id="scientist">Biologist</text>
+            </section>
+            <section id="scientist">
+                <text id="research_set">How is the research going? If you want, I can help you with this. Just bring me {count} [item={item}]s and I will see if I can figure out something useful.</text>
+                <text id="research_repeat">When you get a chance, bring me the {count} [item={item}]s we were talking about - I might be able to figure out a new recipe for you from that.</text>
+                <text id="research_met">Wonderful! I see you have found {count} [item={item}]s! Let me take a crack at that...</text>
+                <text id="research_recipe">Hm, interesting. It seems that\n{enchant} {items} = {creates}.</text>
+                <text id="research_recipe_all">A very nice specimen, but it seems there is nothing more to learn from this.</text>
+            </section>                
+        </lang>
+        
+        <!-- GRAPHICS -->
+        <tilesheet id="items.png" width="16" height="10" />
+        <tile id="genome.ico" x="1" sheet="items.png" />
+        <tile id="rat_genome.ico" x="0" sheet="items.png" />
+        <tile id="gene_scanner.ico" x="2" sheet="items.png" />
+        <tile id="gene_chip.ico" x="3" sheet="items.png" />
+        <animation id="gene_scanner.acquire" x="0" count="12" color="60ff60" />
+        <animation id="gene_scanner.identify" x="12" count="5" color="60ff60" />
+        
+        <!-- GENOME DEFINITIONS -->
+        <itemtype  id="gene" icon="genome.ico" />                    
+    
+        <item id="rat_genome" type="gene" subtype="genome" icon="rat_genome.ico" weight="0" cost="0">
+            <gene id="g_agile" p="50" />
+            <gene id="g_small" p="100" />
+        </item>        
+        <item id="boar_genome" type="gene" subtype="genome" icon="rat_genome.ico" weight="0" cost="0">
+            <gene id="g_strong" p="60" />
+        </item>
+        <item id="pig_genome" type="gene" subtype="genome" icon="rat_genome.ico" weight="0" cost="0">
+            <gene id="g_fat" p="75" />
+        </item>
+        
+        <enemy id="gene_dummy">
+            <lootSet><loot gene="rat" id="rat_genome" /></lootSet>
+            <lootSet><loot gene="boar" id="boar_genome" /></lootSet>
+        </enemy>                                    
+        
+        <!-- GENE DEFINITION -->
+        <item id="g_agile" type="gene" subtype="gene" icon="genome.ico" weight="0" cost="0" />
+        <item id="g_small" type="gene" subtype="gene" icon="genome.ico" weight="0" cost="0" />
+        <item id="g_strong" type="gene" subtype="gene" icon="genome.ico" weight="0" cost="0" />
+        <item id="g_fat" type="gene" subtype="gene" icon="genome.ico" weight="0" cost="0" />
+        
+        <!-- SCANNER-->        
+        <item id="gene_scanner" icon="gene_scanner.ico" weight="5" cost="0" type="equipment" slot="shield" action="equip">
+            <identify tile="cyborg.identify" acquire="gene_scanner.acquire" animation="gene_scanner.identify" color="60ff60" />
+            <onEquip>
+                <action>
+                    for (loot in getObject("gene_dummy").loot) {
+                        enemyId = loot.loot[0].xml.get("gene");
+                        getObject(enemyId).loot.push(loot);
+                    }
+                </action>
+            </onEquip>
+            <onUnequip>
+                <action>
+                    for (loot in getObject("gene_dummy").loot) {
+                        enemyId = loot.loot[0].xml.get("gene");
+                        getObject(enemyId).loot.pop();
+                    }
+                </action>                
+            </onUnequip>
+            <action id="use" name="extract_genome">
+                <window type="craft" title="actions.extract"><recipe type="gene_extract" /></window>
+            </action>
+        </item>
+        <recipe id="craft_gene_scanner" creates="gene_scanner" type="gene_chip">
+            <item id="titanium" count="2" />
+            <item id="silicon" count="2" />
+            <item id="uranium" count="1" />
+        </recipe>
+        
+        <!-- EXTRACT RECIPES -->
+        <recipe id="pig_genome" creates="pig_genome" type="gene_extract" available="player.hasItem('pig')"><item id="pig" /></recipe>
+        
+        <!-- SLOTS AND ENHANCEMENT --> 
+        <player id="player.ancient" extends="player.ancient">
+            <!-- We need all cause otherwise GENE will be first -->
+            <slot id="weapon" /><slot id="shield" /><slot id="pickaxe"/><slot id="gene" flag="test" />
+        </player>
+        
+        <!-- GENE CHIPS -->
+        <item id="gene_chip" type="equipment" slot="gene" icon="gene_chip.ico" weight="2" cost="0" action="equip">
+            <equipCost storage="power" cost="1" />
+            <onEquip><action>applyStatsBoost(player, this.info, getVar, setVar);</action></onEquip>
+            <onUnequip><action>removeStatsBoost(player, this.info, getVar, setVar);</action></onUnequip>
+        </item>
+        <recipe id="craft_gene_chip" creates="gene_chip" type="gene_chip">
+            <item id="titanium" count="1" />
+            <item id="silicon" count="1" />
+            <item id="gold_bar" count="1" />
+        </recipe>
+
+        <item id="gene_chip_agile" extends="gene_chip" boost_stat="evason" boost_value="1" />             
+        <recipe id="gene_chip_agile" creates="gene_chip_agile" type="gene_manipulation">
+            <item id="gene_chip" count="1" />
+            <item id="g_agile" count="1" />
+        </recipe>        
+        <recipe id="agile_chip_erase" creates="gene_chip" type="gene_erase" available="player.hasItem('gene_chip_agile')"><item id="gene_chip_agile" /></recipe>
+        
+        <item id="gene_chip_strong" extends="gene_chip" boost_stat="weight" boost_value="20" />             
+        <recipe id="gene_chip_strong" creates="gene_chip_strong" type="gene_manipulation">
+            <item id="gene_chip" count="1" />
+            <item id="g_strong" count="1" />
+        </recipe>        
+        <recipe id="strong_chip_erase" creates="gene_chip" type="gene_erase" available="player.hasItem('gene_chip_strong')"><item id="gene_chip_strong" /></recipe>
+        
+        <!-- NPC -->
+        <action>
+            gene_goals = [
+                { id: 'rat_genome', min: 5, max: 12 }, 
+                { id: 'boar_genome', min: 4, max: 9 },
+                { id: 'pig_genome', min: 2, max: 5 },
+                { id: 'g_strong', min: 2, max: 4 }
+            ];
+            msg_to_replace = ['scientist.research_set', 'scientist.research_repeat', 'scientist.research_met'];
+            
+            function hasGoal(getVar) {
+                return getVar('gene_goal_n') != 0; 
+            }
+            
+            function setGoal(setVar, getVar, getText) {
+                goal = randInt(0, gene_goals.length);
+                goal_n = randInt(gene_goals[goal].min, gene_goals[goal].max + 1);
+                
+                setVar("gene_goal", goal);
+                setVar("gene_goal_n", goal_n);
+                
+                updateMessages(getVar, getText);
+            }
+            
+            function updateMessages(getVar, getText) {
+                for (msg in msg_to_replace) {
+                  getText(msg).update();                 
+                  getText(msg).set(replace(getText(msg).get(), gene_goals[getVar("gene_goal")].id, getVar("gene_goal_n")));
+                }
+            }
+            
+            
+            function isGoalMet(player, getVar, getText) {
+                updateMessages(getVar, getText);
+                
+                if (player.inventory.getItemCount(Item.get(gene_goals[getVar("gene_goal")].id)) >= getVar("gene_goal_n")) {
+                    return true;
+                }
+                
+                return false;
+            }
+            
+            function finishGoal(player, area, getVar, setVar, getText) {
+                player.addItem(gene_goals[getVar("gene_goal")].id, -getVar("gene_goal_n"));
+                setVar("gene_goal_n", 0);
+                
+                recipe = findUnusedRecipe(area);
+                if (recipe == null) {
+                    getText("scientist.research_recipe").set(getText("scientist.research_recipe_all").get());
+                    return;
+                }
+                
+                area.getStructureById("gene_lab").addRecipe(recipe);
+                getText("scientist.research_recipe").update();
+                getText("scientist.research_recipe").set(formatMessage(getText("scientist.research_recipe").get(), recipe));
+            }
+            
+            function findUnusedRecipe(area) {
+                recIt = Recipe.getByType("gene_manipulation");
+                recs = [];
+                gLab = area.getStructureById("gene_lab");
+                while (recIt.hasNext()) {
+                    rec = recIt.next();
+                    if (gLab.recipes.indexOf(rec) == -1) {
+                        recs.push(rec);
+                    }
+                }
+                
+                if (recs.length > 0) {
+                    return recs[randInt(0, recs.length)];
+                }
+                
+                return null;                                
+            }
+            
+            function replace(str, item, count) {
+                retString = "";
+                for (sub in str.split("{")) {
+                    for(lit in sub.split("}")) {
+                        if (lit == 'item') {
+                            retString += item;                            
+                        } else if (lit == 'count') {
+                            retString += count;
+                        } else {
+                            retString += lit;
+                        }
+                    }
+                }
+                
+                return retString;
+            }
+            
+            function formatMessage(str, recipe) {
+                retString = "";
+                for (sub in str.split("{")) {
+                    for(lit in sub.split("}")) {
+                        if (lit == 'items') {
+                            iit = recipe.getItemRequirements();
+                            iit.next();
+                            while(iit.hasNext()) {
+                                iitem = iit.next();
+                                retString += " + " + iitem.count + "x[item=" + iitem.item.id + "]";
+                            }                            
+                        } else if (lit == 'enchant') {
+                            retString += "[item=" + recipe.getFirstRequirement().id + "]";
+                        } else if (lit == 'creates') {
+                            retString += "[item=" + recipe.creates.item.id + "]";
+                        } else {
+                            retString += lit;
+                        }
+                    }
+                }
+                
+                return retString;
+            }
+            
+        </action>
+        <tilesheet id="scientist.png" width="16" height="16" />
+        <tile id="scientist" sheet="scientist.png" x="0" />	                                                     
+    	<animation id="scientist.build" count="8" x="19" />
+        <npc id="scientist" tile="scientist" action="talk" talk_sfx="talking1">
+            <idle class="build">
+    			<collect><loot id="meat" /></collect>
+    			<collect>
+    				<loot p="2" />
+    				<loot id="berries" p="4" />
+    				<loot id="red_berries" p="1" />
+    			</collect>
+            </idle>
+            <operate>
+                <section if="hasGoal(getVar) && isGoalMet(player, getVar, getText)">
+                    <dialogue section="scientist" id="research_met" speaker="this" />
+                    <!-- PROMPT -->
+                    <action>finishGoal(player, area, getVar, setVar, getText);</action>
+                    <dialogue section="scientist" id="research_recipe" speaker="this" />                
+                </section>
+                <section if="hasGoal(getVar) && !isGoalMet(player, getVar, getText)">
+                    <dialogue section="scientist" id="research_repeat" speaker="this" />
+                </section>
+                <section if="!hasGoal(getVar)">
+                    <action>setGoal(setVar, getVar, getText);</action>
+                    <dialogue section="scientist" id="research_set" speaker="this" />                    
+                </section>
+            </operate>
+        </npc>
+        <area id="farming" extends="farming">
+            <onLoad>
+                <object id="scientist" x="78" y="-1" if="area.getNPC('scientist') == null" />
+            </onLoad>                    
+        </area>
+                
+        <!-- GENE STRUCTURE -->
+        <action>
+            function getGenomeCount(player) {
+                count = 0;
+                iter = player.inventory.getItems();
+                while (iter.hasNext()) {
+                    item = iter.next();
+                    if (item.item.type.id == 'gene' && item.item.xml.get("subtype") == 'genome') {
+                        count += item.count;
+                    }
+                }
+                return count;
+            }
+            
+            function storeResult(results, id, resCount) {
+                for (result in results) {
+                    if (result.id == id) {
+                        result.count += resCount;
+                        return;
+                    }
+                }
+                
+                results.push({id: id, count: resCount});
+            }
+            
+            function applyStatsBoost(player, info, getVar, setVar) {
+                if (info.xml.get("boost_stat") == null) { return; }
+                if (getVar(info.id) != null) {
+                    removeStatsBoost(player, info, getVar, setVar);
+                }
+                setVar(info.id, Std.parseInt(info.xml.get("boost_value")));
+                player.stats.get(info.xml.get("boost_stat")).permaBuff(getVar(info.id));
+            }
+            
+            function removeStatsBoost(player, info, getVar, setVar) {
+                if (info.xml.get("boost_stat") == null) { return; }
+                player.stats.get(info.xml.get("boost_stat")).permaBuff(-getVar(info.id));
+                setVar(info.id, null);
+            }
+            
+            function sequenceGenomes(player, getText, randInt, getVar, setVar) {
+                iIter = player.inventory.getItems();
+                resultMsg = getText("messages.seq_result_basic").get();
+                while (iIter.hasNext()) {
+                    iItem = iIter.next();                                   
+                    if (iItem.item.type.id == 'gene' && iItem.item.xml.get("subtype") == 'genome') {
+                        toProcess = iItem.count;
+                        resultMsg += "\n" + toProcess + "x[item=" + iItem.item.id + "]: ";
+                        results = [];
+                        while (toProcess-- > 0) {
+                            diceRoll = randInt(1, 101);
+                            genIter = iItem.item.xml.elementsNamed("gene");
+                            while (genIter.hasNext()) {
+                                gen = genIter.next();                             
+                                if (luckBalancer(gen, diceRoll, getVar, setVar)) {
+                                    player.addItems(Item.get(gen.get("id")), 1).destroy();
+                                    storeResult(results, gen.get("id"), 1);
+                                }
+                            }         
+                        }
+                        player.addItems(iItem.item, -iItem.count).destroy();
+                        first = true;
+                        if (results.length == 0) { resultMsg += getText("messages.nothing").get(); }
+                        for (result in results) { resultMsg += (first ? "" : "+ ") + result.count + "x[item=" + result.id + "] "; first = false; }
+                    }
+                }
+                getText("messages.seq_result").set(resultMsg);
+            }
+            
+            function luckBalancer(gen, diceRoll, getVar, setVar) {
+                if (getVar(gen.get("id")) == null) { setVar(gen.get("id"), 0); }
+                
+                prob = Std.parseInt(gen.get("p")) + getVar(gen.get("id"));                
+                
+                if (prob >= diceRoll) {
+                    setVar(gen.get("id"), 0);
+                    return true;
+                }
+                
+                setVar(gen.get("id"), getVar(gen.get("id")) + gen.get("p") / 2);
+                return false;
+            }
+
+        </action>
+    	<animation id="com_station.idle" count="10" />
+    	<structure id="gene_lab" width="32" height="32" image="com_station.png" type="enchant" slots="3" name="enter" title="actions.augment">
+            <!-- SEQUENCE GENOME -->
+            <listItem icon="genome.ico" title="actions.sequence" if="getFlag('test_flag')" 
+                enabled="getGenomeCount(player) > 0" fail="'warning.genome'">
+                <tooltip type="requires" requires="common.consumes">
+                    <requirement title="common.genome" icon="genome.ico" count="getGenomeCount(player)" of="getGenomeCount(player)"/>
+                </tooltip>
+                <action>
+                    sequenceGenomes(player, getText, randInt, getVar, setVar);
+                </action>
+                <dialogue section="messages" id="seq_result" />
+            </listItem>
+                        
+            <!-- ERASE CHIPS -->                                                     
+            <listItem icon="gene_chip.ico" title="actions.erase_chip">
+                <window type="craft" title="actions.erase"><recipe type="gene_erase" /></window>
+            </listItem>            
+            
+            <!-- MAKE GENES USABLE -->                        
+		    <item id="g_agile" />
+            <item id="g_strong" />            
+            <item id="g_small" />
+            <item id="g_fat" />
+            
+            <!-- Enchant recipes groups -->            
+            <enchant type="gene_manipulation" />
+            
+            <!-- BUILD CHIP --> <!-- BUILD GENE SCANNER -->
+            <recipe type="gene_chip" />
+    	</structure>                                                               
+	</init>
+</mod>

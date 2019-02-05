@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Tranquilizer Gun</name>
+    <description>Catch enemies from safe distance!</description>
+    <author>gASK</author>
+    <version>1.0.0</version>
+    <init>        
+        <!-- LANG -->
+        <lang id="en_US">
+            <section id="actions">
+                <text id="augment">Augment</text>
+            </section>
+            <section id="equipment">
+                <text id="gene">Gene-chip</text>
+            </section>
+            <section id="capture">
+                <text id="fail_dart">Ineffective!</text>
+            </section>
+            <section id="item.names">
+                <text id="tranquilizer">Tranquilizer Gun</text>
+                <text id="sleep_dart">Sleep Dart</text>
+                <text id="plant_dart">Poison Dart</text>
+                <text id="ice_dart">Ice Dart</text>
+            </section>
+        </lang>
+        
+        <!-- GRAPHICS -->
+        <tilesheet id="items.png" width="16" height="10" />
+        <tile id="tranquilizer.ico" x="0" sheet="items.png" />
+        <tile id="sleep_dart.ico" x="1" sheet="items.png" />
+        <tile id="plant_dart.ico" x="2" sheet="items.png" />
+        <tile id="ice_dart.ico" x="3" sheet="items.png" />
+        <tile id="empty.ico" x="30" sheet="items.png" />
+
+        <tilesheet id="tranquilizer.png" width="18" height="7" />      
+        <tile id="tranquilizer" sheet="tranquilizer.png" x="0" offsetX="-6" offsetY="4"/>
+        <animation id="equipment.tranquilizer.idle" x="0" count="1" />
+        <animation id="equipment.tranquilizer" x="1" count="7" />     
+    
+        <tilesheet id="darts.png" width="3" height="1" />
+        <tile id="sleep_dart" sheet="darts.png" x="0" />
+        <animation id="sleep_dart.idle" sheet="darts.png" x="0" count="1" />
+        <tile id="plant_dart" sheet="darts.png" x="1" />
+        <animation id="plant_dart.idle" sheet="darts.png" x="0" count="1" />
+        <tile id="ice_dart" sheet="darts.png" x="2" />
+        <animation id="ice_dart.idle" sheet="darts.png" x="0" count="1" />
+        
+        <item id="tranquilizer" delay="3" type="equipment" slot="weapon" cost="100" weight="3" stamina="5" range="5" icon="tranquilizer.ico"
+        projectile="sleep_dart" movement_walk="walk_rswing">
+            <action id="equip" />
+            <action id="setProjectile" />
+            <use slot="shield" />                    
+        </item>
+        
+        <action>
+            function tranquilize(projectile, iInfo, area, player) {
+                for(o in area.getObjectsInTile(projectile.tile_x, projectile.tile_y)) {
+                    if (o.info.xml.nodeName() == 'enemy') {
+                        // try to catch them all!
+                        catch = o.attemptCatch(iInfo.xml.get("capture"), player.stats.get("trapping").get(), getElement(iInfo.xml.get("element")));
+                        
+                        // add temp trap for notification (not nice, but eh)
+                        newO = getObject('fake_trap').create(projectile.tile_x * Tile.SIZE, projectile.tile_y * Tile.SIZE); 
+                        area.addObject(newO);
+                        
+                        // Catch means the catch method returns EXACTLY 7
+                        if (catch == 7) {
+                            area.removeObject(o);                            
+                            newO.setHeld(new ItemCt(Item.get(o.info.capture[0].first),1),10);
+                            newO.showPopup(false,getText("capture.caught"));
+                        } else {
+                            newO.showPopup(false,getText(catch >= 3 ? "capture.almost" : "capture.fail_dart"));
+                            area.removeObject(newO);
+                        }
+                        return;
+                    }
+                }                
+            }
+        </action>
+        
+        <item id="fake_trap" type="object" object="trap" icon="empty.ico" weight="0" cost="0" capture="0" />
+        
+        <item id="sleep_dart" type="equipment" capture="2" cost="0" weight="1" icon="sleep_dart.ico" attack="2" action="fire" with="tranquilizer">
+            <projectile tile="sleep_dart" speed="3" animation="sleep_dart.idle" offsetY="3" offsetX="-3">
+                <onHit>
+                    <action>                                                               
+                        tranquilize(this, Item.get("sleep_dart"), area, player);
+                    </action>
+                </onHit>
+            </projectile>            
+        </item>
+        
+        <item id="plant_dart" extends="sleep_dart" capture="4" attack="3" element="plant" icon='plant_dart.ico'>
+            <projectile tile="plant_dart" speed="3" animation="plant_dart.idle" offsetY="3" offsetX="-3">
+                <onHit>
+                    <action>                                                               
+                        tranquilize(this, Item.get("plant_dart"), area, player);
+                    </action>
+                </onHit>
+            </projectile>
+        </item>
+        
+        <item id="ice_dart" extends="sleep_dart" capture="4" attack="3" element="ice" icon="ice_dart.ico">
+            <projectile tile="ice_dart" speed="3" animation="ice_dart.idle" offsetY="3" offsetX="-3" hitEffect="freeze">
+                <onHit>
+                    <action>                                                               
+                        tranquilize(this, Item.get("ice_dart"), area, player);
+                    </action>
+                </onHit>
+            </projectile>
+        </item>
+        
+        <recipe id="tranquilizer" creates="tranquilizer" type="factory">
+            <item id="steel_bar" count="3" />
+            <item id="wood" count="1" />
+        </recipe>
+        
+        <recipe id="sleep_dart" creates="sleep_dart" type="factory" count="2">
+            <item id="steel_bar" count="1" />
+            <item id="berries" count="1" />
+            <item id="red_berries" count="1" />
+        </recipe>
+        
+        <recipe id="plant_dart" creates="plant_dart" type="enchantments">
+            <item id="sleep_dart" count="1" />
+            <item id="plant_eye" count="1" />
+        </recipe>
+        
+        <recipe id="ice_dart" creates="ice_dart" type="enchantments">
+            <item id="sleep_dart" count="1" />
+            <item id="yeti_fur" count="1" />
+        </recipe>
+        
+        </init>
+</mod>

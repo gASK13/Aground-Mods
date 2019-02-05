@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+    <quest id="airship" giver="mechanic" recipe="zeppelin" exp="1000" />
+    <procedure id="airship">
+		<set id="speaker" value="exists('mechanic')?mechanic:this" />
+		<dialogue section="mechanic" id="build_airship1" speaker='speaker' />
+        <dialogue section="mechanic" id="build_airship2" speaker='speaker' />
+        <dialogue section="mechanic" id="build_airship3" speaker='speaker' />
+		<quest id="airship" />
+	</procedure>
+    <procedure id="airship_finish">
+		<set id="speaker" value="exists('mechanic')?mechanic:this" />
+		<dialogue section="mechanic" id="build_airship4" speaker='speaker' />        
+		<complete quest="airship" />               
+        <sound id="build" />
+		<section with="fade">
+			<section if="area.id == 'science1'">
+            	<move object="player" x="138" />
+                <move object="this" to="player" />
+                <object id="zeppelin" x="player.tile_x-5" />
+                <dialogue section="mechanic" id="build_airship5" speaker='speaker' />
+                <dialogue section="mechanic" id="build_airship6" speaker='speaker' />                    
+            </section>
+            <section if="area.id == 'crashed_ship.cave1'">
+                <move object="player" x="51" y="19" />
+                <move object="this" to="player" />
+                <object id="zeppelin_fake" x="player.tile_x-5" y="19" />
+                <dialogue section="mechanic" id="build_airship_cave" speaker='speaker' />
+                <dialogue section="mechanic" id="build_airship_cave2" speaker='speaker' />
+            </section>
+		</section>
+	</procedure>
+    <npc id="mechanic" extends="mechanic">
+		<operate>			
+			<run procedure="airship" if="!player.hasQuest('airship') && player.questComplete('factory') && player.hasItemStorehouse('helium_sac')" />
+            <run procedure="airship_finish" if="player.hasQuest('airship') && player.canCompleteQuest('airship')" />
+		</operate>
+	</npc>
+
+</data>

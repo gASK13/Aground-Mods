@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<trees>
+    <tilesheet id="wild_potato.png" widht="16" height="16" />
+	<tile id="wild_potato" sheet="wild_potato.png" x="0" />
+	<animation id="wild_potato.grow" count="7" reverse="true" />
+	<bush id="wild_potato" loot="potato" min="1" max="3" grown="4" speed="0.01" tile="wild_potato" tooltip="object.tooltip.wild_potato" />
+</trees>
+

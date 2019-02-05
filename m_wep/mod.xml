@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Mirrows Weapons</name>
+    <description>Mirrows have begrudgingly give you access to their weapons!</description>
+    <author>gASK</author>
+    <version>1.0.0</version>
+    <init>
+            
+        <!--
+            ANIMATION COPIED FROM MIRROWS AND PROPERLY RENAMES / OFFSET
+        -->
+
+        <include id="mirrows.xml" includeRoot="true" />
+        <include id="lightning.xml" includeRoot="true" />
+        
+        <tile id="tentacle" x="77" sheet="mirrows.png" />
+        <tile id="tentacle.ico" x="77" sheet="mirrows.png" />
+        <tile id="tentacle_slow" x="77" sheet="mirrows.png" />
+        <animation id="tentacle" offsetX="-4" offsetY="-8" x="4" count="8" repeat="3" />
+        <animation id="tentacle_slow" offsetX="-4" offsetY="-8" x="4" count="8" repeat="3" />
+        <animation id="equipment.tentacle.idle" offsetX="-10" offsetY="-1" x="4" count="8" repeat="3" />
+        <animation id="equipment.tentacle" offsetX="-10" offsetY="-1" x="18" count="3" />
+        <animation id="equipment.tentacle_slow.idle" offsetX="-10" x="4" offsetY="-1" count="8" repeat="3" />
+        <animation id="equipment.tentacle_slow" offsetX="-10" offsetY="-1" x="12" count="6" />
+        
+        <tile id="lightning_ball" x="0" sheet="mirrows.png" />
+	    <animation id="lightning_ball.hit" x="0" count="3" />
+	    <animation id="lightning_ball.idle" x="3" count="6" />
+	    
+        <tile id="lightning_launcher" x="0" sheet="lightning.png" />
+        <animation id="equipment.lightning_launcher" offsetX="-8" offsetY="-8" count="11" glow="true" />
+        <animation id="equipment.lightning_launcher.idle" x="100" count="1" />
+        
+        <tile id="lightning_hand" x="11" sheet="lightning.png" />
+        <animation id="equipment.lightning_hand.idle" x="100" count="1" />
+       	<animation id="equipment.lightning_hand">
+    		<frame x="0" glow="true" offsetX="-8" offsetY="-8" /><frame visible="false" /><frame x="1" offsetX="-8" offsetY="-8" glow="true" /><frame visible="false" />
+    		<frame x="2" glow="true" offsetX="-8" offsetY="-8"/><frame visible="false" /><frame x="3" offsetX="-8" offsetY="-8" glow="true" /><frame visible="false" />
+    		<frame x="4" glow="true" offsetX="-8" offsetY="-8"/><frame visible="false" /><frame x="5" offsetX="-8" offsetY="-8" glow="true" />
+    	</animation>
+
+        <tilesheet id="items.png" width="16" height="10" />      
+        <tile id="lightning_launcher.ico" x="0" sheet="items.png" />
+        <animation id="lightning_launcher" count="8" />  
+        <tile id="lightning_hand.ico" x="8" sheet="items.png" />
+        <animation id="lightning_hand" count="8" />
+          
+        <!--
+            ITEMS 
+        -->
+       
+        <item id="tentacle" weight="0" cost="0" unequip="false" icon="tentacle.ico" animation="tentacle" 
+        type="equipment" slot="shield" use="attack" attack="5" power="5" range="0.5">
+            <equipCost storage="power" cost="2" />
+        </item>
+        
+        <item id="tentacle_slow" weight="0" cost="0" unequip="false" icon="tentacle.ico" animation="tentacle" 
+        type="equipment" slot="shield" use="attack" attack="10" power="10" range="0.5" knockback="10">
+            <equipCost storage="power" cost="2" />
+        </item>
+        
+        <item id="lightning_launcher" weight="0" cost="0" unequip="false" icon="lightning_launcher.ico" animation="lightning_launcher"
+         type="equipment" slot="shield" use="attack" attack="15" power="50" range="10">
+            <projectile tile="lightning_ball" animation="lightning_ball.idle" delay="11" speed="2" offsetX="-16" offsetY="2" glow="true">
+				<hitEffect tile="lightning_ball" animation="lightning_ball.hit" color="ffdd99" />
+			</projectile>
+        </item>
+        
+        <item id="lightning_hand" weight="0" cost="0" unequip="false" icon="lightning_hand.ico" animation="lightning_hand" 
+        type="equipment" slot="shield" use="attack" attack="8" power="15" range="1">
+        </item>
+        
+        <!--
+            RECIPES
+         -->
+         
+        <recipe id="tentacle" creates="tentacle" type="operation_table">
+            <item id="steel_bar" count="1" />
+            <item id="titanium" count="1" />
+            <item id="silicon" count="3" />
+        </recipe>
+        
+        <recipe id="tentacle_slow" creates="tentacle_slow" type="operation_table">
+            <item id="steel_bar" count="1" />
+            <item id="titanium" count="1" />
+            <item id="silicon" count="3" />
+        </recipe>
+        
+        <recipe id="lightning_launcher" creates="lightning_launcher" type="operation_table">
+            <item id="titanium" count="2" />
+            <item id="silicon" count="2" />
+        </recipe>
+        
+        <recipe id="lightning_hand" creates="lightning_hand" type="operation_table">
+            <item id="titanium" count="2" />
+            <item id="silicon" count="2" />
+        </recipe>
+
+        
+        <!--
+            NAMES 
+        -->
+        
+        <lang id="en_US">
+            <section id="item.names">
+                <text id="tentacle">Fast Tentacle</text>
+                <text id="tentacle_slow">Powerful Tentacle</text>
+                <text id="lightning_launcher">Ball Lightning Arm</text>
+                <text id="lightning_hand">Lightning Hand</text>
+            </section>
+        </lang>
+		
+	</init>
+</mod>
