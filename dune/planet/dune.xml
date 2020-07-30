@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+    <include id="dune_desert.xml" />
+    
+    <!-- PLANET TILE (NAV SCREEN) -->
+	<animation id="dune">
+		<append tile="planet3" animation="single" color="ffb93f" colorScale="1" />
+		<append tile="planet3.shadow" animation="single" /><frame visible="false" />
+	</animation>
+    
+    <!-- PLANET BAKCGOUNRD -->
+    <tilesheet id='bg.png' width='768' height='55' />
+    <tilesheet id='bg_far.png' width='256' height='59' />
+    
+    <!-- PLANET SUN TILE -->
+    <tilesheet id='betel.png' width='320' height='320' />
+    <tile id="betel" sheet="betel.png" x="0"/>
+    <animation id="betel" x="0" count="1" />
+    
+    <!-- NAVIGATION SCREEN (SMALL STAR) -->
+    <tilesheet id='star_sm.png' width='13' height='13' />    
+    <tile id="nav.betel" sheet="star_sm.png" x="0" offsetX="-6" offsetY="-6" />
+    <animation id="nav.betel">
+        <frame x="0" length="10" />
+        <frame x="1" length="1" />
+        <frame x="2" length="1" />
+        <frame x="1" length="1" />
+        <frame x="0" length="4" />
+        <frame x="1" length="1" />
+        <frame x="2" length="1" />
+        <frame x="1" length="1" />
+    </animation>
+    
+    <!-- DUNE ORBIT + PLANET PARALAX -->                          
+    <parallax id="dune.orbit" skyColor="0" mapBG="0">
+		<layer p="0" glow="true" max_depth="10000"><tile sheet="{mod:full_version}/space/night_bg.png" x="0" y="0" /></layer>
+		<layer p="0" glow="true" max_depth="10000">
+			<tile id="betel" animation="betel" fps="5" rise="5" set="20" dir="right" pathHeight="46" pathTop="-6" sun="true" />
+		</layer>
+        <layer p="0" py="0.0125" max_depth="10000"><tile sheet="bg_far.png" x="0" dy="84" /></layer>
+		<layer p="0" py="0.0125" id="dune.land" scroll="0.03125" max_depth="10000"><tile sheet="bg.png" x="0" dy="94" /></layer>
+		<layer type="back" />
+	</parallax>
+
+    <!-- PLANET -->
+    <planet id="dune" height="80">
+		<orbit id="dune.orbit" width="192" height="48" background="dune.orbit" name="system.planet.dune_orbit" type="none">
+        	<area id="dune.desert" x="0" />
+			<init><runAreaLoad /></init>
+			<onLoad><music id="orbit" seconds="1" /><radar tile="orbit.radar" animation="orbit.radar" padding="2" /></onLoad>
+		</orbit>
+	</planet>
+    
+    <!-- SYSTEM -->
+	<system id="betel" bgm="voyage" x="220" y="18" tile="nav.betel" animation="nav.betel">
+		<planet id="dune" tile="planet3" animation="dune" orbit="orbit4" orbitOffX="0" offsetX="61" offsetY="22" name="system.planet.dune" />
+	</system>
+    
+    <lang id="en_US">
+    	<section id="system.desc">
+            <text id="betel">???</text>
+        </section>
+        <section id="system">
+		    <text id="betel">Betel-465 System</text>
+	    </section>
+        <section id="system.planet">
+            <text id="dune">Betel-465 D</text>
+            <text id="dune_orbit">Betel-465 D Orbit</text>
+        </section>
+        <section id="system.planet.desc">
+            <text id="dune">A tiny desert planet orbiting a red giant.</text>
+        </section>
+    </lang>
+</data>

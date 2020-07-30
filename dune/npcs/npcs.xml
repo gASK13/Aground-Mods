@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+    <!-- CRAWLER CLOSED AT NIGHT -->
+    <!-- ANIMATIONS -->
+    <tilesheet id="tribe.png" />
+    <tile id="tribeman1" sheet="tribe.png" x="0" />
+    <tile id="tribeman2" sheet="tribe.png" x="1" />
+    <tile id="tribeman3" sheet="tribe.png" x="2" />
+    <tile id="tribeman4" sheet="tribe.png" x="3" />
+    
+    <animation id="tribeman1.idle" count="1" x="0" />
+	<animation id="tribeman1.walk" count="1" x="0" />
+    <animation id="tribeman2.idle" count="1" x="0" />
+	<animation id="tribeman2.walk" count="1" x="0" />
+    <animation id="tribeman3.idle" count="1" x="0" />
+	<animation id="tribeman3.walk" count="1" x="0" />
+    <animation id="tribeman4.idle" count="1" x="0" />
+	<animation id="tribeman4.walk" count="1" x="0" />
+    
+    <tilesheet id="crawler.png" width="128" height="64" />
+    <tile id="crawler" sheet="crawler.png" x="0" />
+    <structure id="crawler" tile="crawler" action="open">
+        <operate>
+            
+        </operate>
+    </structure>
+    
+    <npc id="tribeman1" tile="tribeman1" action="talk">
+		<idle class="wander" fromX="85" toX="95" />
+        <operate>
+            <quest />
+        </operate>
+	</npc>
+	<npc id="tribeman2" tile="tribeman2" behind="true">
+		<idle class="wander" fromX="70" toX="90" />
+	</npc>
+    <npc id="tribeman3" tile="tribeman3" behind="true">
+		<idle class="wander" fromX="78" toX="95" />
+	</npc>
+    <npc id="tribeman4" tile="tribeman4" behind="true">
+		<idle class="wander" fromX="85" toX="100" />
+	</npc>
+
+    
+</data>

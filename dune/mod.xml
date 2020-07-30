@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Dune WIP</name>
+    <description>Based on robo alchemist design. Nomadic desert people and stuff.</description>
+    <author>gASK</author>
+    <version>0.6.9</version>
+    <init>
+        <include id="enemies/enemy.xml" />
+        <include id="npcs/npcs.xml" />
+        <include id="planet/dune.xml" />
+        <include id="planet/station.xml" />
+        <include id="structures/mine.xml" />
+        <!--
+            TODO:
+                ENEMIES
+                    Sand wyrm
+                    Flying scorpion - ranged version of whirlwind?
+                    Loot + recipes ???
+                STRUCTURES
+                    Scorpion lair
+                    Robopeople vehicle - operation
+                    Robopeople refugee camp
+                    Broken miner
+                    Miner (MINE ORES BASED ON AVAILABILITY IN THE AREA - TAKE TIME AS RESOURCE)
+                QUEST
+                    Discovery
+                    Destroy lair
+                    Repair miner
+                    Destroy bomber (DO I WANT TO DO THE LEAVE OPTION -> DESTROY AND NO BP???)
+                    ???
+                SPACE
+                    Space station
+                NPCS
+                    Robopeople
+                    Main roboperson
+                OTHER
+                    Spice? Spice recipes?
+                    Further quests?
+                    Fusion battery? Other devices?
+                    Buried treasure? Unique item or something? Unique SPELL maybe? PILLAR?
+                    
+            ART:
+                Sun sky sprite
+                Proper paralax (canyon mostly)
+                Planet sprite
+                Planet BG sprites
+                Flying beetle sprite
+                Robopeople vehicle + night mode
+                Robopeople talk + move
+                ???
+                    
+            PROGRESSION:
+            - distress call / FTL error
+            - find system + planet
+            - find robonomads
+            - get QUEST to FIX mine
+            - FIX mine and DEFEAT enemies
+            - bombardment - uh-oh
+            - destroy mine, people underground
+            - kill BOMBER quest
+            - IF DONE - get BP for mine and meet us at station -> built on next return
+            - IF LEAVE - destroy people, bomber leaves, blueprints in rubble -> no station
+            - ???
+           
+        -->
+	</init>
+</mod>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+
+    <tile id="d_swarm" sheet="swarm.png"/>
+    <animation id="d_swarm.idle" x="2" count="1" />
+	<animation id="d_swarm.walk" x="2" count="1" />
+	<animation id="d_swarm.attack" x="3" count="1" length="4" />
+	<animation id="d_swarm.tornado.idle" x="0" count="2" />
+	<animation id="d_swarm.tornado.form" x="0" count="3" reverse="true" length="3" />
+	<animation id="d_swarm.unform" x="0" count="3" length="3" />
+	<animation id="d_swarm.tornado.walk" equals="d_swarm.tornado.idle" />
+    
+    <enemy id="d_swarm" tile="d_swarm" health="30" type="surface" vertical="true" speed="2" defense="6" range="1" element="earth" passEnemies="true" flying="true">		
+		<attack type="melee" damage="22" range="1" element="earth" />
+		<cooldown seconds="1">
+            <action>
+                if(this.animPrefix == "d_swarm.tornado" && this.getHealth() == this.getMaxHealth()) {
+                    this.endVulnerable(); this.animPrefix = null; this.renderer.allowAttack = true; this.passPlayer = false;
+                    this.playAnimation('unform');
+                } else if (this.animPrefix == null && 0.4 > (this.getHealth() / this.getMaxHealth())) {
+                    this.setVulnerable(50,50); this.animPrefix = "d_swarm.tornado"; this.renderer.allowAttack = false; this.passPlayer = true;
+                    this.playAnimation('form');
+                } else {                
+                    this.loseHealth(-2);
+                }
+            </action>            			
+        </cooldown>
+		<over><damage object="player.vehicle==null?player:player.vehicle" attacker="this" damage="15" element="earth" if="this.front_defense != -1" /></over>
+		<overSecond><damage object="player.vehicle==null?player:player.vehicle" attacker="this" damage="15" element="earth" if="this.front_defense != -1" /></overSecond>
+	</enemy>
+</data>
