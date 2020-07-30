@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>KSP</name>
+    <description>Your favorite space-faring civilization, now in Aground!</description>
+    <author>gASK</author>
+    <version>1.0.0</version>
+    <loadAfter>Full Version</loadAfter>
+    <init>
+        <!--
+            This mod uses sprites created by u/QuantumFractal from Reddit.
+            
+            See https://www.reddit.com/r/KerbalSpaceProgram/comments/2bn2ly/kerbal_space_program_with_pixels_made_all_by_hand/ for more information. 
+        
+        -->
+        <include id="planet/kerbol.xml" />
+        <!--
+            
+            OPTIONAL:                
+                KERBIN
+                    - fishing "easter eggs" -> debris and maybe snacks?
+                    - proper floating debris sprites
+                    
+                ART
+                    - shading to Kerbals
+                    - talking / waving kerbals
+                    - helmetless kerbals                    
+            TODO:        
+                KSC
+                    - proper KSC sprite!!!                    
+        -->
+	</init>
+</mod>

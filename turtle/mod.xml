@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mod>
+    <name>Great A'Tuin</name>
+    <description>Not a real mod, just a ... joke.</description>
+    <author>gASK</author>
+    <version>0.6.9</version>
+    <loadAfter>Full Version</loadAfter>
+    <init>
+        <!-- TEST -->
+    
+        <tilesheet id='test.png' width='21' height='21' />    
+        <tile id="nav.test" sheet="test.png" x="0" offsetX="-10" offsetY="-10" />
+        <animation id="nav.test">
+            <frame x="0" length="1" />
+            <frame x="1" length="1" />
+            <frame x="2" length="1" />
+            <frame x="3" length="1" />
+        </animation>
+        
+        <tilesheet id='test_turtle.png' width='100' height='100' />
+        <tile id='test_turtle' sheet='test_turtle.png' x='0' />
+        <animation id="test_turtle_move">
+            <frame x="0" length="1" />
+            <frame x="1" length="1" />
+            <frame x="2" length="1" />
+            <frame x="1" length="1" />
+        </animation>
+                
+        <animation id="test_turtle">
+    		<append tile="test_turtle" animation="test_turtle_move"  />		        
+            <append tile="nav_test_sun" animation="single" offsetX='-1.49' offsetY='-0.33' />
+    	</animation>
+        
+        <tilesheet id='nav_test.png' width='50' height='50' />
+        <tile id='nav_test_sun' sheet='nav_test.png' x='0' />
+        
+        <system id="test" bgm="voyage" x="150" y="88" tile="nav.test" animation="nav.test">
+    		<planet id="turtle" tile="test_turtle" animation="test_turtle" offsetX="71" offsetY="12" name="system.planet.kerbin" />
+    	</system>
+	</init>
+</mod>

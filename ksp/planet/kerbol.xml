@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>    
+    
+    <!-- ---------------------------------------------------------- -->
+    <!-- PLANET TILE (NAV SCREEN) -->
+    
+    <tilesheet id='nav_kerbol.png' width='39' height='41' />
+    <tile id='nav_kerbol_sun' sheet='nav_kerbol.png' x='0' />
+    
+    <tilesheet id='planet0.png' width='3' height='3' />
+    <tile id='planet0' sheet='planet0.png' x='0' />
+            
+    <animation id="kerbin">
+		<append tile="planet5" animation="single" color="1c1daf" colorScale="2" />		        
+		<append tile="planet4.land2" animation="single" color="405340" colorScale="2" />
+        <append tile="planet5.land2" animation="single" color="307330" colorScale="2" />
+        <append tile="planet4.clouds" animation="single" color="afacaf" colorScale="2" />
+		<append tile="planet5.shadow" animation="single" /><frame visible="false" />        
+        <append tile="nav_kerbol_sun" animation="single" offsetX='-0.29' offsetY='-0.53' />
+	</animation>
+            
+    <animation id="mun">
+		<append tile="planet2" animation="single" color="c0c0c0" colorScale="2" />
+		<append tile="planet2.shadow" animation="single" /><frame visible="false" />
+	</animation>
+    
+    <animation id="minmus">
+		<append tile="planet0" animation="single"/>
+	</animation>
+    
+    <!-- ---------------------------------------------------------- -->
+    <!-- NAVIGATION SCREEN (SMALL STAR) -->    
+    
+    <tilesheet id='star_sm.png' width='13' height='13' />    
+    <tile id="nav.kerbol" sheet="star_sm.png" x="0" offsetX="-6" offsetY="-6" />
+    <animation id="nav.kerbol">
+        <frame x="0" length="10" />
+        <frame x="1" length="1" />
+        <frame x="2" length="1" />
+        <frame x="1" length="1" />
+        <frame x="0" length="4" />
+        <frame x="1" length="1" />
+        <frame x="2" length="1" />
+        <frame x="1" length="1" />
+    </animation>
+    
+    <!-- ---------------------------------------------------------- -->
+    <!-- KERBALS -->
+    
+    <tilesheet id="kerbals.png" width="16" height="17" />
+    <tile id="jeb" x="0" sheet="kerbals.png" />
+    <animation id="jeb.idle" count="1" />
+	<animation id="jeb.talk" x="0" count="1" />
+    
+    <tile id="valentina" x="1" sheet="kerbals.png" />
+    <animation id="valentina.idle" count="1" />
+	<animation id="valentina.talk" x="0" count="1" />
+    
+    <tile id="bill" x="2" sheet="kerbals.png" />
+    <animation id="bill.idle" count="1" />
+	<animation id="bill.talk" x="0" count="1" />
+    
+    <tilesheet id="kerbals.png" width="16" height="16" />
+    <tile id="ksc_ico" x="0" sheet="ksc_ico.png" />
+    
+    <npc id="ksc" tile="ksc_ico" />
+    <animation id="ksc.idle" count="1" />
+	<animation id="ksc.talk" x="0" count="1" />
+        
+    <npc id="jeb" tile="jeb" action="talk" talk_sfx="talking1" night="true" sleepDay="false"  stopForPlayer="false">
+        <operate>
+            <choose if='!player.hasQuest("ksc_tracker") && !player.questComplete("ksc_tracker") && !getFlag("met_jeb")'>
+                <section>
+                    <dialogue section="jeb" id="contact_no_ksc_1" />
+                    <dialogue section="jeb" id="contact_no_ksc_2" />
+                    <dialogue section="jeb" id="contact_no_ksc_3" />
+                    <dialogue section="jeb" id="contact_no_ksc_4" />
+                    <action>
+                        player.setFlag("met_jeb", true);
+                    </action>
+                </section>
+            </choose>
+            <choose if='!player.hasQuest("ksc_tracker") && !player.questComplete("ksc_tracker") && getFlag("met_jeb")'>
+                <dialogue section="jeb" id="met_no_ksc" />
+            </choose>
+            <choose if='player.hasQuest("ksc_tracker") && !player.questComplete("ksc_tracker")'>
+                <section>
+                    <section if="!getFlag('met_jeb')">
+                        <dialogue section="jeb" id="contact_ksc_1" />
+                        <dialogue section="jeb" id="contact_ksc_2" />
+                        <action>
+                            player.setFlag("met_jeb", true);
+                        </action>
+                    </section>
+                    <section if="!player.canCompleteQuest('ksc_tracker')">
+                        <dialogue section="jeb" id="tracker_wait" />
+                    </section>
+                    <section if="player.canCompleteQuest('ksc_tracker')">                        
+                        <dialogue section="jeb" id="tracker_done_1" />
+                        <dialogue section="jeb" id="tracker_done_2" />
+                        <complete quest="ksc_tracker" />
+                    </section>
+                </section>
+            </choose>
+            <choose if='player.hasQuest("ksc_tracker") && player.questComplete("ksc_tracker") && !getFlag("ksc_launch")'>
+                <dialogue section="jeb" id="tracker_wait" />
+            </choose>
+            <choose if='player.hasQuest("ksc_tracker") && player.questComplete("ksc_tracker") && !player.hasQuest("ksc_oil")&& getFlag("ksc_launch") && !getFlag("met_val")'>
+                <dialogue section="jeb" id="val_landed_1" />
+            </choose>
+            <choose if='player.hasQuest("ksc_tracker") && player.questComplete("ksc_tracker") && !player.hasQuest("ksc_oil") && getFlag("ksc_launch") && getFlag("met_val")'>
+                <dialogue section="jeb" id="val_landed_no_ksc" />
+            </choose>
+            <choose if='player.hasQuest("ksc_tracker") && player.hasQuest("ksc_oil") && !player.questComplete("ksc_oil")'>
+                <dialogue section="jeb" id="val_fuel" />
+            </choose>
+            <choose if='player.hasQuest("ksc_tracker") && player.hasQuest("ksc_oil") && player.questComplete("ksc_oil") && !getFlag("honorary_kerbal")'>
+                <dialogue section="jeb" id="good_end_1" />
+            </choose>
+            <choose if='player.hasQuest("ksc_tracker") && player.hasQuest("ksc_oil") && player.questComplete("ksc_oil") && getFlag("honorary_kerbal")'>
+                <dialogue section="jeb" id="return" />
+            </choose>
+        </operate>
+    </npc>
+    
+    <npc id="valentina" tile="valentina" action="talk" talk_sfx="talking7" night="true" sleepDay="false"  stopForPlayer="false"> 
+        <operate>
+            <choose if='player.hasQuest("ksc_tracker") && player.questComplete("ksc_tracker") && !player.hasQuest("ksc_oil")&& getFlag("ksc_launch") && !getFlag("met_val")'>
+                <section>
+                    <dialogue section="valentina" id="val_landed_1" />
+                    <dialogue section="valentina" id="val_landed_2" />
+                    <dialogue section="valentina" id="val_landed_3" />
+                    <dialogue section="valentina" id="val_landed_4" />
+                    <action>
+                        player.setFlag('met_val', true);
+                    </action>
+                </section>
+            </choose>
+            <choose if='player.hasQuest("ksc_tracker") && player.questComplete("ksc_tracker") && !player.hasQuest("ksc_oil") && getFlag("ksc_launch") && getFlag("met_val")'>
+                <dialogue section="valentina" id="val_landed_no_ksc" />
+            </choose>
+            <choose if='player.hasQuest("ksc_tracker") && player.hasQuest("ksc_oil") && !player.questComplete("ksc_oil") && !player.canCompleteQuest("ksc_oil")'>
+                <dialogue section="valentina" id="val_fuel" />
+            </choose>
+            <choose if='player.hasQuest("ksc_tracker") && player.hasQuest("ksc_oil") && !player.questComplete("ksc_oil") && player.canCompleteQuest("ksc_oil")'>
+                <section>
+                    <dialogue section="valentina" id="val_fuel_end_1" />
+                    <dialogue section="valentina" id="val_fuel_end_2" />
+                    <complete quest="ksc_oil" />
+                    <section with='fade'></section>
+                    <dialogue section="valentina" id="val_fuel_end_3" />
+                    <section with='fade'>
+                        <action>
+                               area.getObject('landed').alpha = 0;
+                               area.getObject('jeb').alpha = 0;
+                               area.getObject('valentina').alpha = 0;
+                                area.removeObject(area.getObject("landed"));
+                                area.removeObject(area.getObject("jeb"));
+                                area.removeObject(area.getObject("valentina"));
+                                v = getObject("valentina").create(131*16, -16);
+                                j = getObject("jeb").create(130*16, -16);
+                                vr = getObject("splashed").create(127*16, -16);
+                                ker = player.areas.get('kerbin.land');
+                                ker.addObject(v);
+                                ker.addObject(vr);
+                                ker.addObject(j);
+                        </action>
+                    </section>
+                </section>
+            </choose>
+            <choose if='player.hasQuest("ksc_tracker") && player.hasQuest("ksc_oil") && player.questComplete("ksc_oil") && !getFlag("honorary_kerbal")'>
+                <dialogue section="valentina" id="good_end_1" />
+            </choose>
+            <choose if='player.hasQuest("ksc_tracker") && player.hasQuest("ksc_oil") && player.questComplete("ksc_oil") && getFlag("honorary_kerbal")'>
+                <dialogue section="valentina" id="return" />
+            </choose>
+        </operate>
+    </npc>       
+    
+    <npc id="bill" tile="bill" action="talk" talk_sfx="talking2" night="true" sleepDay="false" stopForPlayer="false">
+        <operate>
+            <!-- unused NPC, maybe later? -->
+        </operate>
+    </npc>     
+    
+    <!-- ... and their ships (and their debris) -->
+    <tilesheet id="crashed.png" width='79' height='56' />
+    <tile id="crashed" sheet="crashed.png" x="0" />
+    <object id="crashed" tile="crashed" />
+    <tilesheet id="landed.png" width='79' height='76' />
+    <tile id="landed" sheet="landed.png" x="0" />
+    <object id="landed" tile="landed" />
+    <tilesheet id="launch.png" width='24' height='177' />
+    <tile id="launch" sheet="launch.png" x="0" />
+    <object id="launch" tile="launch" />
+    <tilesheet id="splashed.png" width='40' height='18' />
+    <tile id="splashed" sheet="splashed.png" x="0" />
+    <object id="splashed" tile="splashed" />  
+    
+    <animation id="ksc.idle" count="1" />    
+    <structure id="ksc" width="512" height="192" image="ksc.png">
+		<operate>            
+            <choose if="!player.hasQuest('ksc_tracker')">
+                <section>
+                    <section>
+                        <dialogue section="ksc" id="contact_1" />
+                        <dialogue section="ksc" id="contact_2" />
+                        <dialogue section="ksc" id="contact_3" />
+                        <dialogue section="ksc" id="contact_4" />
+                        <dialogue section="ksc" id="contact_5" />
+                        <dialogue section="ksc" id="contact_6" />
+                        <dialogue section="ksc" id="contact_7" />
+                    </section>
+    				<section if="getFlag('met_jeb')">
+                        <dialogue section="ksc" id="contact_jeb_1" />
+                        <dialogue section="ksc" id="contact_jeb_2" />
+                        <dialogue section="ksc" id="contact_jeb_3" />
+                        <dialogue section="ksc" id="contact_jeb_4" />
+                        <dialogue section="ksc" id="contact_jeb_5" />
+                        <dialogue section="ksc" id="contact_jeb_6" />    
+                    </section>
+                    <section if="!getFlag('met_jeb')">
+                        <dialogue section="ksc" id="contact_no_jeb_1" />
+                        <dialogue section="ksc" id="contact_no_jeb_2" />
+                        <dialogue section="ksc" id="contact_no_jeb_3" />
+                        <dialogue section="ksc" id="contact_no_jeb_4" />
+                        <dialogue section="ksc" id="contact_no_jeb_5" />
+                        <dialogue section="ksc" id="contact_no_jeb_6" />
+                    </section>
+                    <quest id="ksc_tracker" />
+                    <section if="player.hasQuest('ksc_tracker') && !player.hasItem('ksc_tracker')">
+                        <item id='ksc_tracker' />
+                    </section>    
+                 </section>            
+            </choose>
+            <choose if="player.hasQuest('ksc_tracker') && !player.questComplete('ksc_tracker') && player.hasItem('ksc_tracker')">
+                <dialogue section="ksc" id="tracker_in_progress" />
+            </choose>
+            <choose if="player.hasQuest('ksc_tracker') && !player.questComplete('ksc_tracker') && !player.hasItem('ksc_tracker')">
+				<section>
+                    <dialogue section="ksc" id="tracker_lost" />
+                    <item id='ksc_tracker' />
+                </section>
+            </choose>
+            <choose if="player.hasQuest('ksc_tracker') && player.questComplete('ksc_tracker') && !player.hasQuest('ksc_oil') && !player.getFlag('met_val')">
+                <section>
+    				<section if="!getFlag('ksc_launch')">
+                        <dialogue section="ksc" id="tracker_done_1" />
+                        <dialogue section="ksc" id="tracker_done_2" />
+                        <dialogue section="ksc" id="tracker_done_3" />
+                        <section with="fade">
+                            <action>
+                                area.getObject('launch').alpha = 0;
+                                area.removeObject(area.getObject("launch"));
+                                v = getObject("valentina").create(46*16, -16);
+                                vr = getObject("landed").create(41*16, -16);
+                                mun = player.areas.get('mun.land');
+                                mun.addObject(v);
+                                mun.addObject(vr);
+                            </action>
+                        </section>
+                        <dialogue section="ksc" id="tracker_done_4" />                                
+                        <action>
+                            setFlag('ksc_launch', true);
+                        </action>
+                    </section>
+                    <dialogue section="ksc" id="tracker_done_5" />
+                </section>
+            </choose>
+            <choose if="player.hasQuest('ksc_tracker') && player.questComplete('ksc_tracker') && !player.hasQuest('ksc_oil') && player.getFlag('met_val')">
+                <section>
+                    <dialogue section="ksc" id="val_landed_1" />
+                    <dialogue section="ksc" id="val_landed_2" />
+                    <dialogue section="ksc" id="val_landed_3" />
+                    <quest id='ksc_oil' />
+                </section>
+            </choose>        
+            <choose if="player.hasQuest('ksc_oil') && !player.questComplete('ksc_oil')">
+                <dialogue section="ksc" id="val_fuel" />
+            </choose>
+            <choose if="player.hasQuest('ksc_oil') && player.questComplete('ksc_oil') && !player.getFlag('honorary_kerbal')">
+                <section>
+                    <quest/>
+                    <dialogue section="ksc" id="good_end_1" />
+                    <dialogue section="ksc" id="good_end_2" />
+                    <item id='ksc_helmet' />
+                    <action>                   
+                        player.setFlag('honorary_kerbal', true);
+                    </action>
+                </section>
+            </choose>
+            <choose if="player.hasQuest('ksc_oil') && player.questComplete('ksc_oil') && player.getFlag('honorary_kerbal')">
+                <dialogue section="ksc" id="return" />
+            </choose>
+		</operate>
+		<light tile="light.large" color="ffffff" offsetX="63" offsetY="30" />
+        <light tile="light.large" color="ffffff" offsetX="193" offsetY="30" />
+	</structure>
+    
+    <tilesheet id="items.png" width='16' height='10' />
+    <tile id="tracker.ico" sheet="items.png" x='0' />
+    <tile id="helmet.ico" sheet="items.png" x='1' />
+    
+    <tilesheet id="helmet.png" widht="11" height="9" />
+    <tile id="ksc_helmet" sheet="helmet.png" x="0" offsetX="5" offsetY='-3' />
+	<animation id="equipment.ksc_helmet.idle" x="0" count="1"/>
+	<animation id="equipment.ksc_helmet.hit" x="0" count="1" />
+	<animation id="equipment.ksc_helmet.death" x="0" count="1" />
+    
+    <item id='ksc_tracker' type="tool" cost="0" weight="0" icon="tracker.ico" />
+    <item id='ksc_helmet' type='equipment' slot='head' cost='0' weight='1' icon='helmet.ico' defense="1" hair='false' action='equip'>
+        <light tile="light.headlamp" color="98ffff" offsetX="-61" />
+        <handleSecond>
+            <action>
+                player.restoreOxygen();                
+            </action>
+        </handleSecond>
+    </item>
+    
+    <quest id="ksc_tracker" giver="ksc">
+		<item id="ksc_tracker" count="1" />
+	</quest>
+    
+	<quest id="ksc_oil" giver="ksc">
+		<item id="refined_oil" count="100" />
+	</quest>
+        
+    <!-- ---------------------------------------------------------- -->
+    <!-- KERBIN -->
+    
+    <!-- PLANET -->
+    <planet id="kerbin" height="64">
+		<orbit id="kerbin.orbit" width="256" height="64" background="stars" name="system.planet.kerbin_orbit" type="none">
+        	<area id="kerbin.land" x="0" />
+            <init><runAreaLoad /></init>
+			<onLoad><music id="orbit" seconds="1" /><radar tile="orbit.radar" animation="orbit.radar" padding="2" /></onLoad>
+		</orbit>
+	</planet>
+    
+    <!-- LAND -->
+    <area id="kerbin.land" background="start" planet="kerbin" name="system.planet.kerbin">
+		<appendArea id="kerbin.mountain" offsetX="96" offsetY="0" />
+		<appendArea id="kerbin.forest" offsetX="0" offsetY="0" />
+		<appendArea id="kerbin.ksc" offsetX="96" offsetY="0" />
+		<appendArea id="sea_floor"><params area_left="-240" area_right="330" area_width="192" area_height="96" /></appendArea>
+		<spawner id="metal_debris1" time="5000" count="3" fromX="-240" toX="-10" fromY="0" toY="0" ground="false" underwater="true" />
+        <spawner id="metal_debris1" time="5000" count="3" fromX="200" toX="330" fromY="0" toY="0" ground="false" underwater="true" />        
+        
+		<fishing>
+            <loot id="iron" p="16" difficulty="1" />
+			<loot id="iron_bar" p="16" difficulty="1" />
+			<loot id="steel_bar" p="4" difficulty="2" />
+			<loot id="titanium" p="1" difficulty="3" />
+		</fishing>
+        <connection area="kerbin.land" fromX="-240" toX="330" />
+		<connection area="kerbin.land" fromX="330" toX="-240" />
+	</area>
+    <area id="kerbin.mountain">
+		<shape type="trapezoid" bottom="64">
+			<top y="-10" fromX="0" toX="1" />
+			<bottom y="32" fromX="-16" toX="17" />
+		</shape>
+		<tiles id="sci1.stone" start="0" end="1" />
+		<ore id="diamond" start="0.9" end="1.0" percent="0.0025" tile="sci1.stone" />
+		<ore id="iron" start="0.0" end="1.0" percent="0.0125" tile="sci1.stone" />
+		<ore id="sulfur" start="0.2" end="0.9" percent="0.0125" tile="sci1.stone" />
+		<ore id="gold" start="0.3" end="0.6" percent="0.0125" tile="sci1.stone" />
+	</area>    
+    <area id="kerbin.forest" width="96" height="96">
+		<tiles id="sci1.grass" y="0" empty="true" />
+		<tiles id="bedrock" y="95" empty="true" />
+		<tiles id="sci1.dirt" start="0" end="0.5" empty="true" />
+		<tiles id="sci1.stone" start="0.5" end="1" empty="true" />
+		<shore x="-1" flip="true" dock="dock_empty" top="sand_top" bottom="sand" trans1="sci1.dirt_sand1" trans2="sci1.dirt_sand3" />
+		<ore id="quartz" start="0.4" end="0.5" percent="0.0025" tile="sci1.dirt" />
+		<ore id="sulfur" start="0.2" end="0.5" percent="0.0125" tile="sci1.dirt" />
+		<ore id="sulfur" start="0.1" end="0.2" percent="0.000625" tile="sci1.dirt" />
+		<ore id="coal" start="0.0" end="0.4" percent="0.0375" tile="sci1.dirt" />
+		<ore id="gold" start="0.4" end="0.5" percent="0.000625" tile="sci1.dirt" />
+		<ore id="diamond" start="0.9" end="1.0" percent="0.0025" tile="sci1.stone" />
+		<ore id="sulfur" start="0.5" end="0.9" percent="0.0125" tile="sci1.stone" />
+		<ore id="iron" start="0.5" end="1.0" percent="0.0375" tile="sci1.stone" />
+		<ore id="lava" start="0.7" end="0.8" percent="1" tile="sci1.stone" />
+		<objects id="conifer" y="-1" startX="55" endX="6" minDist="-6" maxDist="-9" array="trees" />
+		<objects id="red_bush" y="-1" between="trees" pos="0.25" altPos="0.75" percent="0.34" />
+		<objects id="bush" y="-1" between="trees" pos="0.25" altPos="0.75" percent="0.67" />				
+	</area>     
+    
+    <!-- KSC -->
+    <area id="kerbin.ksc" width="96" height="96" name="system.planet.kerbin_ksc">
+		<tiles id="sci1.grass" y="0" empty="true" />
+		<tiles id="bedrock" y="95" empty="true" />
+		<tiles id="sci1.dirt" start="0" end="0.5" empty="true" />
+		<tiles id="sci1.stone" start="0.5" end="1" empty="true" />
+		<shore x="96" dock="dock_empty_flip" top="sand_top" bottom="sand" trans1="sci1.dirt_sand1" trans2="sci1.dirt_sand3" />
+		<ore id="quartz" start="0.4" end="0.5" percent="0.0025" tile="sci1.dirt" />
+		<ore id="sulfur" start="0.2" end="0.5" percent="0.0125" tile="sci1.dirt" />
+		<ore id="sulfur" start="0.1" end="0.2" percent="0.000625" tile="sci1.dirt" />
+		<ore id="coal" start="0.0" end="0.4" percent="0.0375" tile="sci1.dirt" />
+		<ore id="gold" start="0.4" end="0.5" percent="0.000625" tile="sci1.dirt" />
+		<ore id="diamond" start="0.9" end="1.0" percent="0.0025" tile="sci1.stone" />
+		<ore id="sulfur" start="0.5" end="0.9" percent="0.0125" tile="sci1.stone" />
+		<ore id="iron" start="0.5" end="1.0" percent="0.0375" tile="sci1.stone" />
+		<ore id="lava" start="0.7" end="0.8" percent="1" tile="sci1.stone" />
+        <structure id="ksc" x="50" />
+        <object id="launch" x="76" />
+	</area>        
+    
+    <!-- ---------------------------------------------------------- -->
+    <!-- MUN -->
+    <include id="parallax.xml" />
+    
+    <parallax id="munlax" mapBG="0" skyColor="0">
+		<layer p="0" glow="true"><tile sheet="{mod:full_version}/space/night_bg.png" x="0" y="0" /></layer>
+		<layer p="0" glow="true">
+			<tile id="sun" animation="sun" fps="5" rise="5" set="20" dir="left" pathHeight="96" pathTop="-16" sun="true" />
+		</layer>
+    	<layer p="0.25" py="0.75"><tile sheet="parallax.1" x="1" /></layer>
+		<layer p="0.5" py="1"><tile sheet="parallax.1" x="0" /></layer>
+		<layer type="back" />        
+	</parallax>
+    
+	<parallax id="mun.orbit" mapBG="0" skyColor="0">
+		<layer p="0" glow="true" max_depth="10000"><tile sheet="{mod:full_version}/space/night_bg.png" x="0" y="0" /></layer>
+		<layer p="0" glow="true" max_depth="10000">
+			<tile id="sun" animation="sun" fps="5" rise="5" set="20" dir="left" pathHeight="96" pathTop="-16" sun="true" />
+		</layer>
+		<layer p="0" py="0.0125" max_depth="10000"><tile sheet="parallax.4" x="1" dy="22" /></layer>
+		<layer p="0" py="0.0125" id="kerbol.land" scroll="0.03125" max_depth="10000"><tile sheet="parallax.2" x="0" dy="22" /></layer>
+		<layer type="back" />
+	</parallax>
+	
+	<planet id="mun" height="48">
+		<orbit id="mun.orbit" width="192" height="48" background="mun.orbit" name="system.planet.mun_orbit" type="none">
+			<area id="mun.land" x="0" />
+            <init><runAreaLoad /></init>    
+			<onLoad><music id="orbit" seconds="1" /><radar tile="orbit.radar" animation="orbit.radar" padding="2" /></onLoad>
+		</orbit>
+	</planet>
+	
+	<!-- TILES -->
+    <tilesheet id="tiles.png" />
+    <tile id="d_sand.top" sheet="tiles.png" x="1" />
+    <tile id="d_sand" sheet="tiles.png" x="0" />
+    <tile id="d_sand_stone" sheet="tiles.png" x="2" />
+    <tile id="d_sand_rock" sheet="tiles.png" x="3" />
+    <tile id="d_sand_bedrock" sheet="tiles.png" x="4" />
+    <tile id="d_sand_bedrock_unmineable" sheet="tiles.png" x="4" />
+	<dig id="d_sand.top" cost="2" />
+    <dig id="d_sand" cost="2" />
+    <dig id="d_sand_stone" cost="4" />
+    <dig id="d_sand_rock" cost="6" />
+    <dig id="d_sand_bedrock" cost="8" />
+    <dig id="d_sand_bedrock_unmineable" cost="999" />
+	
+	<area id="mun.land" width="192" height="48" hasO2="false" background="munlax" planet="mun" looping="true" name="system.planet.mun">
+        <tiles id="d_sand.top" y="0" /><mine start="0" end="0.01" backTile="d_sand" />
+		<tiles id="d_sand" start="0" end="0.3" empty="front|back"/>
+        <tiles id="d_sand_stone" start="0.3" end="0.45" />
+        <tiles id="d_sand_rock" start="0.45" end="0.6" />
+        <tiles id="d_sand_bedrock" start="0.6" end="1" />
+        <ore id="sulfur" start="0.1" end="0.8" percent="0.0245" tile="d_sand" />
+        <ore id="quartz" start="0.2" end="0.5" percent="0.0175" />
+        <ore id="iron" start="0.2" end="0.5" percent="0.045" />
+        <ore id="titanium" start="0.4" end="0.7" percent="0.0375" />
+        <ore id="titanium" start="0.7" end="1" percent="0.075" />
+        <ore id="gold" percent="0.014" tile="d_sand_stone" />
+        <ore id="gold" percent="0.028" tile="d_sand_rock" />
+		<ore id="diamond"  percent="0.002" tile="d_sand_rock" />
+        <ore id="uranium" start="0.5" end="0.7" percent="0.01" tile="d_sand_rock" />
+        <ore id="diamond" percent="0.005" tile="d_sand_bedrock" />
+        <ore id="uranium" percent="0.03" tile="d_sand_bedrock" />        
+        <tiles id="d_sand_bedrock_unmineable" y="47" />	
+		<onLoad><music id="orbit_nocombat" seconds="1" /></onLoad>
+        <object id='jeb' x='48' />
+        <object id="crashed" x="49" />
+	</area>
+        
+    <!-- ---------------------------------------------------------- -->
+    <!-- MINMUS -->
+    
+    <include id="parallax_mm.xml" />
+    
+    <parallax id="minmuslax" mapBG="0" skyColor="0">
+		<layer p="0" glow="true"><tile sheet="{mod:full_version}/space/night_bg.png" x="0" y="0" /></layer>
+		<layer p="0" glow="true">
+			<tile id="sun" animation="sun" fps="5" rise="5" set="20" dir="left" pathHeight="96" pathTop="-16" sun="true" />
+		</layer>
+    	<layer p="0.0625" py="0.25"><tile sheet="parallax.mm.4" x="0" /></layer>
+		<layer p="0.125" py="0.5"><tile sheet="parallax.mm.3" x="0" /></layer>
+		<layer p="0.5" py="1"><tile sheet="parallax.mm.1" x="0" /></layer>
+		<layer type="back" />
+	</parallax>
+    
+	<parallax id="minmus.orbit" mapBG="0" skyColor="0">
+		<layer p="0" glow="true" max_depth="10000"><tile sheet="{mod:full_version}/space/night_bg.png" x="0" y="0" /></layer>
+		<layer p="0" glow="true" max_depth="10000">
+			<tile id="sun" animation="sun" fps="5" rise="5" set="20" dir="left" pathHeight="96" pathTop="-16" sun="true" />
+		</layer>
+		<layer p="0" py="0.0125" max_depth="10000"><tile sheet="parallax.mm.4" x="1" dy="22" /></layer>
+		<layer p="0" py="0.0125" id="kerbol.land" scroll="0.03125" max_depth="10000"><tile sheet="parallax.mm.2" x="0" dy="22" /></layer>
+		<layer type="back" />
+	</parallax>
+	
+	<planet id="minmus" height="32">
+		<orbit id="minmus.orbit" width="128" height="32" background="minmus.orbit" name="system.planet.minmus_orbit" type="none">
+			<area id="minmus.land" x="0" />
+            <init><runAreaLoad /></init>    
+			<onLoad><music id="orbit" seconds="1" /><radar tile="orbit.radar" animation="orbit.radar" padding="2" /></onLoad>
+		</orbit>
+	</planet>
+	
+	<!-- TILES -->
+    <tilesheet id="tiles_mm.png" />
+    <tile id="mm_sand.top" sheet="tiles_mm.png" x="1" />
+    <tile id="mm_sand" sheet="tiles_mm.png" x="0" />
+    <tile id="mm_sand_stone" sheet="tiles_mm.png" x="2" />
+    <tile id="mm_sand_rock" sheet="tiles_mm.png" x="3" />
+    <tile id="mm_sand_bedrock" sheet="tiles_mm.png" x="4" />
+    <tile id="mm_sand_bedrock_unmineable" sheet="tiles_mm.png" x="4" />
+	<dig id="mm_sand.top" cost="2" />
+    <dig id="mm_sand" cost="2" />
+    <dig id="mm_sand_stone" cost="4" />
+    <dig id="mm_sand_rock" cost="6" />
+    <dig id="mm_sand_bedrock" cost="8" />
+    <dig id="mm_sand_bedrock_unmineable" cost="999" />
+	
+	<area id="minmus.land" width="128" height="32" hasO2="false" background="minmuslax" planet="minmus" looping="true" name="system.planet.minmus">
+        <tiles id="mm_sand.top" y="0" /><mine start="0" end="0.01" backTile="mm_sand" />
+		<tiles id="mm_sand" start="0" end="0.3" empty="front|back"/>
+        <tiles id="mm_sand_stone" start="0.3" end="0.45" />
+        <tiles id="mm_sand_rock" start="0.45" end="0.6" />
+        <tiles id="mm_sand_bedrock" start="0.6" end="1" />
+        <ore id="quartz" start="0.1" end="0.8" percent="0.0245" tile="mm_sand" />
+        <ore id="titanium" start="0.2" end="0.5" percent="0.045" />
+        <ore id="titanium" start="0.4" end="0.7" percent="0.0375" />
+        <ore id="titanium" start="0.7" end="1" percent="0.075" />
+        <ore id="diamond" percent="0.014" tile="mm_sand_stone" />
+        <ore id="diamond" percent="0.028" tile="mm_sand_rock" />
+		<ore id="chromium"  percent="0.002" tile="mm_sand_rock" />
+        <ore id="exotic_matter" start="0.5" end="0.7" percent="0.01" tile="mm_sand_rock" />
+        <ore id="chromium" percent="0.005" tile="mm_sand_bedrock" />
+        <ore id="exotic_matter" percent="0.03" tile="mm_sand_bedrock" />        
+        <tiles id="mm_sand_bedrock_unmineable" y="47" />	
+		<onLoad><music id="orbit_nocombat" seconds="1" /></onLoad>
+	</area>
+    
+    <!-- ---------------------------------------------------------- -->
+    <!-- SYSTEM -->
+	<system id="kerbol" bgm="voyage" x="220" y="18" tile="nav.kerbol" animation="nav.kerbol">
+		<planet id="kerbin" tile="planet5" animation="kerbin" orbit="orbit3" orbitOffX="0" offsetX="11" offsetY="22" name="system.planet.kerbin" />
+        <planet id="mun" tile="planet2" animation="mun" offsetX="1" offsetY="12" name="system.planet.mun" />
+        <planet id="minmus" tile="planet0" animation="minmus" offsetX="121" offsetY="75" name="system.planet.minmus" />
+	</system>            
+
+
+    <!-- ---------------------------------------------------------- -->
+    <!-- LANG -->
+    <lang id="en_US">
+    	<section id="system.desc">
+            <text id="kerbol">G-type star 191 light years from Earth. 1 confirmed exoplanet.</text>
+        </section>
+        <section id="system">
+		    <text id="kerbol">Kerbol system</text>
+	    </section>
+        <section id="system.planet">
+            <text id="kerbin">Kerbin</text>
+            <text id="kerbin_ksc">KSC</text>
+            <text id="kerbin_orbit">Kerbin Orbit</text>
+            <text id="mun">Mun</text>
+            <text id="mun_orbit">Mun Orbit</text>
+            <text id="minmus">Minmus</text>
+            <text id="minmus_orbit">Minmus Orbit</text>
+        </section>
+        <section id="system.planet.desc">
+            <text id="kerbin">An earhtlike planet with low gravity.</text>
+            <text id="mun">Small moon. Sorry, I mean "mun".</text>
+            <text id="minmus">Oh, I thought this was a speck on the scanner screen, but it is a teeny tiny moon!</text>
+        </section>
+        <section id="npc">
+            <text id="jeb">Jebediah Kerman</text>
+            <text id="valentina">Valentina Kerman</text>
+            <text id="bill">Bill Kerman</text>
+            <text id="ksc">KSA</text>
+        </section>
+        <section id="jeb">
+            <!-- First contact, no KSC -->
+            <text id="contact_no_ksc_1">Hello there! We come in peace, alien lifeform! My name is [color=770000]Jeb[/color]!</text>
+            <text id="contact_no_ksc_2">Oh, human you say? What strange skin color!</text>
+            <text id="contact_no_ksc_3">You are just in time to witness a historic moment - first [color=550000]Mun[/color] landing by a kerbal! However so far it seems this was only a one-way trip.</text>
+            <text id="contact_no_ksc_4">Would you mind helping me out and heading back to that green and blue planet and telling them where I am?</text>
+            
+            <!-- Before going to KSC -->
+            <text id="met_no_ksc">Ne pressure on that rescuing, I got plenty of snacks!</text>
+            
+            <!-- First contact, talked to KSC -->
+            <text id="contact_ksc_1">Hello there! We come in peace, alien lifeform! My name is [color=770000]Jeb[/color]!</text>
+            <text id="contact_ksc_2">What do you mean the KSC sent you? I didn't know they outsourced their missions now...</text>
+            
+            <!-- Waiting for tracker -->
+            <text id="tracker_wait">I am curious what plan the KSC will come up with to save me.</text>
+            
+            <!-- Tracker given -->
+            <text id="tracker_done_1">Oh, they gave you a [item=ksc_tracker] for me? Great! With this, [color=770000]Valentina[/color] will have no issue landing right on top of me.</text>
+            <text id="tracker_done_2">Well, not literally, I hope.</text>
+            
+            <!-- Tracker waiting -->
+            <text id="tracker_wait">I'm ready whenever you are. Just head to KSC and let them know the [item=ksc_tracker] has been activated.</text>
+            
+            <!-- Val landed -->
+            <text id="val_landed_1">That was such a blast! I never seen anyone pilot a rocket so well, I was barely scorched by the rocket engine!</text>
+            
+            <!-- Val landed, repeat -->
+            <text id="val_landed_no_ksc">When you get to KSC, can you pick me up some snacks? No? Nevermind then.</text>
+            
+            <!-- Val landed, not completed KSC mission -->
+            <text id="val_fuel">When you get all the [item=refined_oil], just hand it to [color=770000]Val[/color], she will know where to put it.</text>
+                        
+            <!-- After splash down -->
+            <text id="good_end_1">Another mission accomplished! Thanks for all the help, I am sure KSC will have some reward for your hard work.</text>
+            
+            <!-- Returning visits -->
+            <text id="return">I got no issue standing here for a while, I got plenty of snacks!</text>
+        </section>
+        <section id="valentina">
+            <!-- Val landed -->
+            <text id="val_landed_1">Hello there! Nice to finally meet you. My name is [color=770000]Valentina Kerman[/color], but please call me [color=770000]Val[/color]!</text>
+            <text id="val_landed_2">Thanks for helping us with the tracker. I found the right spot easily and landed softly as a feather.</text>
+            <text id="val_landed_3">Unfortunately, it seems we did not pack enough fuel for return trip. I guess nobody thought we will manage to land safely, so they wanted to avoid an explosion.</text>
+            <text id="val_landed_4">Can you hop over to KSC and let them know what happened?</text>
+            
+            <!-- Val landed, repeat -->
+            <text id="val_landed_no_ksc">Did you have a chance to hop over to KSC and let them know what happened?</text>
+            
+            <!-- Val landed, not completed KSC mission -->
+            <text id="val_fuel">Sorry it's such a lot of [item=refined_oil], our engines are a bit hungry. Let me know when you have it ready!</text>
+            
+            <!-- Fuel give -->
+            <text id="val_fuel_end_1">Wow! You managed to get the [item=refined_oil] so fast?</text>
+            <text id="val_fuel_end_2">Let me just pump it into the fuel tanks...</text>
+            <text id="val_fuel_end_3">...and we're ready for liftoff! Thanks for everything and see you on [color=550000]Kerbin[/color]!</text>
+            
+            <!-- After splash down -->
+            <text id="good_end_1">Phew! That was quite a ride! Can we do it again?</text>
+            
+            <!-- Returning visits -->
+            <text id="return">I wonder if they'll ever pick us up?</text>
+        </section>
+        <section id="ksc">
+            <!-- First contact, generic -->
+            <text id="contact_1">ALERT! ALERT! Unidentified flying object approaching!</text>
+            <text id="contact_2">Initite lockdown! Activate red protocol!</text>
+            <text id="contact_3">Yes, sir!</text>
+            <text id="contact_4">...err, what is the red protocol?</text>
+            <text id="contact_5">I though you knew?</text>
+            <text id="contact_6">Does anyone know? No? Ok, let me try something else.</text>
+            <text id="contact_7">Unidentified flying object, please identify yourself!</text>
+            
+            <!-- First contact, no Jeb -->
+            <text id="contact_no_jeb_1">Another star system you say? But that is impossible!</text>
+            <text id="contact_no_jeb_2">But since you're here, can we ask a favor?</text>
+            <text id="contact_no_jeb_3">Our first munar mission was a success and we landed a kerbal on the [color=550000]Mun[/color]!</text>
+            <text id="contact_no_jeb_4">His name is [color=770000]Jeb[/color] and he is one lucky kerbal! Unfortunately his ship was not so lucky.</text>
+            <text id="contact_no_jeb_5">We have prepared a rescue mission, but we need someone to deliver this [item=ksc_tracker] to him.</text>
+            <text id="contact_no_jeb_6">Would you help us, please?</text>
+            
+            <!-- First contact, talked to Jeb -->
+            <text id="contact_jeb_1">Another star system you say? But that is impossible!</text>
+            <text id="contact_jeb_2">Oh, [color=770000]Jeb[/color] sent you?</text>
+            <text id="contact_jeb_3">Then you have heard about our historic success! We landed a kerbal on the [color=550000]Mun[/color]!</text>
+            <text id="contact_jeb_4">There is only the minor thing of getting [color=770000]Jeb[/color] back home...</text>
+            <text id="contact_jeb_5">We have prepared a rescue mission, but we need someone to deliver this [item=ksc_tracker] to him.</text>
+            <text id="contact_jeb_6">Would you help us, please?</text>
+            
+            <!-- Tracker in progress -->
+            <text id="tracker_in_progress">Did you have a chance to deliver the [item=ksc_tracker] to [color=770000]Jeb[/color]? No rush, he is well stocked on snacks, just asking!</text>
+            
+            <!-- Tracker in progress, not in inventory -->
+            <text id="tracker_lost">You lost the [item=ksc_tracker]? Don't worry, we have a warehouse full of them. Here, have another!</text>
+            
+            <!-- Tracker given, Val launch -->
+            <text id="tracker_done_1">So [color=770000]Jeb[/color] has the [item=ksc_tracker]? Great! Now we can launch the rescue mission!</text>
+            <text id="tracker_done_2">[color=770000]Valentina[/color], please get ready. Everyone, on your positions! Prepare the launch sequence.</text>
+            <text id="tracker_done_3">Open the VAB! Roll out the MEV! Check the OUM levels. Double check delta-V and gamma-R! T-minus 2 hours, we have a lot to do, kerbals!</text>
+            <text id="tracker_done_4">Well, that was one great launch.</text>
+            <text id="tracker_done_5">Can you please go check if [color=770000]Val[/color] landed okay?</text>
+            
+            <!-- Val landed -->
+            <text id="val_landed_1">That's great news! I meant the ship being intact, not about the fuel, that is rather unfortunate...</text>
+            <text id="val_landed_2">Well, seeing you have that great ship and all that, could you maybe help us refuel the ship?</text>
+            <text id="val_landed_3">Unfortunately you will also have to find some fuel since we seem to have accidentaly burned it all.</text>
+            
+            <!-- Val landed, not completed KSC mission -->
+            <text id="val_fuel">When you get the [item=refined_oil], just head to [color=550000]Mun[/color] and give it to [color=770000]Val[/color].</text>
+            
+            <!-- After splash down -->
+            <text id="good_end_1">It seems both [color=770000]Jeb[/color] and [color=770000]Val[/color] are safely back on the ground. Thank you so much for this!</text>
+            <text id="good_end_2">We hereby declare you a honorary Kerbal for life and as a sign of our appreciation, please accept this ... errr .... this ... [item=ksc_helmet]! Yes, very useful, you'll see!</text>
+            
+            <!-- Returning visits -->
+            <text id="return">Nice to see you again! We are currently preparing a more ambitious mission to [color=550000]Minmus[/color], we'll let you know if we need any help!</text>
+        </section>
+        <section id="quests">
+            <text id="ksc_tracker">Precise Landing</text>
+            <text id="ksc_oil">Running On Fumes</text>            
+        </section>
+        <section id="quest.description">
+            <text id="ksc_tracker">needs you to deliver [item=ksc_tracker] to [color=770000]Jeb[/color] so [color=770000]Valentina[/color] can rescue him.</text>
+            <text id="ksc_oil">wants you to help refuel [color=770000]Valentina[/color]'s ship so she can bring [color=770000]Jeb[/color] home!</text>
+        </section>
+        <section id="item.names">
+            <text id="ksc_tracker">KSA Tracker</text>
+            <text id="ksc_helmet">Kerbal Helmet</text>
+        </section>
+        <section id="item.descriptions">
+            <text id="ksc_tracker">A primitive piece of technology that allows Kerbals to precisely navigate to certain location.</text>
+            <text id="ksc_helmet">Seemingly simple helmet which provides unlimited supply of oxygen.</text>
+        </section>
+        <section id="structure.tooltip">
+            <text id='ksc'>Contact KSA</text>
+        </section>
+    </lang>        
+</data>
